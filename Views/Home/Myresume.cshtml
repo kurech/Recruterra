@@ -50,6 +50,7 @@
                     {
                         var user = IsAuthenticated.GetUser(globalAccount.IdUser);
                         <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
                         <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
                     }
                 </div>
@@ -98,7 +99,7 @@
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Дата рождения</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="dateofresume" value="@IsAuthenticated.GetResumeById(user.Id).DateOfBirth.Date">
+                            <input type="datetime" class="w-50" name="passwordprof" id="dateofresume" placeholder="@IsAuthenticated.GetResumeById(user.Id).DateOfBirth" value="">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Номер телефона</label><br>

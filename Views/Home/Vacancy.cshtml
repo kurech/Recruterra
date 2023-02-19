@@ -56,7 +56,10 @@
         </header>
 
         <div class="container">
-            <a href="/Home/AddVacancy"><p class="color-bububu mrtop32 font-bold font24 mrleft256 mrleftvacan">Добавить вакансию</p></a>
+            @if (IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Работодатель")
+            {
+                <a href="/Home/AddVacancy"><p class="color-bububu mrtop32 font-bold font24 mrleft256 mrleftvacan">Добавить вакансию</p></a>
+            }
             <p class="color-bububu mrtop32 font-bold font24 mrleft256 mrleftvacan">@IsAuthenticated.vacancies().Count вакансий</p>
             <form method="post">
                 <div class="rightbarvacancy">
@@ -86,11 +89,11 @@
                                     </div>
                                 </div>
                                 <div class="right">
-                                    @if (globalAccount.Auth != 0)
+                                    @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
                                     {
                                         if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, a) == false)
                                         {
-                                            <input type="button" class="btn btn-outline-dark w-200 mrtop16" onclick="CreateResponse('@globalAccount.IdUser', '@a', '@DateTime.Now');HappyMassage();" value="Откликнуться" />
+                                            <input type="button" class="btn btn-outline-dark w-200 mrtop16" onclick="CreateResponse('@globalAccount.IdUser', '@a'); HappyMassage()" value="Откликнуться" />
                                         }
                                         else
                                         {

@@ -1,6 +1,5 @@
-﻿function CreateResponse(iduser, idvacancy, date) {
-    $.get(`/Home/AddResponse?idUser=${iduser}&idvacancy=${idvacancy}&dateandtime=${date}`);
-    location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(true)
+﻿function CreateResponse(iduser, idvacancy) {
+    $.get(`/Home/AddResponse?iduser=${iduser}&idvacancy=${idvacancy}`);
 };
 
 function CreateMeeting(iduser, name, surname, descrip, dateandtime) {

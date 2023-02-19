@@ -92,6 +92,8 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public IActionResult Signup(string email, string password, string role, string photo)
         {
+            string format = "yyyy-MM-dd HH:mm:ss.FFFFFFF";
+            DateTime dateTime = DateTime.Now;
             string connString = "Data Source=localhost;" +
               "Initial Catalog=recruterra;" +
               "User id=recrut;" +
@@ -106,6 +108,23 @@ namespace WebApplication2.Controllers
                 command.Parameters.AddWithValue("?role", role);
                 command.Parameters.AddWithValue("?photo", photo);
                 command.ExecuteNonQuery();
+                //Photo = @photoresume, Name = @nameresume, Surname = @surnameresume, DateOfBirth = @dateofresume, PhoneNumber = @phoneresume, IdCity = @cityresume, IdCitizenship = @citizenshipresume, Position = @positionresume, Salary = @salaryresume, Education = @eduresume, WorkExperience = @workresume, IdTypeOfEmployment = @employresume, AdditionalInformation = @addinforesume WHERE Id = @iduser"
+                var comm = conne.CreateCommand();
+                comm.CommandText = "INSERT INTO resume(Id,Name,Surname,Photo,DateOfBirth,PhoneNumber,IdCity,IdCitizenship,Position,Salary,Education,WorkExperience,IdTypeOfEmployment,AdditionalInformation) VALUES(NULL, @nameresume, @surnameresume, @photoresume, @dateofresume, @phoneresume, @cityresume, @citizenshipresume, @positionresume, @salaryresume, @eduresume, @workresume, @employresume, @addinforesume)";
+                comm.Parameters.AddWithValue("?photoresume", "https://i.pinimg.com/originals/6f/f5/f2/6ff5f248a5cad4d81cb33a75f7ff8c80.jpg");
+                comm.Parameters.AddWithValue("?nameresume", "null");
+                comm.Parameters.AddWithValue("?surnameresume", "null");
+                comm.Parameters.AddWithValue("?dateofresume", dateTime.ToString(format));
+                comm.Parameters.AddWithValue("?phoneresume", "null");
+                comm.Parameters.AddWithValue("?cityresume", 0);
+                comm.Parameters.AddWithValue("?citizenshipresume", 0);
+                comm.Parameters.AddWithValue("?positionresume", "null");
+                comm.Parameters.AddWithValue("?salaryresume", 0);
+                comm.Parameters.AddWithValue("?eduresume", "null");
+                comm.Parameters.AddWithValue("?workresume", 0);
+                comm.Parameters.AddWithValue("?employresume", 0);
+                comm.Parameters.AddWithValue("?addinforesume", "null");
+                comm.ExecuteNonQuery();
             }
 
             return Redirect("~/Home/Signin");
@@ -151,8 +170,10 @@ namespace WebApplication2.Controllers
             }
         }
 
-        public EmptyResult AddResponse(int iduser, int idvacancy, DateTime dateandtime)
+        public EmptyResult AddResponse(int iduser, int idvacancy)
         {
+            string format = "yyyy-MM-dd HH:mm:ss.FFFFFFF";
+            DateTime dateTime = DateTime.Now;
             string connString = "Data Source=localhost;" +
               "Initial Catalog=recruterra;" +
               "User id=recrut;" +
@@ -164,7 +185,7 @@ namespace WebApplication2.Controllers
                 command.CommandText = "INSERT INTO response(Id,IdUser,IdVacancy,DateAndTime) VALUES(NULL, @iduser, @idvacancy, @dateandtime)";
                 command.Parameters.AddWithValue("?iduser", iduser);
                 command.Parameters.AddWithValue("?idvacancy", idvacancy);
-                command.Parameters.AddWithValue("?dateandtime", dateandtime);
+                command.Parameters.AddWithValue("?dateandtime", dateTime.ToString(format));
                 command.ExecuteNonQuery();
             }
             return new EmptyResult();

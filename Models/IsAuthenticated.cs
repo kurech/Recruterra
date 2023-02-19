@@ -45,17 +45,26 @@ namespace WebApplication2.Models
         public static string GetCityById(int id) // получение города по айди
         {
             var city = cities().FirstOrDefault(m => m.Id == id);
-            return city.Name;
+            if (city != null)
+                return city.Name;
+            else
+                return "null";
         }
         public static string GetTypeOfEmpById(int id) // получение типа по айди
         {
             var type = typeOfEmployments().FirstOrDefault(m => m.Id == id);
-            return type.Type;
+            if (type != null)
+                return type.Type;
+            else
+                return "null";
         }
         public static string GetCitizenshipById(int id) // получение гражданства по айди
         {
             var citizenship = citizenships().FirstOrDefault(m => m.Id == id);
-            return citizenship.Name;
+            if (citizenship != null)
+                return citizenship.Name;
+            else
+                return "null";
         }
 
         public static Resume GetResumeById(int id) // получение резюме по айди

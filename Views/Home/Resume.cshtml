@@ -49,6 +49,7 @@
                     {
                         var user = IsAuthenticated.GetUser(globalAccount.IdUser);
                         <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
                         <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
                     }
                 </div>
@@ -56,44 +57,47 @@
         </header>
 
         <div class="container">
-            <p class="color-bububu mrtop32 font-bold font24 mrleftvacan">Получено @IsAuthenticated.resumes().Count вакансий</p>
+            <p class="color-bububu mrtop32 font-bold font24 mrleftvacan">Получено @IsAuthenticated.resumes().Where(m => m.Name != "null").Count() вакансий</p>
             <div class="rightbarvacancy">
                 @{ for (int a = 1; a <= IsAuthenticated.resumes().Count; a++)
                     {
-                        <div class="resumeback mrtop16 mrleft2566 mrleftvacan">
-                                            <div class="left">
-                                                <div class="stroka1">
-                                                    <div class="vacancyname1">
-                                                        <p class="">@IsAuthenticated.GetResumeById(a).Name</p>
-                                                    </div>
-                                                    <div class="vacancycompanyname1 mrleft32">
-                                                        <p class="">@IsAuthenticated.GetResumeById(a).Surname</p>
-                                                    </div>
-                                                </div>
-                                                <div class="stroka2">
-                                                    <div class="vacancyname1">
-                                                        <p class="">@IsAuthenticated.GetResumeById(a).Position</p>
-                                                    </div>
-                                                    <div class="vacancycompanyname1 mrleft32">
-                                                        <p class="">@IsAuthenticated.GetResumeById(a).Salary руб</p>
-                                                    </div>
-                                                </div>
-                                                <div class="stroka3">
-                                                    <div class="vacancysalary1">
-                                                        <p class="">@IsAuthenticated.GetResumeById(a).WorkExperience year   @IsAuthenticated.GetTypeOfEmpById(IsAuthenticated.GetResumeById(a).IdTypeOfEmployment) занятость</p>
-                                                    </div>
-                                                    <div class="vacancycity1 mrleft32">
-                                                        <p class="">@IsAuthenticated.GetCityById(IsAuthenticated.GetResumeById(a).IdCity)</p>
-                                                    </div>
-                                                </div>
-                                                <div class="vacancyaddinfo1">
-                                                    <p class="">@IsAuthenticated.GetResumeById(a).AdditionalInformation</p>
-                                                </div>
-                                            </div>
-                            <div class="right">
-                                <img  class="imgresume" src="@IsAuthenticated.GetResumeById(a).Photo"/>
+                        if (IsAuthenticated.GetResumeById(a).Name != "null")
+                        {
+                            <div class="resumeback mrtop16 mrleft2566 mrleftvacan">
+                                <div class="left">
+                                    <div class="stroka1">
+                                        <div class="vacancyname1">
+                                            <p class="">@IsAuthenticated.GetResumeById(a).Name</p>
+                                        </div>
+                                        <div class="vacancycompanyname1 mrleft32">
+                                            <p class="">@IsAuthenticated.GetResumeById(a).Surname</p>
+                                        </div>
+                                    </div>
+                                    <div class="stroka2">
+                                        <div class="vacancyname1">
+                                            <p class="">@IsAuthenticated.GetResumeById(a).Position</p>
+                                        </div>
+                                        <div class="vacancycompanyname1 mrleft32">
+                                            <p class="">@IsAuthenticated.GetResumeById(a).Salary руб</p>
+                                        </div>
+                                    </div>
+                                    <div class="stroka3">
+                                        <div class="vacancysalary1">
+                                            <p class="">@IsAuthenticated.GetResumeById(a).WorkExperience year   @IsAuthenticated.GetTypeOfEmpById(IsAuthenticated.GetResumeById(a).IdTypeOfEmployment) занятость</p>
+                                        </div>
+                                        <div class="vacancycity1 mrleft32">
+                                            <p class="">@IsAuthenticated.GetCityById(IsAuthenticated.GetResumeById(a).IdCity)</p>
+                                        </div>
+                                    </div>
+                                    <div class="vacancyaddinfo1">
+                                        <p class="">@IsAuthenticated.GetResumeById(a).AdditionalInformation</p>
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <img class="imgresume" src="@IsAuthenticated.GetResumeById(a).Photo" />
+                                </div>
                             </div>
-                        </div>
+                        }
                     } }
             </div>
         </div>
