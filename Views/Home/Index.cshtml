@@ -42,17 +42,24 @@
                 </ul>
                 
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault();}
+                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault(); var user = IsAuthenticated.GetUser(globalAccount.IdUser);}
                     @if (globalAccount.Auth == 0)
                     {
                         <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
                     }
                     else
                     {
-                        var user = IsAuthenticated.GetUser(globalAccount.IdUser);
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
+                        if (user != null)
+                        {
+                            <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
+                            <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
+                            <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
+                        }
+
                     }
                 </div>
             </nav>
@@ -251,7 +258,7 @@
                                         {
                                             if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd4) == false)
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd4');HappyMassage();" value="Откликнуться" />
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd4');HappyMassage();" href="/Home/Index" value="Откликнуться" />
                                             }
                                             else
                                             {
@@ -321,9 +328,9 @@
                 <div class="meeting">
                     <a class="opvacancy-text">Встречи сегодня</a>
                 </div>
-                @{ Meeting meet = null;}
+                @{Meeting meet = null;}
                 <a href="/Home/Meeting"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
-                @if (globalAccount != null)
+                @if (globalAccount != null && globalAccount.Auth == 1)
                 {
                     meet = IsAuthenticated.GetMeetingToday(globalAccount.IdUser);
                 }
@@ -392,23 +399,36 @@
                         <div class="strokaresume">
                             <img src="~/images/resume1.png" class="mrtop32 mrleft32 mrright16" alt="">
                         </div>
-                        @{Random randomResume1 = new Random(); int rndResume1 = randomResume1.Next(1, IsAuthenticated.resumes().Count());}
-                        <div class="resumeinfo">
-                            <p class="mrbottom8 font-bolder">@IsAuthenticated.GetResumeById(rndResume1).Position</p>
-                            <p>@IsAuthenticated.resumes().Count(m => m.Position == @IsAuthenticated.GetResumeById(rndResume1).Position) резюме</p>
-                        </div>
+                        @{Random randomResume1 = new Random(); int rndResume1 = randomResume1.Next(1, IsAuthenticated.resumes().Where(m => m.Name != "null").Count());}
+                        @if (IsAuthenticated.GetResumeById(rndResume1).Name != "null")
+                        {
+                            <div class="resumeinfo">
+                                <p class="mrbottom8 font-bolder">@IsAuthenticated.GetResumeById(rndResume1).Position</p>
+                                <p>@IsAuthenticated.resumes().Count(m => m.Position == @IsAuthenticated.GetResumeById(rndResume1).Position) резюме</p>
+                            </div>
+                        }
+                        else
+                        {
+                            rndResume1 = randomResume1.Next(1, IsAuthenticated.resumes().Where(m => m.Name != "null").Count());
+                            <div class="resumeinfo">
+                                <p class="mrbottom8 font-bolder">@IsAuthenticated.GetResumeById(rndResume1).Position</p>
+                                <p>@IsAuthenticated.resumes().Count(m => m.Position == @IsAuthenticated.GetResumeById(rndResume1).Position) резюме</p>
+                            </div>
+                        }
+
                     </div>
                     <div class="resume2back">
                         <div class="strokaresume">
                             <img src="~/images/resume2.png" class="mrtop24 mrleft32 mrright16" alt="">
                         </div>
-                        @{Random randomResume2 = new Random(); int rndResume2 = randomResume2.Next(1, IsAuthenticated.resumes().Count());
+                        @{Random randomResume2 = new Random(); int rndResume2 = randomResume2.Next(1, IsAuthenticated.resumes().Where(m => m.Name != "null").Count());
                             do { rndResume2 = randomResume2.Next(1, IsAuthenticated.resumes().Count()); } while (rndResume2 == rndResume1);}
                         <div class="resumeinfo">
                             <p class="mrbottom8 font-bolder">@IsAuthenticated.GetResumeById(rndResume2).Position</p>
                             <p>@IsAuthenticated.resumes().Count(m => m.Position == @IsAuthenticated.GetResumeById(rndResume2).Position) резюме</p>
                         </div>
                     </div>
+                            
                 </div>
 
                 <div class="article mrtop32">
@@ -416,17 +436,17 @@
                 </div>
                 <a href="/Home/Article"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в сообщество"></a>
                 <div class="allarticle mrtop16">
-                    @{Random randomArticle1 = new Random(); int rndArticle1 = randomArticle1.Next(1, IsAuthenticated.resumes().Count());}
+                    @{Random randomArticle1 = new Random(); int rndArticle1 = randomArticle1.Next(1, IsAuthenticated.articles().Count());}
                     <div class="article1back mrright16 mrtop20 mrleft28">
                         <img src="@IsAuthenticated.GetArticleById(rndArticle1).Photo" class="articleimg" alt="">
                         <p class="article-text font-bolder mrleft16 mrtop-50">@IsAuthenticated.GetArticleById(rndArticle1).Name</p>
                     </div>
-                    @{Random randomArticle2 = new Random(); int rndArticle2 = randomArticle2.Next(1, IsAuthenticated.resumes().Count());
+                    @{Random randomArticle2 = new Random(); int rndArticle2 = randomArticle2.Next(1, IsAuthenticated.articles().Count());
                         do { rndArticle2 = randomArticle2.Next(1, IsAuthenticated.articles().Count()); } while (rndArticle2 == rndArticle1);}
-                    <div class="article2back mrtop20">
-                        <img src="@IsAuthenticated.GetArticleById(rndArticle2).Photo" class="articleimg" alt="">
-                        <p class="article-text font-bolder mrleft16 mrtop-50">@IsAuthenticated.GetArticleById(rndArticle2).Name</p>
-                    </div>
+                <div class="article2back mrtop20">
+                    <img src="@IsAuthenticated.GetArticleById(rndArticle2).Photo" class="articleimg" alt="">
+                    <p class="article-text font-bolder mrleft16 mrtop-50">@IsAuthenticated.GetArticleById(rndArticle2).Name</p>
+                </div>
                 </div>
             </div>
         </div>

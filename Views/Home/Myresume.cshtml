@@ -41,17 +41,16 @@
                     </li>
                 </ul>
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault();}
+                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault(); var user = IsAuthenticated.GetUser(globalAccount.IdUser);}
                     @if (globalAccount.Auth == 0)
                     {
                         <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
                     }
                     else
                     {
-                        var user = IsAuthenticated.GetUser(globalAccount.IdUser);
                         <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
                         <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
+                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" href="/Home/Index" value="Выйти" />
                     }
                 </div>
             </nav>
@@ -75,7 +74,7 @@
             <div class="rightbarvacancy w-100px">
                 <div class="accback mrtop32 mrleft128 height2050">
                     <form id="stripe-login">
-                        @{var user = IsAuthenticated.GetUser(globalAccount.IdUser);}
+                        @{user = IsAuthenticated.GetUser(globalAccount.IdUser);}
                         <img src="@IsAuthenticated.GetResumeById(user.Id).Photo" class="accimg" alt="">
                         <div class="field padding-bottom--24">
                             <label for="photoprof" class="font-bolder">Фотография резюме</label><br>

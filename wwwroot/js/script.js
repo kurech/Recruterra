@@ -51,7 +51,7 @@ function DeleteMeetMassage() {
 };
 
 function AddMeetMassage() {
-    alert('Отлик записан ᵔᴥᵔ!');
+    alert('Встреча добавлена ᵔᴥᵔ!');
 };
 
 function AddVacancyMassage() {

@@ -73,7 +73,7 @@ namespace WebApplication2.Models
             return resume;
         }
 
-        public static Article GetArticleById(int id) // получение резюме по айди
+        public static Article GetArticleById(int id) // получение статьи по айди
         {
             var article = articles().FirstOrDefault(m => m.Id == id);
             return article;
