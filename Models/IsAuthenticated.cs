@@ -11,6 +11,7 @@ namespace WebApplication2.Models
 {
     public class IsAuthenticated
     {
+        public ApplicationContext db;
         public IEnumerable<Meeting> meet { get; set; }
         public SelectList days { get; set; }
         public static User GetUser(int id)

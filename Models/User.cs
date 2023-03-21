@@ -12,5 +12,8 @@ namespace WebApplication2.Models
         public string Password { get; set; }
         public string Role { get; set; }
         public string Photo { get; set; }
+        public virtual ICollection<Meeting> Meetings { get; set; }
+        public virtual ICollection<Response> Responses { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }
