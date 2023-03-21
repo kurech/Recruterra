@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +9,7 @@ namespace WebApplication2.Models
 {
     public class Resume
     {
+        [Key, ]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -21,5 +24,16 @@ namespace WebApplication2.Models
         public int WorkExperience { get; set; }
         public int IdTypeOfEmployment { get; set; }
         public string AdditionalInformation { get; set; }
+        [ForeignKey("Id")]
+        public virtual User User { get; set; }
+
+        [ForeignKey("IdCitizenship")]
+        public virtual Citizenship Citizenship { get; set; }
+
+        [ForeignKey("IdCity")]
+        public virtual City City { get; set; }
+
+        [ForeignKey("IdTypeOfEmployment")]
+        public virtual TypeOfEmployment TypeOfEmployment { get; set; }
     }
 }

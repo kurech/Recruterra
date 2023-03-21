@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using MySql.Data.MySqlClient;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication2.Models
 {
@@ -18,6 +19,12 @@ namespace WebApplication2.Models
         public string Description { get; set; }
         public string Education { get; set; }
         public int IdTypeOfEmployment { get; set; }
+        public virtual ICollection<Response> Responses { get; set; }
+
+        [ForeignKey("IdCity")]
+        public virtual City City { get; set; }
+
+        [ForeignKey("IdTypeOfEmployment")]
+        public virtual TypeOfEmployment TypeOfEmployment { get; set; }
     }
-    
 }

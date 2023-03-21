@@ -11,6 +11,7 @@ namespace WebApplication2.Models
 {
     public class IsAuthenticated
     {
+        public ApplicationContext db;
         public IEnumerable<Meeting> meet { get; set; }
         public SelectList days { get; set; }
         public static User GetUser(int id)
@@ -27,15 +28,6 @@ namespace WebApplication2.Models
             else
                 return false;
         }
-
-        //public static bool GetMeetingUser(int idUser, int IdMeeting) // провека встреч юзера
-        //{
-        //    var meeting = meetings().FirstOrDefault(m => m.IdUser == idUser && m.Id == IdMeeting);
-        //    if (meeting != null)
-        //        return true; // у юзера уже 
-        //    else
-        //        return false;
-        //}
 
         public static Vacancy GetVacancyById(int id)
         {
