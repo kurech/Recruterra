@@ -29,15 +29,6 @@ namespace WebApplication2.Models
                 return false;
         }
 
-        //public static bool GetMeetingUser(int idUser, int IdMeeting) // провека встреч юзера
-        //{
-        //    var meeting = meetings().FirstOrDefault(m => m.IdUser == idUser && m.Id == IdMeeting);
-        //    if (meeting != null)
-        //        return true; // у юзера уже 
-        //    else
-        //        return false;
-        //}
-
         public static Vacancy GetVacancyById(int id)
         {
             var vacancy = vacancies().FirstOrDefault(m => m.Id == id);
