@@ -12,6 +12,7 @@ namespace WebApplication2.Models
         public int IdUser { get; set; }
         public int IdVacancy { get; set; }
         public DateTime DateAndTime { get; set; }
+        public int? IsAccepted { get; set; }
 
         [ForeignKey("IdUser")]
         public virtual User User { get; set; }

@@ -38,6 +38,16 @@ function UpdateMeetingFilter(iduser) {
     location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(false)
 };
 
+function AcceptResponse(idresponse) {
+    $.get(`/Home/AcceptResponse?idresponse=${idresponse}`);
+    location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(false)
+};
+
+function DismissResponse(idresponse) {
+    $.get(`/Home/DismissResponse?idresponse=${idresponse}`);
+    location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(false)
+};
+
 function Message() {
     alert('Вы уже откликались на эту вакансию!');
 };

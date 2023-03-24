@@ -20,7 +20,16 @@ namespace WebApplication2.Models
         public DbSet<TypeOfEmployment> TypeOfEmployments { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Vacancy>()
+                .HasOne(p => p.User)
+                .WithMany(t => t.Vacancies)
+                .HasForeignKey(x => x.IdUser)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

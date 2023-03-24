@@ -670,6 +670,13 @@ vertical-align:middle;
     border-radius: 5px;
 }
 
+.responsesback {
+    width: 1070px;
+    height: 120px;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
 .accimg {
     margin-top: 32px;
     margin-left: 32px;

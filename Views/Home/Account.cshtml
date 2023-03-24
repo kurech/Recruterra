@@ -71,14 +71,20 @@
                             <div class="form-check">
                                 <a href="/Home/Myresume" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
                             </div>
+                            <div class="form-check">
+                                <a href="/Home/Responses/@user.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
+                            </div>
                         }
                         if (user.Role == "Работодатель")
                         {
                             <div class="form-check mrtop16">
                                 <a href="/Home/Account" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
                             </div>
-                            } }
-                    </fieldset>
+                            <div class="form-check">
+                                <a href="/Home/Responses/@user.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
+                            </div>
+                        } }
+                </fieldset>
             </div>
 
             <div class="rightbarvacancy w-100px">

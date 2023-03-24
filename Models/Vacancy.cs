@@ -19,6 +19,7 @@ namespace WebApplication2.Models
         public string Description { get; set; }
         public string Education { get; set; }
         public int IdTypeOfEmployment { get; set; }
+        public int IdUser { get; set; }
         public virtual ICollection<Response> Responses { get; set; }
 
         [ForeignKey("IdCity")]
@@ -26,5 +27,8 @@ namespace WebApplication2.Models
 
         [ForeignKey("IdTypeOfEmployment")]
         public virtual TypeOfEmployment TypeOfEmployment { get; set; }
+
+        [ForeignKey("IdUser")]
+        public virtual User User { get; set; }
     }
 }

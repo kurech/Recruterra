@@ -96,6 +96,26 @@ namespace WebApplication2.Models
             return meet;
         }
 
+        //public static List<Response> responsesss()
+        //{
+        //    List<Response> list1 = new List<Response>();
+        //    string query = "select * from city";
+        //    MySqlCommand comm = new MySqlCommand(query);
+        //    comm.Connection = conn;
+        //    conn.Open();
+        //    MySqlDataReader dr = comm.ExecuteReader();
+        //    while (dr.Read())
+        //    {
+        //        list1.Add(new City
+        //        {
+        //            Id = Convert.ToInt32(dr["Id"]),
+        //            Name = dr["Name"].ToString()
+        //        });
+        //    }
+        //    conn.Close();
+        //    return list1;
+        //}
+
         public static List<City> cities()
         {
             MySqlConnection conn = new MySqlConnection();

@@ -15,5 +15,6 @@ namespace WebApplication2.Models
         public virtual ICollection<Meeting> Meetings { get; set; }
         public virtual ICollection<Response> Responses { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Vacancy> Vacancies { get; set; }
     }
 }

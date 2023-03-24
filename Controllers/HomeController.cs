@@ -11,13 +11,15 @@ using System.IO;
 using MySql.Data.MySqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebApplication2.Controllers
 {
     public class HomeController : Controller
     {
         private ApplicationContext db;
-
+        static MailAddress to;
         public HomeController(ApplicationContext context)
         {
             db = context;
@@ -87,6 +89,49 @@ namespace WebApplication2.Controllers
         public IActionResult AddVacancy()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Responses()
+        {
+            var users = db.Users.ToList();
+            var resumes = db.Resumes.ToList();
+            var vacancies = db.Vacancies.ToList();
+            var responses = db.Responses.ToList();
+            var model = new ResponsesData { Users = users, Resumes = resumes, Vacancies = vacancies, Responses = responses };
+            return View(model);
+        }
+
+        public EmptyResult AcceptResponse(int idresponse)
+        {
+            var response = db.Responses.FirstOrDefault(m => m.Id == idresponse);
+            var vacancy = db.Vacancies.FirstOrDefault(m => m.Id == response.IdVacancy);
+            var user = db.Users.FirstOrDefault(m => m.Id == response.IdUser);
+            response.IsAccepted = 1;
+            db.Update(response);
+            db.SaveChanges();
+
+            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
+            to = new MailAddress(user.Login);
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Ваш отклик принят!";
+            m.Body = $"Отклик на вакансию <b> {vacancy.Position} </b> принят!<br>Ожидайте назначение встречи от работодателя.<br><br> --------------------- <br> 2023 - Recruterra";
+            m.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
+            smtp.EnableSsl = true;
+            smtp.SendMailAsync(m);
+
+            return new EmptyResult();
+        }
+
+        public EmptyResult DismissResponse(int idresponse)
+        {
+            var response = db.Responses.FirstOrDefault(m => m.Id == idresponse);
+            response.IsAccepted = 2;
+            db.Update(response);
+            db.SaveChanges();
+            return new EmptyResult();
         }
 
         [HttpPost]
