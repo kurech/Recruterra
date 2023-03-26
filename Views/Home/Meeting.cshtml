@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.IsAuthenticated
+﻿@model MeetingsData
 @{
     Layout = null;
 }
@@ -56,12 +56,14 @@
         </header>
 
         <div class="container height950">
-            <a href="/Home/AddMeeting"><p class="color-bububu mrtop32 font-bold font24 mrleft256 mrleftvacan">Добавить встречу</p></a>
-            @{ List<Meeting> meet = new List<Meeting>();
-                meet = IsAuthenticated.GetAllMeetings(globalAccount.IdUser);}
+            @{ List<Meeting> employerMeetings = new List<Meeting>();
+                employerMeetings = Model.Meetings.Where(m => m.IdUser == globalAccount.IdUser).ToList();
+                List<Meeting> seekerMeetings = new List<Meeting>();
+                var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == globalAccount.IdUser);
+                seekerMeetings = Model.Meetings.Where(m => m.Name == seekerResume.Name && m.Surname == seekerResume.Surname).ToList();
+                string role = Model.Users.FirstOrDefault(m => m.Id == globalAccount.IdUser).Role;}
             <div class="rightbarvacancy">
-
-                @{ foreach (var a in meet)
+                @{ foreach (var a in (role == "Соискатель" ? seekerMeetings : employerMeetings))
                     {
                         if (a != null)
                         {
@@ -69,7 +71,7 @@
                                 <div class="left">
                                     <div class="stroka1">
                                         <div class="vacancyname1 mrtop20">
-                                             <p class="">@a.Name @a.Surname @a.DateAndTime.ToString("D")</p>
+                                            <p class="">@a.Name @a.Surname @a.DateAndTime.ToString("D")</p>
                                         </div>
                                         <div class="vacancycompanyname1 mrleft32 mrtop16">
                                             <p class="">@a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>

@@ -402,6 +402,10 @@ a{
     margin-right: 16px;
 }
 
+.mrright-40 {
+    margin-right: -40px;
+}
+
 .mrbottom8{
     margin-bottom: 8px;
 }

@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.IsAuthenticated
+﻿@model ResponsesData
 @{
     Layout = null;
 }
@@ -58,25 +58,25 @@
         <div class="container">
             <div class="rightbarvacancy">
                 <div class="meetingssback mrtop32 mrleftvacan height650 mrleft400">
-                    <form id="stripe-login">
+                    <form id="stripe-login" method="post">
                         <div class="field padding-bottom--24">
                             <label for="meetname" class="font-bolder mrtop32">Имя</label><br>
-                            <input type="text" class="w-95" id="meetname">
+                            <input type="text" class="w-95" id="meetname" value="@Model.Resumes.First().Name" placeholder="Имя">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="meetsurname" class="font-bolder">Фамилия</label><br>
-                            <input type="text" class="w-95" id="meetsurname">
+                            <input type="text" class="w-95" id="meetsurname" value="@Model.Resumes.First().Surname" placeholder="Фамилия">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="meetdescrip" class="font-bolder">Описание</label><br>
-                            <input type="text" class="w-95" id="meetdescrip">
+                            <input type="text" class="w-95" id="meetdescrip" placeholder="Введите описание встречи (Например, собеседование)">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="meetdatetime" class="font-bolder">Дата и время (Формат: 2023-02-18 20:00:00)</label><br>
-                            <input type="datetime" class="w-95" id="meetdatetime">
+                            <input type="datetime" class="w-95" id="meetdatetime" placeholder="2023-02-18 20:00:00">
                         </div>
                         <div class="btneditacc mrtop32">
-                            <input type="button" class="btn btn-outline-dark w-200" onclick="CreateMeeting('@globalAccount.IdUser', this.form.meetname.value, this.form.meetsurname.value, this.form.meetdescrip.value, this.form.meetdatetime.value);AddMeetMassage();" value="Добавить" />
+                            <input type="button" class="btn btn-outline-dark w-200" onclick="CreateMeeting('@globalAccount.IdUser', this.form.meetname.value, this.form.meetsurname.value, this.form.meetdescrip.value, this.form.meetdatetime.value); RedirectMeetingToResponse();" value="Добавить" />
                         </div>
                     </form>
                 </div>

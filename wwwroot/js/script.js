@@ -4,6 +4,7 @@
 
 function CreateMeeting(iduser, name, surname, descrip, dateandtime) {
     $.get(`/Home/AddMeet?iduser=${iduser}&name=${name}&surname=${surname}&descrip=${descrip}&dateandtime=${dateandtime}`);
+
 };
 
 function CreateVacancy(vacposition, vacsalary, vaccity, vacworkex, vacdescrip, vacedu, vactypeofemp) {
@@ -66,4 +67,12 @@ function AddMeetMassage() {
 
 function AddVacancyMassage() {
     alert('Вакансия добавлена ʕ￫ᴥ￩ʔ!');
+};
+
+function RedirectResponseToMeeting(id) {
+    window.location.href = '/Home/AddMeeting/' + id;
+};
+
+function RedirectMeetingToResponse() {
+    window.location.href = '/Home/Responses/';
 };

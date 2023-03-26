@@ -20,11 +20,12 @@ namespace WebApplication2.Controllers
     {
         private ApplicationContext db;
         static MailAddress to;
+        public Vacancy _vacancy = new Vacancy();
         public HomeController(ApplicationContext context)
         {
             db = context;
         }
-        
+
         [HttpGet]
         public IActionResult Signin()
         {
@@ -58,17 +59,15 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public ActionResult Meeting()
         {
-            return View();
+            var users = db.Users.ToList();
+            var resumes = db.Resumes.ToList();
+            var meetings = db.Meetings.ToList();
+            var model = new MeetingsData { Users = users, Resumes = resumes, Meetings = meetings };
+            return View(model);
         }
 
         [HttpGet]
         public IActionResult Account()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AddMeeting()
         {
             return View();
         }
@@ -122,6 +121,7 @@ namespace WebApplication2.Controllers
             smtp.EnableSsl = true;
             smtp.SendMailAsync(m);
 
+            _vacancy = vacancy;
             return new EmptyResult();
         }
 
@@ -131,6 +131,40 @@ namespace WebApplication2.Controllers
             response.IsAccepted = 2;
             db.Update(response);
             db.SaveChanges();
+            return new EmptyResult();
+        }
+
+        [HttpGet]
+        public IActionResult AddMeeting(int id)
+        {
+            List<User> users = db.Users.Where(m => m.Id == id).ToList();
+            List<Resume> resumes = db.Resumes.Where(m => m.Id == id).ToList();
+            var model = new ResponsesData { Users = users, Resumes = resumes };
+            return View(model);
+        }
+
+        public EmptyResult AddMeet(int iduser, string name, string surname, string descrip, DateTime dateandtime)
+        {
+            Meeting meeting = new Meeting()
+            {
+                Name = name, Surname = surname, Description = descrip, DateAndTime = dateandtime, IdUser = iduser
+            };
+            db.Meetings.Add(meeting);
+            db.SaveChanges();
+
+            var someoneSendingResume = db.Resumes.FirstOrDefault(m => m.Name == name && m.Surname == surname);
+            var someoneSendingUser = db.Users.FirstOrDefault(m => m.Id == someoneSendingResume.Id);
+            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
+            to = new MailAddress(someoneSendingUser.Login);
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Вам назначена встреча с работодателем!";
+            m.Body = $"Здравствуйте, {name}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br><br> --------------------- <br> 2023 - Recruterra";
+            m.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
+            smtp.EnableSsl = true;
+            smtp.SendMailAsync(m);
+
             return new EmptyResult();
         }
 
@@ -231,27 +265,6 @@ namespace WebApplication2.Controllers
                 command.Parameters.AddWithValue("?iduser", iduser);
                 command.Parameters.AddWithValue("?idvacancy", idvacancy);
                 command.Parameters.AddWithValue("?dateandtime", dateTime.ToString(format));
-                command.ExecuteNonQuery();
-            }
-            return new EmptyResult();
-        }
-
-        public EmptyResult AddMeet(int iduser, string name, string surname, string descrip, DateTime dateandtime)
-        {
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
-            {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "INSERT INTO meeting(Id,Name,Surname,Description,DateAndTime,IdUser) VALUES(NULL, @name, @surname, @descrip, @dateandtime, @iduser)";
-                command.Parameters.AddWithValue("?name", name);
-                command.Parameters.AddWithValue("?surname", surname);
-                command.Parameters.AddWithValue("?descrip", descrip);
-                command.Parameters.AddWithValue("?dateandtime", dateandtime);
-                command.Parameters.AddWithValue("?iduser", iduser);
                 command.ExecuteNonQuery();
             }
             return new EmptyResult();

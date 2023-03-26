@@ -29,7 +29,7 @@
                         <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold under-line color-green" href="/Home/Meeting">Встречи</a>
+                        <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Resume">Базы резюме</a>
@@ -57,56 +57,148 @@
 
         <div class="container height950">
             <div class="rightbarvacancy">
-                @{ foreach (var a in Model.Responses)
+                @{ string role = Model.Users.FirstOrDefault(m => m.Id == globalAccount.IdUser).Role;
+                    
+                    if (role == "Работодатель")
                     {
-                        List<Vacancy> _vacancies = new List<Vacancy>();
-                        foreach (var b in Model.Vacancies)
+                        foreach (var a in Model.Responses)
                         {
-                            if (b.IdUser == globalAccount.IdUser)
+                            List<Vacancy> _vacancies = new List<Vacancy>();
+                            foreach (var b in Model.Vacancies)
                             {
-                                _vacancies.Add(b);
+                                if (b.IdUser == globalAccount.IdUser)
+                                {
+                                    _vacancies.Add(b);
+                                }
+                            }
+                            foreach (var c in _vacancies)
+                            {
+                                if (a.IdVacancy == c.Id)
+                                {
+                                    var resume = Model.Resumes.FirstOrDefault(m => m.Id == a.IdUser);
+                                    <div class="responsesback mrtop16 mrleft256 mrleftvacan">
+                                        <div class="left">
+                                            <div class="stroka1">
+                                                <div class="vacancyname1 mrtop20">
+                                                    <p class="font-bold">@c.Position</p>
+                                                </div>
+                                            </div>
+                                            <div class="stroka2">
+                                                <div class="vacancysalary1">
+                                                    <p class="">@resume.Name @resume.Surname</p>
+                                                </div>
+                                            </div>
+                                            <div class="stroka2">
+                                                <div class="vacancysalary1">
+                                                    <p class="">@a.DateAndTime.ToString("D")</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (a.IsAccepted == 1)
+                                        {
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="mrtop16">
+                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else if (a.IsAccepted == 2)
+                                        {
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="mrtop16">
+                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="btnacceptresponse mrtop16">
+                                                        <a class="btn btn-outline-dark w-200" onclick="AcceptResponse('@a.Id'); RedirectResponseToMeeting('@resume.Id');">Принять</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="btndismissresponse mrtop16">
+                                                        <a class="btn btn-outline-dark w-200" onclick="DismissResponse('@a.Id');">Отклонить</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
                             }
                         }
-                        foreach (var c in _vacancies)
+                    }
+                    else
+                    {
+                        var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == globalAccount.IdUser);
+                        foreach (var a in Model.Responses)
                         {
-                            if (a.IdVacancy == c.Id)
+                            if (a.IdUser == seekerResume.Id)
                             {
-                                var resume = Model.Resumes.FirstOrDefault(m => m.Id == a.IdUser);
                                 <div class="responsesback mrtop16 mrleft256 mrleftvacan">
-                                    <div class="left">
-                                        <div class="stroka1">
-                                            <div class="vacancyname1 mrtop20">
-                                                <p class="font-bold">@c.Position</p>
+                                        <div class="left">
+                                            <div class="stroka1">
+                                                <div class="vacancyname1 mrtop20">
+                                                    <p class="font-bold">@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
+                                                </div>
+                                            </div>
+                                            <div class="stroka2">
+                                                <div class="vacancysalary1">
+                                                    <p class="">@seekerResume.Name @seekerResume.Surname</p>
+                                                </div>
+                                            </div>
+                                            <div class="stroka2">
+                                                <div class="vacancysalary1">
+                                                    <p class="">@a.DateAndTime.ToString("D")</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="stroka2">
-                                            <div class="vacancysalary1">
-                                                <p class="">@resume.Name @resume.Surname</p>
-                                            </div>
-                                        </div>
-                                        <div class="stroka2">
-                                            <div class="vacancysalary1">
-                                                <p class="">@a.DateAndTime.ToString("D")</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="right">
-                                        @if (globalAccount != null)
+                                        @if (a.IsAccepted == 1)
                                         {
-                                            <div class="btnacceptresponse mrtop16">
-                                                <a class="btn btn-outline-dark w-200" onclick="AcceptResponse('@a.Id');">Принять</a>
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="mrtop16">
+                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else if (a.IsAccepted == 2)
+                                        {
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="mrtop16">
+                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="right">
+                                                @if (globalAccount != null)
+                                                {
+                                                    <div class="mrtop16">
+                                                        <a class="font20 font-bolder text-decoration-none mrleft128">В обработке</a>
+                                                    </div>
+                                                }
                                             </div>
                                         }
                                     </div>
-                                    <div class="right">
-                                        @if (globalAccount != null)
-                                        {
-                                            <div class="btndismissresponse mrtop16">
-                                                <a class="btn btn-outline-dark w-200" onclick="DismissResponse('@a.Id');">Отклонить</a>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
                             }
                         }
                     }
