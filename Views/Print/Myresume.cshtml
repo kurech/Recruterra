@@ -80,7 +80,7 @@
                             <div class="toggle-switch"></div>
                             <span class="toggle-label">Ваше резюме публичное</span>
                         </label>
-                        <p class="color-bububu mrtop16 font-bolder font16" onclick="PrintResume('@user.Id')">Печать резюме</p>
+                        <input type="button" class="btn btn-outline-dark w-200" onclick="PrintResume('@user.Id')" value="Печать" />
                         <img src="@IsAuthenticated.GetResumeById(user.Id).Photo" class="accimg" alt="">
                         <div class="field padding-bottom--24">
                             <label for="photoprof" class="font-bolder">Фотография резюме</label><br>

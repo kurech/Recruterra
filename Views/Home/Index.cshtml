@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication2.Models.IsAuthenticated>
+﻿@model IndexData
 
 @{
     Layout = null;
@@ -22,10 +22,10 @@
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index">Recruterra</a>
+                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link under-line color-green font-bold" href="/Home/Index">Сводка</a>
+                        <a class="nav-link under-line color-green font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
@@ -42,24 +42,19 @@
                 </ul>
                 
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault(); var user = IsAuthenticated.GetUser(globalAccount.IdUser);}
-                    @if (globalAccount.Auth == 0)
+                    @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) == null)
                     {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
                     }
-                    else
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 0)
                     {
-                        if (user != null)
-                        {
-                            <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                            <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                            <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
-                        }
-                        else
-                        {
-                            <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
-                        }
-
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
+                    }
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                    {
+                        <a class="font16 mrright16" href="/Home/Account" name="">@Model.User.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account" name="">@Model.User.Role</a>
+                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
                     }
                 </div>
             </nav>
@@ -100,15 +95,18 @@
                                 <form method="post">
                                     <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
-                                        @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
+                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
-                                            if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd1) == false)
+                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd1');HappyMassage();" value="Откликнуться" />
-                                            }
-                                            else
-                                            {
+                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == rnd1) == null)
+                                                {
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '@rnd1');HappyMassage();" value="Откликнуться" />
+                                                }
+                                                else
+                                                {
                                                 <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
+                                                }
                                             }
                                         }
                                     </p>
@@ -152,15 +150,18 @@
                                 <form method="post">
                                     <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
-                                        @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
+                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
-                                            if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd2) == false)
+                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd2');HappyMassage();" value="Откликнуться" />
-                                            }
-                                            else
-                                            {
+                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == rnd1) == null)
+                                                {
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '@rnd2');HappyMassage();" value="Откликнуться" />
+                                                }
+                                                else
+                                                {
                                                 <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
+                                                }
                                             }
                                         }
                                     </p>
@@ -203,15 +204,18 @@
                                 <form method="post">
                                     <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
-                                        @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
+                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
-                                            if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd3) == false)
+                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd3');HappyMassage();" value="Откликнуться" />
-                                            }
-                                            else
-                                            {
+                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == rnd1) == null)
+                                                {
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '@rnd3');HappyMassage();" value="Откликнуться" />
+                                                }
+                                                else
+                                                {
                                                 <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
+                                                }
                                             }
                                         }
                                     </p>
@@ -254,15 +258,18 @@
                                 <form method="post">
                                     <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
-                                        @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
+                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
-                                            if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd4) == false)
+                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd4');HappyMassage();" href="/Home/Index" value="Откликнуться" />
-                                            }
-                                            else
-                                            {
+                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == rnd1) == null)
+                                                {
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '@rnd4');HappyMassage();" href="/Home/Index" value="Откликнуться" />
+                                                }
+                                                else
+                                                {
                                                 <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
+                                                }
                                             }
                                         }
                                     </p>
@@ -305,15 +312,18 @@
                                 <form method="post">
                                     <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
-                                        @if (globalAccount.Auth != 0 && IsAuthenticated.GetUser(globalAccount.IdUser).Role == "Соискатель")
+                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
-                                            if (IsAuthenticated.GetResponseUser(globalAccount.IdUser, rnd5) == false)
+                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@globalAccount.IdUser', '@rnd5');HappyMassage();" value="Откликнуться" />
-                                            }
-                                            else
-                                            {
+                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == rnd1) == null)
+                                                {
+                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '@rnd5');HappyMassage();" value="Откликнуться" />
+                                                }
+                                                else
+                                                {
                                                 <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
+                                                }
                                             }
                                         }
                                     </p>
@@ -330,9 +340,12 @@
                 </div>
                 @{Meeting meet = null;}
                 <a href="/Home/Meeting"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
-                @if (globalAccount != null && globalAccount.Auth == 1)
+                @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                 {
-                    meet = IsAuthenticated.GetMeetingToday(globalAccount.IdUser);
+                    if (Model.User != null && Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                    {
+                        meet = Model.Meetings.FirstOrDefault(m => m.IdUser == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
+                    }
                 }
                 <div class="allmeetingback">
                     <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
@@ -380,10 +393,10 @@
                     <div class="right">
                         @if (meet != null)
                         {
-                            @if (globalAccount != null)
+                            @if (Model.User != null)
                             {
                                 <div class="btndelmeet">
-                                    <a class="btn btn-outline-dark w-200" onclick="DeleteMeeting('@globalAccount.IdUser', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
+                                    <a class="btn btn-outline-dark w-200" onclick="DeleteMeeting('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
                                 </div>
                             }
                         }

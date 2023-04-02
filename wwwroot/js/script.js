@@ -2,13 +2,16 @@
     $.get(`/Home/AddResponse?iduser=${iduser}&idvacancy=${idvacancy}`);
 };
 
-function CreateMeeting(iduser, name, surname, descrip, dateandtime) {
-    $.get(`/Home/AddMeet?iduser=${iduser}&name=${name}&surname=${surname}&descrip=${descrip}&dateandtime=${dateandtime}`);
-
+function RedirectVacancyToOneOfTheVacancy(idvacancy) {
+    window.location.href = '/Home/OneOfTheVacancy/' + idvacancy;
 };
 
-function CreateVacancy(vacposition, vacsalary, vaccity, vacworkex, vacdescrip, vacedu, vactypeofemp) {
-    $.get(`/Home/AddVac?vacposition=${vacposition}&vacsalary=${vacsalary}&vaccity=${vaccity}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}`);
+function CreateMeeting(iduser, name, surname, descrip, dateandtime) {
+    $.get(`/Home/AddMeet?iduser=${iduser}&name=${name}&surname=${surname}&descrip=${descrip}&dateandtime=${dateandtime}`);
+};
+
+function CreateVacancy(vacposition, vacsalary, vaccity, vacworkex, vacdescrip, vacedu, vactypeofemp, vacidemployer) {
+    $.get(`/Home/AddVac?vacposition=${vacposition}&vacsalary=${vacsalary}&vaccity=${vaccity}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&idemployer=${vacidemployer}`);
 };
 
 function DeleteMeeting(iduser, idmeeting) {
@@ -76,3 +79,11 @@ function RedirectResponseToMeeting(id) {
 function RedirectMeetingToResponse() {
     window.location.href = '/Home/Responses/';
 };
+
+function RedirectAddVacancyToVacancy() {
+    window.location.href = '/Home/Vacancy/';
+};
+
+function PrintResume(id) {
+    $.get(`/Print/PrintPesumePDF?iduser=${id}`);
+}

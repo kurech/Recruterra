@@ -13,6 +13,9 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 namespace WebApplication2.Controllers
 {
@@ -20,7 +23,6 @@ namespace WebApplication2.Controllers
     {
         private ApplicationContext db;
         static MailAddress to;
-        public Vacancy _vacancy = new Vacancy();
         public HomeController(ApplicationContext context)
         {
             db = context;
@@ -39,15 +41,28 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View();
+            if (id != null)
+            {
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
+                return View(model);
+            }
+            else
+            {
+                id = 1;
+                User user = db.Users.FirstOrDefault(m => m.Id == id);
+                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
+                return View(model);
+            }
         }
 
         [HttpGet]
         public IActionResult Vacancy()
         {
-            return View();
+            var model = new VacanciesData { Vacancies = db.Vacancies.ToList(), Users = db.Users.ToList(), Responses = db.Responses.ToList() };
+            return View(model);
         }
 
         [HttpGet]
@@ -84,10 +99,18 @@ namespace WebApplication2.Controllers
             return View();
         }
 
+        public async Task<IActionResult> OneOfTheVacancy(int id)
+        {
+            Vacancy vacancy = await db.Vacancies.FirstOrDefaultAsync(p => p.Id == id);
+            var model = new OneOfTheVacancyData { Vacancy = vacancy, Users = db.Users.ToList(), Responses = db.Responses.ToList() };
+            return View(model);
+        }
+
         [HttpGet]
         public IActionResult AddVacancy()
         {
-            return View();
+            var model = new VacanciesData { Vacancies = db.Vacancies.ToList(), Users = db.Users.ToList(), Responses = db.Responses.ToList() };
+            return View(model);
         }
 
         [HttpGet]
@@ -121,7 +144,6 @@ namespace WebApplication2.Controllers
             smtp.EnableSsl = true;
             smtp.SendMailAsync(m);
 
-            _vacancy = vacancy;
             return new EmptyResult();
         }
 
@@ -169,84 +191,48 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signup(string email, string password, string role, string photo)
+        public IActionResult Signup(string email, string password, string role, string photo) // регистрация
         {
-            string format = "yyyy-MM-dd HH:mm:ss.FFFFFFF";
             DateTime dateTime = DateTime.Now;
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
+
+            User user = new User() { Login = email, Password = PasswordHashing.GetHashString(password), Role = role, Photo = photo };
+            db.Users.Add(user);
+            db.SaveChanges();
+
+            if (role == "Соискатель")
             {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "INSERT INTO user(Id,Login,Password,Role,Photo) VALUES(NULL, @login, @password, @role, @photo)";
-                command.Parameters.AddWithValue("?login", email);
-                command.Parameters.AddWithValue("?password", password);
-                command.Parameters.AddWithValue("?role", role);
-                command.Parameters.AddWithValue("?photo", photo);
-                command.ExecuteNonQuery();
-                //Photo = @photoresume, Name = @nameresume, Surname = @surnameresume, DateOfBirth = @dateofresume, PhoneNumber = @phoneresume, IdCity = @cityresume, IdCitizenship = @citizenshipresume, Position = @positionresume, Salary = @salaryresume, Education = @eduresume, WorkExperience = @workresume, IdTypeOfEmployment = @employresume, AdditionalInformation = @addinforesume WHERE Id = @iduser"
-                var comm = conne.CreateCommand();
-                comm.CommandText = "INSERT INTO resume(Id,Name,Surname,Photo,DateOfBirth,PhoneNumber,IdCity,IdCitizenship,Position,Salary,Education,WorkExperience,IdTypeOfEmployment,AdditionalInformation) VALUES(NULL, @nameresume, @surnameresume, @photoresume, @dateofresume, @phoneresume, @cityresume, @citizenshipresume, @positionresume, @salaryresume, @eduresume, @workresume, @employresume, @addinforesume)";
-                comm.Parameters.AddWithValue("?photoresume", "https://i.pinimg.com/originals/6f/f5/f2/6ff5f248a5cad4d81cb33a75f7ff8c80.jpg");
-                comm.Parameters.AddWithValue("?nameresume", "null");
-                comm.Parameters.AddWithValue("?surnameresume", "null");
-                comm.Parameters.AddWithValue("?dateofresume", dateTime.ToString(format));
-                comm.Parameters.AddWithValue("?phoneresume", "null");
-                comm.Parameters.AddWithValue("?cityresume", 0);
-                comm.Parameters.AddWithValue("?citizenshipresume", 0);
-                comm.Parameters.AddWithValue("?positionresume", "null");
-                comm.Parameters.AddWithValue("?salaryresume", 0);
-                comm.Parameters.AddWithValue("?eduresume", "null");
-                comm.Parameters.AddWithValue("?workresume", 0);
-                comm.Parameters.AddWithValue("?employresume", 0);
-                comm.Parameters.AddWithValue("?addinforesume", "null");
-                comm.ExecuteNonQuery();
+                Resume resume = new Resume() { Id = user.Id, DateOfBirth = dateTime, IdCity = 0, IdCitizenship = 0, Salary = 0, WorkExperience = 0 };
+                db.Resumes.Add(resume);
+            }
+            else if (role == "Работодатель")
+            {
+                Resume resume = new Resume() { Id = user.Id, DateOfBirth = dateTime, IdCity = 0, IdCitizenship = 0, Salary = 0, WorkExperience = 0 };
+                db.Resumes.Add(resume);
             }
 
+            db.SaveChanges();
+            
             return Redirect("~/Home/Signin");
         }
 
         [HttpPost]
-        public IActionResult Signin(string email, string password)
+        public IActionResult Signin(string email, string password) // авторизация
         {
-            var user = users().FirstOrDefault(el => el.Login == email && el.Password == password);
+            var user = db.Users.FirstOrDefault(el => el.Login == email && el.Password == PasswordHashing.GetHashString(password));
+
             if (user != null)
             {
-                string connString = "Data Source=localhost;" +
-                  "Initial Catalog=recruterra;" +
-                  "User id=recrut;" +
-                  "Password=ronell7815;";
-                using (var conne = new MySqlConnection(connString))
-                {
-                    conne.Open();
-                    var command = conne.CreateCommand();
-                    command.CommandText = "INSERT INTO account(Id, IdUser,Auth) VALUES(NULL, @userid, @auth)";
-                    command.Parameters.AddWithValue("?userid", user.Id);
-                    command.Parameters.AddWithValue("?auth", 1);
-                    command.ExecuteNonQuery();
-                }
-                return Redirect("~/Home/Index");
+                Account account = new Account() { IdUser = user.Id, Auth = 1 };
+                db.Accounts.Add(account);
             }
             else
             {
-                string connString = "Data Source=localhost;" +
-                  "Initial Catalog=recruterra;" +
-                  "User id=recrut;" +
-                  "Password=ronell7815;";
-                using (var conne = new MySqlConnection(connString))
-                {
-                    conne.Open();
-                    var command = conne.CreateCommand();
-                    command.CommandText = "INSERT INTO account(Id, IdUser,Auth) VALUES(NULL, @userid, @auth)";
-                    command.Parameters.AddWithValue("?userid", user.Id);
-                    command.Parameters.AddWithValue("?auth", 0);
-                    command.ExecuteNonQuery();
-                }
-                return Redirect("~/Home/Index");
+                Account account = new Account() { IdUser = user.Id, Auth = 0 };
+                db.Accounts.Add(account);
             }
+            db.SaveChanges();
+
+            return Redirect($"~/Home/Index/{user.Id}");
         }
 
         public EmptyResult AddResponse(int iduser, int idvacancy)
@@ -270,26 +256,11 @@ namespace WebApplication2.Controllers
             return new EmptyResult();
         }
 
-        public EmptyResult AddVac(string vacposition, int vacsalary, string vaccity, int vacworkex, string vacdescrip, string vacedu, string vactypeofemp)
+        public EmptyResult AddVac(string vacposition, int vacsalary, string vaccity, int vacworkex, string vacdescrip, string vacedu, string vactypeofemp, int idemployer)
         {
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
-            {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "INSERT INTO vacancy(Id,Position,Salary,IdCity,WorkExperience,Description,Education,IdTypeOfEmployment) VALUES(NULL, @vacposition, @vacsalary, @vaccity, @vacworkex, @vacdescrip, @vacedu, @vactypeofemp)";
-                command.Parameters.AddWithValue("?vacposition", vacposition);
-                command.Parameters.AddWithValue("?vacsalary", vacsalary);
-                command.Parameters.AddWithValue("?vaccity", GetCityByIdCity(vaccity));
-                command.Parameters.AddWithValue("?vacworkex", vacworkex);
-                command.Parameters.AddWithValue("?vacdescrip", vacdescrip);
-                command.Parameters.AddWithValue("?vacedu", vacedu);
-                command.Parameters.AddWithValue("?vactypeofemp", GetTypeEmploymentByIdCity(vactypeofemp));
-                command.ExecuteNonQuery();
-            }
+            Vacancy vacancy = new Vacancy() { Position = vacposition, Salary = vacsalary, IdCity = db.Cities.FirstOrDefault(m => m.Name == vaccity).Id, WorkExperience = vacworkex, Description = vacdescrip, Education = vacedu, IdTypeOfEmployment = db.TypeOfEmployments.FirstOrDefault(m => m.Type == vactypeofemp).Id, IdUser = idemployer};
+            db.Vacancies.Add(vacancy);
+            db.SaveChanges();
             return new EmptyResult();
         }
 

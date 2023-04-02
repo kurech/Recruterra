@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.IsAuthenticated
+﻿@model VacanciesData
 @{
     Layout = null;
 }
@@ -26,7 +26,7 @@
                         <a class="nav-link font-bold" href="/Home/Index">Сводка</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold under-line color-green" href="/Home/Vacancy">Вакансии</a>
+                        <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
@@ -59,37 +59,41 @@
             <div class="rightbarvacancy">
                 <div class="articlesssback mrtop32 mrleftvacan height650 mrleft400">
                     <form id="stripe-login" method="post">
-                        <div class="field padding-bottom--24">
-                            <label for="vacposition" class="font-bolder mrtop32">Должность</label><br>
-                            <input type="text" class="w-95" id="vacposition">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vacsalary" class="font-bolder">Заработная плата</label><br>
-                            <input type="text" class="w-95" id="vacsalary">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vaccity" class="font-bolder">Город</label><br>
-                            <input type="text" class="w-95" id="vaccity">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vacworkex" class="font-bolder">Опыт работы</label><br>
-                            <input type="text" class="w-95" id="vacworkex">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vacdescrip" class="font-bolder">Описание</label><br>
-                            <input type="text" class="w-95" id="vacdescrip">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vacedu" class="font-bolder">Образование</label><br>
-                            <input type="text" class="w-95" id="vacedu">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="vactypeofemp" class="font-bolder">Тип занятости</label><br>
-                            <input type="text" class="w-95" id="vactypeofemp">
-                        </div>
-                        <div class="btneditacc mrtop32">
-                            <input type="button" class="btn btn-outline-dark w-200" onclick="CreateVacancy(this.form.vacposition.value, this.form.vacsalary.value, this.form.vaccity.value, this.form.vacworkex.value, this.form.vacdescrip.value, this.form.vacedu.value, this.form.vactypeofemp.value);AddVacancyMassage();" value="Добавить" />
-                        </div>
+                        @{string role = Model.Users.FirstOrDefault(m => m.Id == globalAccount.IdUser).Role;
+                            if (role == "Работодатель")
+                            {
+                                <div class="field padding-bottom--24">
+                                    <label for="vacposition" class="font-bolder mrtop32">Должность</label><br>
+                                    <input type="text" class="w-95" id="vacposition" placeholder="Бариста">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vacsalary" class="font-bolder">Заработная плата</label><br>
+                                    <input type="text" class="w-95" id="vacsalary" placeholder="40000">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vaccity" class="font-bolder">Город</label><br>
+                                    <input type="text" class="w-95" id="vaccity" placeholder="Москва">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vacworkex" class="font-bolder">Опыт работы</label><br>
+                                    <input type="text" class="w-95" id="vacworkex" placeholder="5 лет">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vacdescrip" class="font-bolder">Описание</label><br>
+                                    <input type="text" class="w-95" id="vacdescrip" placeholder="Требуется начинающий бариста в компинию Coffix">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vacedu" class="font-bolder">Образование</label><br>
+                                    <input type="text" class="w-95" id="vacedu" placeholder="Высшее">
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="vactypeofemp" class="font-bolder">Тип занятости</label><br>
+                                    <input type="text" class="w-95" id="vactypeofemp" placeholder="Полная">
+                                </div>
+                                <div class="btneditacc mrtop32">
+                                    <input type="button" class="btn btn-outline-dark w-200" onclick="CreateVacancy(this.form.vacposition.value, this.form.vacsalary.value, this.form.vaccity.value, this.form.vacworkex.value, this.form.vacdescrip.value, this.form.vacedu.value, this.form.vactypeofemp.value, @globalAccount.IdUser); AddVacancyMassage(); RedirectAddVacancyToVacancy();" value="Добавить" />
+                                </div>
+                            }}
                     </form>
                 </div>
             </div>
