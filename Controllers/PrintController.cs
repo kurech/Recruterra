@@ -1,6 +1,8 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,15 +23,22 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Myresume()
+        public async Task<IActionResult> Myresume(int? id)
         {
-            return View();
+            if (id != null)
+            {
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
+                return View(model);
+            }
+            else
+                return NotFound();
         }
 
-        public IActionResult PrintPesumePDF(int iduser)
+        public FileContentResult PrintPesumePDF(int iduser)
         {
             var resume = db.Resumes.FirstOrDefault(m => m.Id == iduser);
-            string documentTitle = $"Резюме {resume.Surname} {resume.Name} - {resume.Position}";
+            string documentTitle = $"Резюме {resume.Surname} {resume.Name} {resume.Position} от {DateTime.Now.Date}";
 
             var globalSettings = new GlobalSettings
             {
@@ -38,15 +47,13 @@ namespace WebApplication2.Controllers
                 PaperSize = PaperKind.A4,
                 Margins = new MarginSettings { Top = 10 },
                 DocumentTitle = documentTitle,
-                Out = $@"C:\Users\ranel\OneDrive\{documentTitle}.pdf",
+                Out = $@"C:\Users\ranel\Downloads\{documentTitle}.pdf",
             };
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
-                HtmlContent = $"<html><head></head>" +
-                $"<body><img src=\"{resume.Photo}\"></img><p class=\"font36\">{resume.Surname} {resume.Name}</p><br></body>" +
-                $"</html>",
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "css", "style.css") },
+                HtmlContent = PDFTemplateGenerator.GetHTMLString(resume),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetDirectoryRoot("C:\\Users\\ranel\\source\\repos\\WebApplication2\\wwwroot\\"), "css", "style.css") },
                 HeaderSettings = { FontName = "Inter", FontSize = 12, Line = true, Center = $"Recruterra - {resume.Surname} {resume.Name} резюме"},
                 FooterSettings = { FontName = "Inter", FontSize = 9, Center = "Страница [page] из [toPage]"}
             };
@@ -56,8 +63,9 @@ namespace WebApplication2.Controllers
                 Objects = { objectSettings }
             };
             
-            var file = _converter.Convert(pdf);
-            return File(file, "application/octet-stream");
+            _converter.Convert(pdf);
+
+            return File(_converter.Convert(pdf), "application/octet-stream", $"{documentTitle}.pdf");
         }
 
         public IActionResult Index()

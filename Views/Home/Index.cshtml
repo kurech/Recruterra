@@ -52,8 +52,8 @@
                     }
                     else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
                     {
-                        <a class="font16 mrright16" href="/Home/Account" name="">@Model.User.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" name="">@Model.User.Role</a>
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Role</a>
                         <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
                     }
                 </div>

@@ -20,7 +20,7 @@ function DeleteMeeting(iduser, idmeeting) {
 
 function UpdateAccount(id) {
     $.get(`/Home/UpadateAccountAfterLogout?idaccount=${id}`);
-    location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(false)
+    window.location.href = '/Home/Index/';
 };
 
 function UpdateProfile(id, photo, password) {
@@ -82,6 +82,10 @@ function RedirectMeetingToResponse() {
 
 function RedirectAddVacancyToVacancy() {
     window.location.href = '/Home/Vacancy/';
+};
+
+function RedirectToIndex(id) {
+    window.location.href = '/Home/Index/' + id;
 };
 
 function PrintResume(id) {

@@ -52,7 +52,7 @@ namespace WebApplication2.Controllers
             else
             {
                 id = 1;
-                User user = db.Users.FirstOrDefault(m => m.Id == id);
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
                 var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
                 return View(model);
             }
@@ -82,9 +82,11 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Account()
+        public async Task<IActionResult> Account(int? id)
         {
-            return View();
+            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
+            return View(model);
         }
 
         [HttpGet]
@@ -114,13 +116,10 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Responses()
+        public async Task<IActionResult> Responses(int? id)
         {
-            var users = db.Users.ToList();
-            var resumes = db.Resumes.ToList();
-            var vacancies = db.Vacancies.ToList();
-            var responses = db.Responses.ToList();
-            var model = new ResponsesData { Users = users, Resumes = resumes, Vacancies = vacancies, Responses = responses };
+            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
             return View(model);
         }
 
@@ -204,11 +203,6 @@ namespace WebApplication2.Controllers
                 Resume resume = new Resume() { Id = user.Id, DateOfBirth = dateTime, IdCity = 0, IdCitizenship = 0, Salary = 0, WorkExperience = 0 };
                 db.Resumes.Add(resume);
             }
-            else if (role == "Работодатель")
-            {
-                Resume resume = new Resume() { Id = user.Id, DateOfBirth = dateTime, IdCity = 0, IdCitizenship = 0, Salary = 0, WorkExperience = 0 };
-                db.Resumes.Add(resume);
-            }
 
             db.SaveChanges();
             
@@ -225,11 +219,7 @@ namespace WebApplication2.Controllers
                 Account account = new Account() { IdUser = user.Id, Auth = 1 };
                 db.Accounts.Add(account);
             }
-            else
-            {
-                Account account = new Account() { IdUser = user.Id, Auth = 0 };
-                db.Accounts.Add(account);
-            }
+
             db.SaveChanges();
 
             return Redirect($"~/Home/Index/{user.Id}");
@@ -284,18 +274,12 @@ namespace WebApplication2.Controllers
 
         public EmptyResult UpadateAccountAfterLogout(int idaccount)
         {
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
-            {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "UPDATE account SET Auth = 0 WHERE Id = @idaccount";
-                command.Parameters.AddWithValue("?idaccount", idaccount);
-                command.ExecuteNonQuery();
-            }
+            var account = db.Accounts.FirstOrDefault(m => m.Id == idaccount);
+            account.Auth = 0;
+
+            db.Accounts.Update(account);
+            db.SaveChanges();
+
             return new EmptyResult();
         }
 

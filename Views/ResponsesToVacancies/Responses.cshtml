@@ -1,4 +1,5 @@
-﻿@model ResponsesData
+﻿@model IndexData
+
 @{
     Layout = null;
 }
@@ -20,10 +21,10 @@
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index">Recruterra</a>
+                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Index">Сводка</a>
+                        <a class="nav-link font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
@@ -39,26 +40,59 @@
                     </li>
                 </ul>
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault();}
-                    @if (globalAccount.Auth == 0)
+                    @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) == null)
                     {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
                     }
-                    else
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 0)
                     {
-                        var user = IsAuthenticated.GetUser(globalAccount.IdUser);
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
+                    }
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                    {
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Role</a>
+                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
                     }
                 </div>
             </nav>
         </header>
 
         <div class="container height950">
+
+            <div class="leftbarvacancy mrleft256">
+                <p class="color-bububu mrtop32 font-bold font20">Настройки пользователя</p>
+
+                <p class="color-bububu mrtop32 font-bolder font16">Выберите нужное</p>
+                <fieldset id="class1">
+                    @{
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            <div class="form-check mrtop16">
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                            </div>
+                            <div class="form-check">
+                                <a href="/Print/Myresume/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
+                            </div>
+                            <div class="form-check">
+                                <a href="/Home/Responses/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
+                            </div>
+                        }
+                        if (Model.User.Role == "Работодатель")
+                        {
+                            <div class="form-check mrtop16">
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                            </div>
+                            <div class="form-check">
+                                <a href="/Home/Responses/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
+                            </div>
+                        } }
+                </fieldset>
+            </div>
+
             <div class="rightbarvacancy">
-                @{ string role = Model.Users.FirstOrDefault(m => m.Id == globalAccount.IdUser).Role;
-                    
+                @{ string role = Model.User.Role;
+
                     if (role == "Работодатель")
                     {
                         foreach (var a in Model.Responses)
@@ -66,7 +100,7 @@
                             List<Vacancy> _vacancies = new List<Vacancy>();
                             foreach (var b in Model.Vacancies)
                             {
-                                if (b.IdUser == globalAccount.IdUser)
+                                if (b.IdUser == Model.User.Id)
                                 {
                                     _vacancies.Add(b);
                                 }
@@ -97,7 +131,7 @@
                                         @if (a.IsAccepted == 1)
                                         {
                                             <div class="right">
-                                                @if (globalAccount != null)
+                                                @if (Model.User != null)
                                                 {
                                                     <div class="mrtop16">
                                                         <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
@@ -108,7 +142,7 @@
                                         else if (a.IsAccepted == 2)
                                         {
                                             <div class="right">
-                                                @if (globalAccount != null)
+                                                @if (Model.User != null)
                                                 {
                                                     <div class="mrtop16">
                                                         <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
@@ -119,7 +153,7 @@
                                         else
                                         {
                                             <div class="right">
-                                                @if (globalAccount != null)
+                                                @if (Model.User != null)
                                                 {
                                                     <div class="btnacceptresponse mrtop16">
                                                         <a class="btn btn-outline-dark w-200" onclick="AcceptResponse('@a.Id'); RedirectResponseToMeeting('@resume.Id');">Принять</a>
@@ -127,7 +161,7 @@
                                                 }
                                             </div>
                                             <div class="right">
-                                                @if (globalAccount != null)
+                                                @if (Model.User != null)
                                                 {
                                                     <div class="btndismissresponse mrtop16">
                                                         <a class="btn btn-outline-dark w-200" onclick="DismissResponse('@a.Id');">Отклонить</a>
@@ -142,63 +176,63 @@
                     }
                     else
                     {
-                        var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == globalAccount.IdUser);
+                        var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id);
                         foreach (var a in Model.Responses)
                         {
                             if (a.IdUser == seekerResume.Id)
                             {
                                 <div class="responsesback mrtop16 mrleft256 mrleftvacan">
-                                        <div class="left">
-                                            <div class="stroka1">
-                                                <div class="vacancyname1 mrtop20">
-                                                    <p class="font-bold">@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
-                                                </div>
-                                            </div>
-                                            <div class="stroka2">
-                                                <div class="vacancysalary1">
-                                                    <p class="">@seekerResume.Name @seekerResume.Surname</p>
-                                                </div>
-                                            </div>
-                                            <div class="stroka2">
-                                                <div class="vacancysalary1">
-                                                    <p class="">@a.DateAndTime.ToString("D")</p>
-                                                </div>
+                                    <div class="left">
+                                        <div class="stroka1">
+                                            <div class="vacancyname1 mrtop20">
+                                                <p class="font-bold">@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
                                             </div>
                                         </div>
-                                        @if (a.IsAccepted == 1)
-                                        {
-                                            <div class="right">
-                                                @if (globalAccount != null)
-                                                {
-                                                    <div class="mrtop16">
-                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
-                                                    </div>
-                                                }
+                                        <div class="stroka2">
+                                            <div class="vacancysalary1">
+                                                <p class="">@seekerResume.Name @seekerResume.Surname</p>
                                             </div>
-                                        }
-                                        else if (a.IsAccepted == 2)
-                                        {
-                                            <div class="right">
-                                                @if (globalAccount != null)
-                                                {
-                                                    <div class="mrtop16">
-                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
-                                                    </div>
-                                                }
+                                        </div>
+                                        <div class="stroka2">
+                                            <div class="vacancysalary1">
+                                                <p class="">@a.DateAndTime.ToString("D")</p>
                                             </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="right">
-                                                @if (globalAccount != null)
-                                                {
-                                                    <div class="mrtop16">
-                                                        <a class="font20 font-bolder text-decoration-none mrleft128">В обработке</a>
-                                                    </div>
-                                                }
-                                            </div>
-                                        }
+                                        </div>
                                     </div>
+                                    @if (a.IsAccepted == 1)
+                                    {
+                                        <div class="right">
+                                            @if (Model.User != null)
+                                            {
+                                                <div class="mrtop16">
+                                                    <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else if (a.IsAccepted == 2)
+                                    {
+                                        <div class="right">
+                                            @if (Model.User != null)
+                                            {
+                                                <div class="mrtop16">
+                                                    <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="right">
+                                            @if (Model.User != null)
+                                            {
+                                                <div class="mrtop16">
+                                                    <a class="font20 font-bolder text-decoration-none mrleft128">В обработке</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
                             }
                         }
                     }

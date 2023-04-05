@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication2.Models.IsAuthenticated>
+﻿@model IndexData
 
 @{
     Layout = null;
@@ -22,10 +22,10 @@
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index">Recruterra</a>
+                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Index">Сводка</a>
+                        <a class="nav-link font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
@@ -41,16 +41,19 @@
                     </li>
                 </ul>
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault(); var user = IsAuthenticated.GetUser(globalAccount.IdUser);}
-                    @if (globalAccount.Auth == 0)
+                    @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) == null)
                     {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
                     }
-                    else
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 0)
                     {
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" href="/Home/Index" value="Выйти" />
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
+                    }
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                    {
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Role</a>
+                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
                     }
                 </div>
             </nav>
@@ -62,80 +65,85 @@
 
                 <p class="color-bububu mrtop32 font-bolder font16">Выберите нужное</p>
                 <fieldset id="class1">
-                    <div class="form-check mrtop16">
-                        <a href="/Home/Account" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
-                    </div>
-                    <div class="form-check">
-                        <a href="/Home/Myresume" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
-                    </div>
+                    @{if (Model.User.Role == "Соискатель")
+                        {
+                            <div class="form-check mrtop16">
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                            </div>
+                            <div class="form-check">
+                                <a href="/Print/Myresume/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
+                            </div>
+                            <div class="form-check">
+                                <a href="/Home/Responses/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
+                            </div>
+                        }}
                 </fieldset>
             </div>
 
             <div class="rightbarvacancy w-100px">
                 <div class="accback mrtop32 mrleft128 height2050">
                     <form id="stripe-login">
-                        @{user = IsAuthenticated.GetUser(globalAccount.IdUser);}
                         <label class="toggle mrleft32 mrtop32">
                             <input id="resumeIsPublish" class="toggle-checkbox" type="checkbox" checked>
                             <div class="toggle-switch"></div>
                             <span class="toggle-label">Ваше резюме публичное</span>
                         </label>
-                        <input type="button" class="btn btn-outline-dark w-200" onclick="PrintResume('@user.Id')" value="Печать" />
-                        <img src="@IsAuthenticated.GetResumeById(user.Id).Photo" class="accimg" alt="">
+                        <input type="button" class="btn btn-outline-dark w-200" onclick="PrintResume('@Model.User.Id')" value="Печать" />
+                        <img src="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Photo" class="accimg" alt="">
                         <div class="field padding-bottom--24">
                             <label for="photoprof" class="font-bolder">Фотография резюме</label><br>
-                            <input type="text" maxlength="255" name="photoprof" id="photoresume" value="@IsAuthenticated.GetResumeById(user.Id).Photo">
+                            <input type="text" maxlength="255" name="photoprof" id="photoresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Photo">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Имя</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="nameresume" value="@IsAuthenticated.GetResumeById(user.Id).Name">
+                            <input type="text" class="w-50" name="passwordprof" id="nameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Name">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Фамилия</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="surnameresume" value="@IsAuthenticated.GetResumeById(user.Id).Surname">
+                            <input type="text" class="w-50" name="passwordprof" id="surnameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Surname">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Должность</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="positionresume" value="@IsAuthenticated.GetResumeById(user.Id).Position">
+                            <input type="text" class="w-50" name="passwordprof" id="positionresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Position">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Ожидаемая зарплата</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="salaryresume" value="@IsAuthenticated.GetResumeById(user.Id).Salary">
+                            <input type="text" class="w-50" name="passwordprof" id="salaryresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Salary">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Дата рождения</label><br>
-                            <input type="datetime" class="w-50" name="passwordprof" id="dateofresume" placeholder="@IsAuthenticated.GetResumeById(user.Id).DateOfBirth" value="">
+                            <input type="datetime" class="w-50" name="passwordprof" id="dateofresume" placeholder="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).DateOfBirth" value="">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Номер телефона</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="phoneresume" value="@IsAuthenticated.GetResumeById(user.Id).PhoneNumber">
+                            <input type="text" class="w-50" name="passwordprof" id="phoneresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).PhoneNumber">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Город</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="cityresume" value="@IsAuthenticated.GetCityById(IsAuthenticated.GetResumeById(user.Id).IdCity)">
+                            <input type="text" class="w-50" name="passwordprof" id="cityresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdCity)">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Гражданство</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="citizenshipresume" value="@IsAuthenticated.GetCitizenshipById(IsAuthenticated.GetResumeById(user.Id).IdCitizenship)">
+                            <input type="text" class="w-50" name="passwordprof" id="citizenshipresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdCitizenship)">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Образование</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="eduresume" value="@IsAuthenticated.GetResumeById(user.Id).Education">
+                            <input type="text" class="w-50" name="passwordprof" id="eduresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Education">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Стаж работы (количество лет)</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="workresume" value="@IsAuthenticated.GetResumeById(user.Id).WorkExperience">
+                            <input type="text" class="w-50" name="passwordprof" id="workresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).WorkExperience">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Тип занятости</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="employresume" value="@IsAuthenticated.GetTypeOfEmpById(IsAuthenticated.GetResumeById(user.Id).IdTypeOfEmployment)">
+                            <input type="text" class="w-50" name="passwordprof" id="employresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdTypeOfEmployment)">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Дополнительная информация</label><br>
-                            <input type="text" name="passwordprof" id="addinforesume" value="@IsAuthenticated.GetResumeById(user.Id).AdditionalInformation">
+                            <input type="text" name="passwordprof" id="addinforesume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).AdditionalInformation">
                         </div>
                         <div class="btneditacc mrtop32">
-                            <input type="button" class="btn btn-outline-dark w-200" onclick="UpdateResume('@user.Id', this.form.photoresume.value, this.form.nameresume.value, this.form.surnameresume.value, this.form.positionresume.value, this.form.salaryresume.value, this.form.dateofresume.value, this.form.phoneresume.value, this.form.cityresume.value, this.form.citizenshipresume.value, this.form.eduresume.value, this.form.workresume.value, this.form.employresume.value, this.form.addinforesume.value)" value="Обновить" />
+                            <input type="button" class="btn btn-outline-dark w-200" onclick="UpdateResume('@Model.User.Id', this.form.photoresume.value, this.form.nameresume.value, this.form.surnameresume.value, this.form.positionresume.value, this.form.salaryresume.value, this.form.dateofresume.value, this.form.phoneresume.value, this.form.cityresume.value, this.form.citizenshipresume.value, this.form.eduresume.value, this.form.workresume.value, this.form.employresume.value, this.form.addinforesume.value)" value="Обновить" />
                         </div>
                     </form>
                 </div>
