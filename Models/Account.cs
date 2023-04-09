@@ -11,6 +11,7 @@ namespace WebApplication2.Models
         public int Id { get; set; }
         public int IdUser { get; set; }
         public int Auth { get; set; }
+        public DateTime CurentDateTime { get; set; }
 
         [ForeignKey("IdUser")]
         public virtual User User { get; set; }

@@ -2,17 +2,21 @@
     $.get(`/Home/AddResponse?iduser=${iduser}&idvacancy=${idvacancy}`);
 };
 
-function RedirectVacancyToOneOfTheVacancy(idvacancy) {
-    window.location.href = '/Home/OneOfTheVacancy/' + idvacancy;
+function RedirectVacancyToOneOfTheVacancy(idvacancy, iduser) {
+    window.location.href = '/Vacancys/OneOfTheVacancy/' + idvacancy + '/' + iduser;
 };
 
 function CreateMeeting(iduser, name, surname, descrip, dateandtime) {
     $.get(`/Home/AddMeet?iduser=${iduser}&name=${name}&surname=${surname}&descrip=${descrip}&dateandtime=${dateandtime}`);
 };
 
-function CreateVacancy(vacposition, vacsalary, vaccity, vacworkex, vacdescrip, vacedu, vactypeofemp, vacidemployer) {
-    $.get(`/Home/AddVac?vacposition=${vacposition}&vacsalary=${vacsalary}&vaccity=${vaccity}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&idemployer=${vacidemployer}`);
+function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdescrip, vacedu, vactypeofemp, vacisactive, vacidemployer) {
+    $.get(`/Home/AddVac?vacposition=${vacposition}&vacobligations=${vacobligations}&vacsalary=${vacsalary}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&vacisactive=${vacisactive}&idemployer=${vacidemployer}`);
 };
+
+function DeleteVacancy(idvacancy) {
+    $.get(`/Home/DelVacancy?idvacancy=${idvacancy}`);
+}
 
 function DeleteMeeting(iduser, idmeeting) {
     $.get(`/Home/DelMeeting?iduser=${iduser}&idmeet=${idmeeting}`);
@@ -76,12 +80,17 @@ function RedirectResponseToMeeting(id) {
     window.location.href = '/Home/AddMeeting/' + id;
 };
 
-function RedirectMeetingToResponse() {
-    window.location.href = '/Home/Responses/';
+function RedirectMeetingToResponse(id) {
+    window.location.href = '/Home/Responses/' + id;
 };
 
-function RedirectAddVacancyToVacancy() {
-    window.location.href = '/Home/Vacancy/';
+function RedirectAddVacancyToVacancy(id) {
+    window.location.href = '/Home/Vacancy/' + id;
+
+};
+
+function RedirectOneOfTheVacancyToVacancy(id) {
+    window.location.href = '/Home/Vacancy/' + id;
 };
 
 function RedirectToIndex(id) {
@@ -90,4 +99,8 @@ function RedirectToIndex(id) {
 
 function PrintResume(id) {
     $.get(`/Print/PrintPesumePDF?iduser=${id}`);
+}
+
+function AutoRefresh(t) {
+    setTimeout("location.reload(true);", t);
 }

@@ -10,6 +10,5 @@ namespace WebApplication2.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual ICollection<Resume> Resumes { get; set; }
-        public virtual ICollection<Vacancy> Vacancies { get; set; }
     }
 }

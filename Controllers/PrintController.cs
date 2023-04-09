@@ -38,7 +38,7 @@ namespace WebApplication2.Controllers
         public FileContentResult PrintPesumePDF(int iduser)
         {
             var resume = db.Resumes.FirstOrDefault(m => m.Id == iduser);
-            string documentTitle = $"Резюме {resume.Surname} {resume.Name} {resume.Position} от {DateTime.Now.Date}";
+            string documentTitle = $"Резюме {resume.LastName} {resume.FirstName.Substring(0, 1)} {resume.MiddleName.Substring(0, 1)} {resume.Position} от {DateTime.Now.Date}";
 
             var globalSettings = new GlobalSettings
             {
@@ -54,7 +54,7 @@ namespace WebApplication2.Controllers
                 PagesCount = true,
                 HtmlContent = PDFTemplateGenerator.GetHTMLString(resume),
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetDirectoryRoot("C:\\Users\\ranel\\source\\repos\\WebApplication2\\wwwroot\\"), "css", "style.css") },
-                HeaderSettings = { FontName = "Inter", FontSize = 12, Line = true, Center = $"Recruterra - {resume.Surname} {resume.Name} резюме"},
+                HeaderSettings = { FontName = "Inter", FontSize = 12, Line = true, Center = $"Recruterra - {resume.LastName} {resume.FirstName.Substring(0, 1)} {resume.MiddleName.Substring(0, 1)} резюме"},
                 FooterSettings = { FontName = "Inter", FontSize = 9, Center = "Страница [page] из [toPage]"}
             };
             var pdf = new HtmlToPdfDocument()

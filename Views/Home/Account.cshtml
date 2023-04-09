@@ -28,13 +28,13 @@
                         <a class="nav-link font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
+                        <a class="nav-link font-bold" href="/Home/Vacancy/@Model.User.Id">Вакансии</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Resume">Базы резюме</a>
+                        <a class="nav-link font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Article">Сообщество</a>
@@ -93,11 +93,6 @@
             <div class="rightbarvacancy w-100px">
                 <div class="accback mrtop32 mrleft128">
                     <form id="stripe-login">
-                        <img src="@Model.User.Photo" class="accimg" alt="">
-                        <div class="field padding-bottom--24">
-                            <label for="photoprof" class="font-bolder">Фотография профиля</label><br>
-                            <input type="text" maxlength="255" name="photoprof" id="photoprof" value="@Model.User.Photo">
-                        </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Пароль</label><br>
                             <input type="text" maxlength="10" class="w-50" name="passwordprof" id="passwordprof" value="@Model.User.Password">

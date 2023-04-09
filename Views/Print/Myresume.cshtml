@@ -96,11 +96,11 @@
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Имя</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="nameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Name">
+                            <input type="text" class="w-50" name="passwordprof" id="nameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).LastName">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Фамилия</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="surnameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Surname">
+                            <input type="text" class="w-50" name="passwordprof" id="surnameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).FirstName">
                         </div>
                         <div class="field padding-bottom--24">
                             <label for="passwordprof" class="font-bolder">Должность</label><br>

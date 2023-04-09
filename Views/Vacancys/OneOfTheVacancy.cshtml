@@ -58,70 +58,71 @@
             </nav>
         </header>
 
-        <div class="container">
+        <div class="container height650">
             @{ string role = Model.User.Role;
                 <div class="color-bububu mrtop16">
-                    <a href="/Home/Vacancy" class="color-bububu font-bolder font16 mrleft256 mrleftvacan">Вакансии</a>
+                    <a href="/Home/Vacancy/@Model.User.Id" class="color-bububu font-bolder font16 mrleft256 mrleftvacan">Вакансии</a>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18">
                         <path fill="currentColor" d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z"></path>
                     </svg>
-                    <a href="/Home/OneOfTheVacancy/@Model.Vacancy.Id" class="color-bububu font-bolder font16">@Model.Vacancy.Position</a>
+                    <a href="/Vacancys/OneOfTheVacancy/@Model.Vacancy.Id/@Model.User.Id" class="color-bububu font-bolder font16">@Model.Vacancy.Position</a>
                 </div>      
                 <form method="post">
                     <div class="rightbarvacancy">
                         <div class="oneofthevacancyback mrtop16 mrleft256 mrleftvacan">
-                            <div class="left">
-                                <div class="stroka1">
-                                    <div class="vacancyname1">
-                                        <p class="">@Model.Vacancy.Position</p>
-                                    </div>
-                                    <div class="vacancycompanyname1 mrleft32">
-                                        <p class="">@Model.Vacancy.Salary руб.</p>
-                                    </div>
-                                </div>
-                                <div class="stroka2">
-                                    <div class="vacancysalary1">
-                                        <p class="">@Model.Vacancy.WorkExperience year - @Model.Vacancy.IdTypeOfEmployment занятость</p>
-                                    </div>
-                                    <div class="vacancycity1 mrleft32">
-                                        <p class="">@*@Model.Vacancy.IdCity*@</p>
-                                    </div>
-                                </div>
-                                <div class="vacancyaddinfo1">
-                                    <p class="">@Model.Vacancy.Description</p>
-                                </div>
+                            <div class="employerback">
+                                <p class="mrleft32 mrtop16 mrbottom16 font-weight-normal font16">@Model.Employers.FirstOrDefault(employer => employer.Id == Model.Vacancy.IdEmployer).СompanyName</p>
+                                <p class="mrleft32 mrtop16 mrbottom16 font-weight-normal font16">город: @Model.Cities.FirstOrDefault(city => city.Id == Model.Employers.FirstOrDefault(employer => employer.Id == Model.Vacancy.IdEmployer).IdCity).Name</p>
+                                <p class="mrleft32 mrtop16 mrbottom16 font-weight-normal font16">ул: @Model.Employers.FirstOrDefault(employer => employer.Id == Model.Vacancy.IdEmployer).Street</p>
+                                <p class="mrleft32 mrtop16 mrbottom16 font-weight-normal font16">дом: @Model.Employers.FirstOrDefault(employer => employer.Id == Model.Vacancy.IdEmployer).House</p>
+                                <p class="mrleft32 mrtop16 mrbottom16 font-weight-normal font16">помещение: @Model.Employers.FirstOrDefault(employer => employer.Id == Model.Vacancy.IdEmployer).Apartment</p>
+                            </div>
+                            <div class="leftoneofthevacancy">
+                                @{ if (Model.Vacancy != null)
+                                    {
+
+                                        <p class="mrleft32 mrtop16 font32">@Model.Vacancy.Position</p>
+                                        <p class="mrleft32 mrtop16 font24">@Model.Vacancy.Salary руб.</p>
+                                        <p class="mrleft32 mrtop16 font16">Требуемый опыт работы: @Model.GetWorkEx()</p>
+                                        <p class="mrleft32 mrtop8 font16">Образование: @Model.Vacancy.Education</p>
+                                        <p class="mrleft32 mrtop8 font16">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == Model.Vacancy.IdTypeOfEmployment).Type занятость</p>
+                                        <div class="vacancyaddinfooneofthevacancy">
+                                            <p>@Model.Vacancy.Obligations</p>
+                                        </div>
+                                        <div class="vacancyaddinfooneofthevacancy">
+                                            <p>@Model.Vacancy.Description</p>
+                                        </div>
+                                    }
+                                }
                             </div>
                             @if (role == "Соискатель")
                             {
                                 if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == Model.Vacancy.Id) == null)
                                 {
-                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16" onclick="CreateResponse('@Model.User.Id', '@Model.Vacancy.Id'); HappyMassage()" value="Откликнуться" />
+                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrleft32 mrbottom32" onclick="CreateResponse('@Model.User.Id', '@Model.Vacancy.Id'); HappyMassage()" value="Откликнуться" />
                                 }
                                 else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == Model.Vacancy.Id).IsAccepted == 0)
                                 {
-                                    <div class="mrtop16">
-                                        <a class="font20 font-bolder text-decoration-none mrleft16">Отклик отправлен</a>
+                                    <div class="mrtop16 display-flex">
+                                        <a class="font20num2 font-bolder text-decoration-none mrleft32 mrbottom32">Отклик отправлен</a>
                                     </div>
                                 }
                                 else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == Model.Vacancy.Id).IsAccepted == 1)
                                 {
-                                    <div class="mrtop16">
-                                        <a class="font20 font-bolder text-decoration-none mrleft16">Отклик принят</a>
+                                    <div class="mrtop16 display-flex">
+                                        <a class="font20num2 font-bolder text-decoration-none mrleft32 mrbottom32">Отклик принят</a>
                                     </div>
                                 }
                                 else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == Model.Vacancy.Id).IsAccepted == 2)
                                 {
-                                    <div class="mrtop16">
-                                        <a class="font20 font-bolder text-decoration-none mrleft16">Отклик отклонен</a>
+                                    <div class="mrtop16 display-flex">
+                                        <a class="font20num2 font-bolder text-decoration-none mrleft32 mrbottom32">Отклик отклонен</a>
                                     </div>
                                 }
                             }
                             else if (role == "Работодатель")
                             {
-                                <div class="">
-                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrleft32" onclick="DeleteVacancy('@Model.User.Id', '@Model.Vacancy.Id');" value="Удалить" />
-                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrleft32" onclick="UpdateVacancy('@Model.User.Id', '@Model.Vacancy.Id');" value="Редактировать" />
-                                </div>
+                                <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrleft32 mrbottom32" onclick="DeleteVacancy('@Model.Vacancy.Id'); RedirectOneOfTheVacancyToVacancy('@Model.User.Id');" value="Удалить" />
                             }
                         </div>
                     </div>

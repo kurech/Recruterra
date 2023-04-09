@@ -46,9 +46,9 @@
                     }
                     else
                     {
-                        var user = IsAuthenticated.GetUser(globalAccount.IdUser);
+                        @*var user = IsAuthenticated.GetUser(globalAccount.IdUser);
                         <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
+                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>*@
                         <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
                     }
                 </div>
@@ -60,7 +60,7 @@
                 employerMeetings = Model.Meetings.Where(m => m.IdUser == globalAccount.IdUser).ToList();
                 List<Meeting> seekerMeetings = new List<Meeting>();
                 var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == globalAccount.IdUser);
-                seekerMeetings = Model.Meetings.Where(m => m.Name == seekerResume.Name && m.Surname == seekerResume.Surname).ToList();
+                seekerMeetings = Model.Meetings.Where(m => m.LastName == seekerResume.LastName && m.FirstName == seekerResume.FirstName && m.MiddleName == seekerResume.MiddleName).ToList();
                 string role = Model.Users.FirstOrDefault(m => m.Id == globalAccount.IdUser).Role;}
             <div class="rightbarvacancy">
                 @{ foreach (var a in (role == "Соискатель" ? seekerMeetings : employerMeetings))
@@ -71,7 +71,7 @@
                                 <div class="left">
                                     <div class="stroka1">
                                         <div class="vacancyname1 mrtop20">
-                                            <p class="">@a.Name @a.Surname @a.DateAndTime.ToString("D")</p>
+                                            <p class="">@a.LastName @a.FirstName @a.DateAndTime.ToString("D")</p>
                                         </div>
                                         <div class="vacancycompanyname1 mrleft32 mrtop16">
                                             <p class="">@a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>
@@ -79,7 +79,7 @@
                                     </div>
                                     <div class="stroka2">
                                         <div class="vacancysalary1">
-                                            <p class="">@a.Description</p>
+                                            <p class="">Собеседование</p>
                                         </div>
                                     </div>
                                 </div>

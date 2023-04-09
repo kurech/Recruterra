@@ -12,13 +12,6 @@ namespace WebApplication2.Models
     public class IsAuthenticated
     {
         public ApplicationContext db;
-        public IEnumerable<Meeting> meet { get; set; }
-        public SelectList days { get; set; }
-        public static User GetUser(int id)
-        {
-            var user = users().FirstOrDefault(m => m.Id == id);
-            return user;
-        }
 
         public static bool GetResponseUser(int idUser, int IdVacancy) // провека отклика юзера по вакансии
         {
@@ -27,12 +20,6 @@ namespace WebApplication2.Models
                 return true; // у юзера уже есть отклик на эту вакансию
             else
                 return false;
-        }
-
-        public static Vacancy GetVacancyById(int id)
-        {
-            var vacancy = vacancies().FirstOrDefault(m => m.Id == id);
-            return vacancy;
         }
         public static string GetCityById(int id) // получение города по айди
         {
@@ -59,41 +46,10 @@ namespace WebApplication2.Models
                 return "null";
         }
 
-        public static Resume GetResumeById(int id) // получение резюме по айди
-        {
-            var resume = resumes().FirstOrDefault(m => m.Id == id);
-            return resume;
-        }
-
         public static Article GetArticleById(int id) // получение статьи по айди
         {
             var article = articles().FirstOrDefault(m => m.Id == id);
             return article;
-        }
-
-        public static Meeting GetMeetingToday(int iduser)
-        {
-            var meet = meetings().FirstOrDefault(m => m.DateAndTime.Date == DateTime.Now.Date && m.IdUser == iduser);
-            return meet;
-        }
-
-        public static Meeting GetMeetingById(int id)
-        {
-            var meet = meetings().FirstOrDefault(m => m.Id == id);
-            return meet;
-        }
-
-        public static List<Meeting> GetAllMeetings(int idUser)
-        {
-            List<Meeting> meet = new List<Meeting>();
-            foreach (var a in meetings())
-            {
-                if (a.IdUser == idUser)
-                {
-                    meet.Add(a);
-                }
-            }
-            return meet;
         }
 
         //public static List<Response> responsesss()
@@ -167,136 +123,6 @@ namespace WebApplication2.Models
             conn.Close();
             return list1;
         }
-
-        public static List<User> users()
-        {
-            MySqlConnection conn = new MySqlConnection();
-            conn.ConnectionString =
-              "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            List<User> list1 = new List<User>();
-            string query = "select * from user";
-            MySqlCommand comm = new MySqlCommand(query);
-            comm.Connection = conn;
-            conn.Open();
-            MySqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                list1.Add(new User
-                {
-                    Id = Convert.ToInt32(dr["Id"]),
-                    Login = dr["Login"].ToString(),
-                    Password = dr["Password"].ToString(),
-                    Role = dr["Role"].ToString(),
-                    Photo = dr["Photo"].ToString()
-                });
-            }
-            conn.Close();
-            return list1;
-        }
-
-        public static List<Vacancy> vacancies()
-        {
-            MySqlConnection conn = new MySqlConnection();
-            conn.ConnectionString =
-              "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            List<Vacancy> list1 = new List<Vacancy>();
-            string query = "select * from vacancy";
-            MySqlCommand comm = new MySqlCommand(query);
-            comm.Connection = conn;
-            conn.Open();
-            MySqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                list1.Add(new Vacancy
-                {
-                    Id = Convert.ToInt32(dr["Id"]),
-                    Position = dr["Position"].ToString(),
-                    Salary = Convert.ToInt32(dr["Salary"]),
-                    IdCity = Convert.ToInt32(dr["IdCity"]),
-                    WorkExperience = Convert.ToInt32(dr["WorkExperience"]),
-                    Description = dr["Description"].ToString(),
-                    Education = dr["Education"].ToString(),
-                    IdTypeOfEmployment = Convert.ToInt32(dr["IdTypeOfEmployment"])
-                });
-            }
-            conn.Close();
-            return list1;
-        }
-
-        public static List<Meeting> meetings()
-        {
-            MySqlConnection conn = new MySqlConnection();
-            conn.ConnectionString =
-              "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            List<Meeting> list1 = new List<Meeting>();
-            string query = "select * from meeting";
-            MySqlCommand comm = new MySqlCommand(query);
-            comm.Connection = conn;
-            conn.Open();
-            MySqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                list1.Add(new Meeting
-                {
-                    Id = Convert.ToInt32(dr["Id"]),
-                    Name = dr["Name"].ToString(),
-                    Surname = dr["Surname"].ToString(),
-                    Description = dr["Description"].ToString(),
-                    DateAndTime = (DateTime)dr["DateAndTime"],
-                    IdUser = Convert.ToInt32(dr["IdUser"])
-                });
-            }
-            conn.Close();
-            return list1;
-        }
-
-        public static List<Resume> resumes()
-        {
-            MySqlConnection conn = new MySqlConnection();
-            conn.ConnectionString =
-              "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            List<Resume> list1 = new List<Resume>();
-            string query = "select * from resume";
-            MySqlCommand comm = new MySqlCommand(query);
-            comm.Connection = conn;
-            conn.Open();
-            MySqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                list1.Add(new Resume
-                {
-                    Id = Convert.ToInt32(dr["Id"]),
-                    Name = dr["Name"].ToString(),
-                    Surname = dr["Surname"].ToString(),
-                    Photo = dr["Photo"].ToString(),
-                    DateOfBirth = (DateTime)dr["DateOfBirth"],
-                    PhoneNumber = dr["PhoneNumber"].ToString(),
-                    IdCity = Convert.ToInt32(dr["IdCity"]),
-                    IdCitizenship = Convert.ToInt32(dr["IdCitizenship"]),
-                    Position = dr["Position"].ToString(),
-                    Salary = Convert.ToInt32(dr["Salary"]),
-                    Education = dr["Education"].ToString(),
-                    WorkExperience = Convert.ToInt32(dr["WorkExperience"]),
-                    IdTypeOfEmployment = Convert.ToInt32(dr["IdTypeOfEmployment"]),
-                    AdditionalInformation = dr["AdditionalInformation"].ToString()
-                });
-            }
-            conn.Close();
-            return list1;
-        }
-
         public static List<Citizenship> citizenships()
         {
             MySqlConnection conn = new MySqlConnection();

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication2.Models.IsAuthenticated>
+﻿@model IndexData
 @{
     Layout = null;
 }
@@ -21,10 +21,10 @@
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index">Recruterra</a>
+                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Index">Сводка</a>
+                        <a class="nav-link font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Vacancy">Вакансии</a>
@@ -33,71 +33,71 @@
                         <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link under-line color-green font-bold" href="/Home/Resume">Базы резюме</a>
+                        <a class="nav-link under-line color-green font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Article">Сообщество</a>
                     </li>
                 </ul>
                 <div class="text-end">
-                    @{Account globalAccount = IsAuthenticated.accounts().LastOrDefault();}
-                    @if (globalAccount.Auth == 0)
+                    @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) == null)
                     {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin" id="ema">Войти</a>
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
                     }
-                    else
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 0)
                     {
-                        var user = IsAuthenticated.GetUser(globalAccount.IdUser);
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Login</a>
-                        <a class="font16 mrright16" href="/Home/Account" id="ema" name="">@user.Role</a>
-                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@globalAccount.Id')" value="Выйти" />
+                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
+                    }
+                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                    {
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Login</a>
+                        <a class="font16 mrright16" href="/Home/Account/@Model.User.Id" name="">@Model.User.Role</a>
+                        <input type="button" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
                     }
                 </div>
             </nav>
         </header>
 
         <div class="container">
-            <p class="color-bububu mrtop32 font-bold font24 mrleftvacan">Получено @IsAuthenticated.resumes().Where(m => m.Name != "null").Count() вакансий</p>
+            <p class="color-bububu mrtop32 font-bold font24 mrleftvacan">Получено @Model.Resumes.Where(m => m.ItsPublic == true).Count() резюме</p>
             <div class="rightbarvacancy">
-                @{ for (int a = 1; a <= IsAuthenticated.resumes().Count; a++)
+                @{ var publicResumes = Model.Resumes.Where(m => m.ItsPublic == true);
+                    foreach (var resume in publicResumes)
                     {
-                        if (IsAuthenticated.GetResumeById(a).Name != "null")
-                        {
-                            <div class="resumeback mrtop16 mrleft2566 mrleftvacan">
+                        <div class="resumeback mrtop16 mrleft2566 mrleftvacan">
                                 <div class="left">
                                     <div class="stroka1">
                                         <div class="vacancyname1">
-                                            <p class="">@IsAuthenticated.GetResumeById(a).Name</p>
+                                            <p class="">@resume.LastName</p>
                                         </div>
                                         <div class="vacancycompanyname1 mrleft32">
-                                            <p class="">@IsAuthenticated.GetResumeById(a).Surname</p>
+                                            <p class="">@resume.FirstName</p>
                                         </div>
                                     </div>
                                     <div class="stroka2">
                                         <div class="vacancyname1">
-                                            <p class="">@IsAuthenticated.GetResumeById(a).Position</p>
+                                            <p class="">@resume.Position</p>
                                         </div>
                                         <div class="vacancycompanyname1 mrleft32">
-                                            <p class="">@IsAuthenticated.GetResumeById(a).Salary руб</p>
+                                            <p class="">@resume.Salary руб</p>
                                         </div>
                                     </div>
                                     <div class="stroka3">
                                         <div class="vacancysalary1">
-                                            <p class="">@IsAuthenticated.GetResumeById(a).WorkExperience year   @IsAuthenticated.GetTypeOfEmpById(IsAuthenticated.GetResumeById(a).IdTypeOfEmployment) занятость</p>
+                                            <p class="">@resume.WorkExperience year   @resume.IdTypeOfEmployment занятость</p>
                                         </div>
                                         <div class="vacancycity1 mrleft32">
-                                            <p class="">@IsAuthenticated.GetCityById(IsAuthenticated.GetResumeById(a).IdCity)</p>
+                                            <p class="">@resume.IdCity</p>
                                         </div>
                                     </div>
                                     <div class="vacancyaddinfo1">
-                                        <p class="">@IsAuthenticated.GetResumeById(a).AdditionalInformation</p>
+                                        <p class="">@resume.AdditionalInformation</p>
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <img class="imgresume" src="@IsAuthenticated.GetResumeById(a).Photo" />
+                                    <img class="imgresume" src="@resume.Photo" />
                                 </div>
                             </div>
-                        }
                     } }
             </div>
         </div>

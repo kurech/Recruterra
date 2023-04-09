@@ -18,18 +18,19 @@ namespace WebApplication2.Models
         public DbSet<Response> Responses { get; set; }
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<TypeOfEmployment> TypeOfEmployments { get; set; }
+        public DbSet<Employer> Employers { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
+            // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vacancy>()
-                .HasOne(p => p.User)
+                .HasOne(p => p.Employer)
                 .WithMany(t => t.Vacancies)
-                .HasForeignKey(x => x.IdUser)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.IdEmployer)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

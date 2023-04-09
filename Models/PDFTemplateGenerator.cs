@@ -17,7 +17,7 @@ namespace WebApplication2.Models
                             </head>
                             <body>
                                 <header><p style='margin-top: 100px'>Recruterra 2023</p></header>
-                                <div class='header font36 mrleft16'><h1>{resume.Name}</h1></div>
+                                <div class='header font36 mrleft16'><h1>{resume.LastName}</h1></div>
                             </body>
                         </html>");
             return sb.ToString();
