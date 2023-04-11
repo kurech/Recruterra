@@ -17,7 +17,7 @@
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="~/js/script.js" charset="utf-8"></script>
 </head>
-<body onload="AutoRefresh(5000);">
+<body>
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
@@ -30,13 +30,13 @@
                         <a class="nav-link under-line color-green font-bold" href="/Home/Vacancy/@Model.User.Id">Вакансии</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
+                        <a class="nav-link font-bold" href="/Home/Meeting/@Model.User.Id">Встречи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Article">Сообщество</a>
+                        <a class="nav-link font-bold" href="/Home/Article/@Model.User.Id">Сообщество</a>
                     </li>
                 </ul>
                 <div class="text-end">
@@ -71,8 +71,8 @@
                             {
                                 if (vacancy.IsActive == 1)
                                 {
-                                    <div class="vacancyback mrtop16 mrleft256 mrleftvacan cursor-pointer" onclick="RedirectVacancyToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id');">
-                                        <div class="left">
+                                    <div class="vacancyback mrtop16 mrleft256 mrleftvacan cursor-pointer">
+                                        <div class="left" onclick="RedirectVacancyToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id');">
                                             <div class="stroka1">
                                                 <div class="vacancyname1">
                                                     <p class="">@vacancy.Position</p>
@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                         <div class="right">
-                                            <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="DeleteVacancy('@vacancy.Id'); RedirectOneOfTheVacancyToVacancy('@Model.User.Id');" value="Удалить" />
+                                            <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="DeleteVacancy('@vacancy.Id'); AutoRefresh(5000);" value="Удалить" />
                                         </div>
                                     </div>
                                 }
@@ -201,7 +201,7 @@
                                             }
                                             else
                                             {
-                                                <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="CreateResponse('@Model.User.Id', '@vacancy.Id'); HappyMassage(); AutoRefresh(5000);" value="Откликнуться" />
+                                                <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="CreateResponse('@Model.User.Id', '@vacancy.Id'); AutoRefresh(5000);" value="Откликнуться" />
                                             }
                                         </div>
                                     </div>

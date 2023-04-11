@@ -31,6 +31,12 @@ namespace WebApplication2.Models
                 .WithMany(t => t.Vacancies)
                 .HasForeignKey(x => x.IdEmployer)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Meeting>()
+                .HasOne(p => p.Resume)
+                .WithMany(t => t.Meetings)
+                .HasForeignKey(x => x.IdResume)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

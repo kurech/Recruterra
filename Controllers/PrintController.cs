@@ -28,11 +28,35 @@ namespace WebApplication2.Controllers
             if (id != null)
             {
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList() };
+                Resume resume = await db.Resumes.FirstOrDefaultAsync(m => m.Id == id);
+                var model = new ResumeData { User = user, Resumes = db.Resumes.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList() };
                 return View(model);
             }
             else
                 return NotFound();
+        }
+
+        // обновление резюме соискателя
+        public EmptyResult UpadateSeekerResumeSettings(int iduser, byte[] photo, int postcode, string street, string house, string apartment, string position, int salary, string edu, string university, int workex, string typeofemp, string additionalinformation, bool itspublic)
+        {
+            int idtypeofemp = db.TypeOfEmployments.FirstOrDefault(t => t.Type == typeofemp).Id;
+
+            Resume resume = db.Resumes.FirstOrDefault(user => user.Id == iduser);
+            //resume.Photo = photo;
+            resume.Postcode = postcode;
+            resume.Street = street;
+            resume.House = house;
+            resume.Apartment = apartment;
+            resume.Position = position;
+            resume.Salary = salary;
+            resume.Education = edu;
+            resume.University = university;
+            resume.WorkExperience = workex;
+            resume.AdditionalInformation = additionalinformation;
+            resume.ItsPublic = itspublic;
+            db.Update(resume);
+            db.SaveChanges();
+            return new EmptyResult();
         }
 
         public FileContentResult PrintPesumePDF(int iduser)

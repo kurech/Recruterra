@@ -31,7 +31,7 @@
                         <a class="nav-link font-bold" href="/Home/Vacancy/@Model.User.Id">Вакансии</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
+                        <a class="nav-link font-bold" href="/Home/Meeting/@Model.User.Id">Встречи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
@@ -59,7 +59,7 @@
             </nav>
         </header>
 
-        <div class="container">
+        <div class="container minheight860">
             <div class="leftbarvacancy mrleft256">
                 <p class="color-bububu mrtop32 font-bold font20">Настройки пользователя</p>
 
@@ -69,7 +69,7 @@
                         if (Model.User.Role == "Соискатель")
                         {
                             <div class="form-check mrtop16">
-                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Основная информация</label></a>
                             </div>
                             <div class="form-check">
                                 <a href="/Print/Myresume/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
@@ -81,7 +81,7 @@
                         if (Model.User.Role == "Работодатель")
                         {
                             <div class="form-check mrtop16">
-                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Основная информация</label></a>
                             </div>
                             <div class="form-check">
                                 <a href="/ResponsesToVacancies/Responses/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
@@ -93,13 +93,246 @@
             <div class="rightbarvacancy w-100px">
                 <div class="accback mrtop32 mrleft128">
                     <form id="stripe-login">
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Пароль</label><br>
-                            <input type="text" maxlength="10" class="w-50" name="passwordprof" id="passwordprof" value="@Model.User.Password">
-                        </div>
-                        <div class="btneditacc mrtop32">
-                            <input type="button" class="btn btn-outline-dark w-200" onclick="UpdateProfile('@Model.User.Id', this.form.photoprof.value, this.form.passwordprof.value,)" value="Обновить" />
-                        </div>
+                        @if (Model.User.Role == "Соискатель")
+                        {
+                            <table class="display-flex">
+                                <tbody class="mrleft32">
+                                    <tr class="display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rlogin" class="font-bolder mrtop32">Логин</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="email" class="w-95 mrtop32" id="rlogin" placeholder="email@mail.ru" value="@Model.User.Login">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rlastname" class="font-bolder">Фамилия</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rlastname" placeholder="Иванов" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).LastName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rfirstname" class="font-bolder">Имя</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rfirstname" placeholder="Иван" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).FirstName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rmiddlename" class="font-bolder">Отчество</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rmiddlename" placeholder="Иванович" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).MiddleName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rgender" class="font-bolder">Пол</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            @{var gender = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Gender; }
+                                            <select id="rgender">
+                                                @if (gender == "М")
+                                                {
+                                                    <option value="М" selected>Мужской</option>
+                                                    <option value="Ж">Женский</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="Ж" selected>Женский</option>
+                                                    <option value="М">Мужской</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rdateofbirth" class="font-bolder">Дата рождения</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="date" asp-for="Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).DateOfBirth.Value" asp-format="{0:yyyy-MM-dd}" class="w-95" id="rdateofbirth">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rphone" class="font-bolder">Номер<br>телефона</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rphone" placeholder="89050209952" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).PhoneNumber">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rcity" class="font-bolder">Город</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rcity" placeholder="Казань" value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCity).Name">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="rcitizenship" class="font-bolder">Гражданство</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="rcitizenship" placeholder="Россия" value="@Model.Citizenships.FirstOrDefault(citizenship => citizenship.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCitizenship).Name">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btneditacc mrtop32 mrleft2256">
+                                <input type="button" class="btn btn-outline-dark w-200 mrbottom32" onclick="UpdateProfileResume('@Model.User.Id', this.form.rlogin.value, this.form.rlastname.value, this.form.rfirstname.value, this.form.rmiddlename.value, this.form.rgender.value, this.form.rdateofbirth.value, this.form.rphone.value, this.form.rcity.value, this.form.rcitizenship.value)" value="Обновить" />
+                            </div>
+                        }
+                        @if (Model.User.Role == "Работодатель")
+                        {
+                            <table class="display-flex">
+                                <tbody class="mrleft32">
+                                    <tr class="display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="elogin" class="font-bolder mrtop32">Логин</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95 mrtop32" id="elogin" placeholder="email@mail.ru" value="@Model.User.Login">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="ecompanyname" class="font-bolder">Название<br>компании</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="ecompanyname" placeholder='ООО "Каскад"' value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).СompanyName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="emsrn" class="font-bolder">ОГРН</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="emsrn" placeholder="313028000120160" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MSRN">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="elastname" class="font-bolder">Фамилия HR</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="elastname" placeholder="Иванов" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).LastName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="efirstname" class="font-bolder">Имя HR</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="efirstname" placeholder="Иван" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).FirstName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="emiddlename" class="font-bolder">Отчество HR</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="emiddlename" placeholder="Иванович" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MiddleName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="ecreationdate" class="font-bolder">Дата<br>регистрации</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="date" asp-for="Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).CreationDate.Value" asp-format="{0:yyyy-MM-dd}" class="w-95" id="ecreationdate">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="ecity" class="font-bolder">Город</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="ecity" placeholder="Казань" value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).IdCity).Name">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="epostcode" class="font-bolder" title="Почтовый индекс офиса вашей компании">Почтовый<br>индекс</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="epostcode" placeholder="420140" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Postcode">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="estreet" class="font-bolder" title="Адрес вашей компании">Улица</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="estreet" placeholder="Пушкина" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Street">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="ehouse" class="font-bolder" title="Адрес вашей компании">Дом</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="ehouse" placeholder="3" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).House">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="mrtop32 display-flex">
+                                        <td width="150" class="leftaddvacancy">
+                                            <label for="eapartment" class="font-bolder" title="Адрес вашей компании">Квартира</label>
+                                        </td>
+                                        <td width="400" class="rightaddvacancy">
+                                            <div class="fieldvacancy">
+                                                <input type="text" class="w-95" id="eapartment" placeholder="185" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Apartment">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btneditacc mrtop32 mrleft2256">
+                                <input type="button" class="btn btn-outline-dark w-200 mrbottom32" onclick="UpdateProfileEmployer('@Model.User.Id', this.form.elogin.value, this.form.ecompanyname.value, this.form.emsrn.value, this.form.elastname.value, this.form.efirstname.value, this.form.emiddlename.value, this.form.ecreationdate.value, this.form.ecity.value, this.form.epostcode.value, this.form.estreet.value, this.form.ehouse.value, this.form.eapartment.value)" value="Обновить" />
+                            </div>
+                        }
                     </form>
                 </div>
             </div>

@@ -73,16 +73,6 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public ActionResult Meeting()
-        {
-            var users = db.Users.ToList();
-            var resumes = db.Resumes.ToList();
-            var meetings = db.Meetings.ToList();
-            var model = new MeetingsData { Users = users, Resumes = resumes, Meetings = meetings };
-            return View(model);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Account(int? id)
         {
             User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
@@ -99,9 +89,19 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Article()
+        public async Task<IActionResult> Meeting(int? id)
         {
-            return View();
+            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Article(int? id)
+        {
+            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+            return View(model);
         }
 
         [HttpGet]
@@ -152,39 +152,39 @@ namespace WebApplication2.Controllers
             return new EmptyResult();
         }
 
-        [HttpGet]
-        public IActionResult AddMeeting(int id)
+        [Route("Home/AddMeeting/{id:int}/{id2:int}")]
+        public async Task<IActionResult> AddMeeting(int id, int id2)
         {
-            List<User> users = db.Users.Where(m => m.Id == id).ToList();
-            List<Resume> resumes = db.Resumes.Where(m => m.Id == id).ToList();
-            var model = new ResponsesData { Users = users, Resumes = resumes };
+            User user = await db.Users.FirstOrDefaultAsync(p => p.Id == id);
+            Resume resume = await db.Resumes.FirstOrDefaultAsync(p => p.Id == id2);
+
+            var model = new MeetingsData { User = user, Resume = resume, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Employers = db.Employers.ToList(), Accounts = db.Accounts.ToList() };
             return View(model);
         }
 
-        public EmptyResult AddMeet(int iduser, string lastname, string firstname, string middlename, DateTime dateandtime, int postcode, string street, string house, string apartment)
+
+        public EmptyResult AddMeet(int idemployer, int idresume, DateTime dateandtime)
         {
+            Resume seeker = db.Resumes.FirstOrDefault(s => s.Id == idresume);
+            Employer employer = db.Employers.FirstOrDefault(e => e.Id == idemployer);
+
             Meeting meeting = new Meeting()
             {
-                LastName = lastname, 
-                FirstName = firstname, 
-                MiddleName = middlename, 
-                DateAndTime = dateandtime, 
-                IdUser = iduser, 
-                Postcode = postcode, 
-                Street = street, 
-                House = house, 
-                Apartment = apartment
+                DateAndTime = dateandtime,
+                IsActive = true,
+                IdEmployer = idemployer,
+                IdResume = idresume
             };
             db.Meetings.Add(meeting);
             db.SaveChanges();
 
-            var someoneSendingResume = db.Resumes.FirstOrDefault(m => m.LastName == lastname && m.FirstName == firstname && m.MiddleName == middlename);
+            var someoneSendingResume = seeker;
             var someoneSendingUser = db.Users.FirstOrDefault(m => m.Id == someoneSendingResume.Id);
             MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
             to = new MailAddress(someoneSendingUser.Login);
             MailMessage m = new MailMessage(from, to);
             m.Subject = "Вам назначена встреча с работодателем!";
-            m.Body = $"Здравствуйте, {someoneSendingResume.FirstName}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br><br> --------------------- <br> 2023 - Recruterra";
+            m.Body = $"Здравствуйте, {someoneSendingResume.FirstName}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br>Адрес встречи: офис {employer.СompanyName} (Улица: {employer.Street}, дом {employer.House}, помещение {employer.Apartment})<br><i>Не забудьте взять свои документы!<i><br> --------------------- <br> 2023 - Recruterra";
             m.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
             smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
@@ -274,21 +274,25 @@ namespace WebApplication2.Controllers
             return new EmptyResult();
         }
 
-        public EmptyResult DelMeeting(int iduser, int idmeet)
+        public EmptyResult DelMeetingSeeker(int idseeker, int idmeet)
         {
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
-            {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "DELETE FROM meeting WHERE IdUser = @iduser AND Id = @idmeet";
-                command.Parameters.AddWithValue("?iduser", iduser);
-                command.Parameters.AddWithValue("?idmeet", idmeet);
-                command.ExecuteNonQuery();
-            }
+            Meeting meeting = db.Meetings.FirstOrDefault(m => m.IdResume == idseeker && m.Id == idmeet);
+            meeting.IsActive = false;
+
+            db.Update(meeting);
+            db.SaveChanges();
+
+            return new EmptyResult();
+        }
+
+        public EmptyResult DelMeetingEmployer(int idemployer, int idmeet)
+        {
+            Meeting meeting = db.Meetings.FirstOrDefault(m => m.IdEmployer == idemployer && m.Id == idmeet);
+            meeting.IsActive = false;
+
+            db.Update(meeting);
+            db.SaveChanges();
+
             return new EmptyResult();
         }
 
@@ -303,52 +307,54 @@ namespace WebApplication2.Controllers
             return new EmptyResult();
         }
 
-        public ViewResult UpadateProfileSettings(int iduser, string photo, string password)
+        // обновление основной информации соискателя
+        public EmptyResult UpadateSeekerProfileSettings(int iduser, string login, string lastname, string firstname, string middlename, string gender, DateTime dateofbirth, string phone, string city, string citizenship)
         {
-            string connString = "Data Source=localhost;" +
-              "Initial Catalog=recruterra;" +
-              "User id=recrut;" +
-              "Password=ronell7815;";
-            using (var conne = new MySqlConnection(connString))
-            {
-                conne.Open();
-                var command = conne.CreateCommand();
-                command.CommandText = "UPDATE user SET Photo = @photo, Password = @password WHERE Id = @iduser";
-                command.Parameters.AddWithValue("?iduser", iduser);
-                command.Parameters.AddWithValue("?photo", photo);
-                command.Parameters.AddWithValue("?password", password);
-                command.ExecuteNonQuery();
-            }
-            return View("Account");
+            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
+            int idcitizenship = db.Citizenships.FirstOrDefault(cz => cz.Name == citizenship).Id;
+            User user = db.Users.FirstOrDefault(user => user.Id == iduser);
+            user.Login = login;
+            db.Update(user);
+            db.SaveChanges();
+
+            Resume resume = db.Resumes.FirstOrDefault(user => user.Id == iduser);
+            resume.LastName = lastname;
+            resume.FirstName = firstname;
+            resume.MiddleName = middlename;
+            resume.Gender = gender;
+            resume.DateOfBirth = dateofbirth;
+            resume.PhoneNumber = phone;
+            resume.IdCity = idcity;
+            resume.IdCitizenship = idcitizenship;
+            db.Update(resume);
+            db.SaveChanges();
+            return new EmptyResult();
         }
 
-        public EmptyResult UpdateResumeSettings(int iduser, string photoresume, string nameresume, string surnameresume, string positionresume, int salaryresume, DateTime dateofresume, string phoneresume, string cityresume, string citizenshipresume, string eduresume, int workresume, string employresume, string addinforesume)
+        // обновление основной информации работодателя
+        public EmptyResult UpadateEmployerProfileSettings(int iduser, string login, string companyname, string msrn, string lastname, string firstname, string middlename, DateTime creationdate, string city, int postcode, string street, string house, string apartment)
         {
-            //string connString = "Data Source=localhost;" +
-            //  "Initial Catalog=recruterra;" +
-            //  "User id=recrut;" +
-            //  "Password=ronell7815;";
-            //using (var conne = new MySqlConnection(connString))
-            //{
-            //    conne.Open();
-            //    var command = conne.CreateCommand();
-            //    command.CommandText = "UPDATE resume SET Photo = @photoresume, Name = @nameresume, Surname = @surnameresume, DateOfBirth = @dateofresume, PhoneNumber = @phoneresume, IdCity = @cityresume, IdCitizenship = @citizenshipresume, Position = @positionresume, Salary = @salaryresume, Education = @eduresume, WorkExperience = @workresume, IdTypeOfEmployment = @employresume, AdditionalInformation = @addinforesume WHERE Id = @iduser";
-            //    command.Parameters.AddWithValue("?iduser", iduser);
-            //    command.Parameters.AddWithValue("?photoresume", photoresume);
-            //    command.Parameters.AddWithValue("?nameresume", nameresume);
-            //    command.Parameters.AddWithValue("?surnameresume", surnameresume);
-            //    command.Parameters.AddWithValue("?dateofresume", (DateTime)dateofresume);
-            //    command.Parameters.AddWithValue("?phoneresume", phoneresume);
-            //    command.Parameters.AddWithValue("?cityresume", GetCityByIdCity(cityresume));
-            //    command.Parameters.AddWithValue("?citizenshipresume", GetCitizenshipByIdCity(citizenshipresume));
-            //    command.Parameters.AddWithValue("?positionresume", positionresume);
-            //    command.Parameters.AddWithValue("?salaryresume", salaryresume);
-            //    command.Parameters.AddWithValue("?eduresume", eduresume);
-            //    command.Parameters.AddWithValue("?workresume", workresume);
-            //    command.Parameters.AddWithValue("?employresume", GetTypeEmploymentByIdCity(employresume));
-            //    command.Parameters.AddWithValue("?addinforesume", addinforesume);
-            //    command.ExecuteNonQuery();
-            //}
+            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
+
+            User user = db.Users.FirstOrDefault(user => user.Id == iduser);
+            user.Login = login;
+            db.Update(user);
+            db.SaveChanges();
+
+            Employer employer = db.Employers.FirstOrDefault(user => user.Id == iduser);
+            employer.СompanyName = companyname;
+            employer.LastName = lastname;
+            employer.FirstName = firstname;
+            employer.MiddleName = middlename;
+            employer.CreationDate = creationdate;
+            employer.Postcode = postcode;
+            employer.IdCity = idcity;
+            employer.Street = street;
+            employer.House = house;
+            employer.Apartment = apartment;
+            employer.MSRN = msrn;
+            db.Update(employer);
+            db.SaveChanges();
             return new EmptyResult();
         }
 

@@ -58,7 +58,7 @@
             </nav>
         </header>
 
-        <div class="container height950">
+        <div class="container minheight860">
 
             <div class="leftbarvacancy mrleft256">
                 <p class="color-bububu mrtop32 font-bold font20">Настройки пользователя</p>
@@ -68,7 +68,7 @@
                     @{  if (Model.User.Role == "Соискатель")
                         {
                             <div class="form-check mrtop16">
-                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Основная информация</label></a>
                             </div>
                             <div class="form-check">
                                 <a href="/Print/Myresume/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Резюме</label></a>
@@ -80,7 +80,7 @@
                         if (Model.User.Role == "Работодатель")
                         {
                             <div class="form-check mrtop16">
-                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Профиль</label></a>
+                                <a href="/Home/Account/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Основная информация</label></a>
                             </div>
                             <div class="form-check">
                                 <a href="/Home/Responses/@Model.User.Id" class="font16" style="cursor: pointer"><label class="form-check-label mrtop3">• Отклики</label></a>
@@ -89,7 +89,7 @@
                 </fieldset>
             </div>
 
-            <div class="rightbarvacancy w-100px">
+            <div class="rightbarvacancy w-100px mrbottom32">
                 @{ string role = Model.User.Role;
 
                     if (role == "Работодатель")
@@ -109,61 +109,55 @@
                                 if (a.IdVacancy == c.Id)
                                 {
                                     var resume = Model.Resumes.FirstOrDefault(m => m.Id == a.IdUser);
-                                    <div class="responsesback mrtop32 mrleft128">
+                                    <div class="responsesback mrtop16 mrleft128">
                                         <div class="left">
-                                            <div class="stroka1">
-                                                <div class="vacancyname1 mrtop20">
+                                            <div class="vacancyname1 mrtop32">
                                                     <p class="font-bold">@c.Position</p>
-                                                </div>
                                             </div>
-                                            <div class="stroka2">
-                                                <div class="vacancysalary1">
-                                                    <p class="">@resume.LastName @resume.FirstName.Substring(0, 1) @resume.MiddleName.Substring(0, 1)</p>
-                                                </div>
+                                            <div class="vacancysalary1">
+                                                    <p class="">@resume.LastName @resume.FirstName.Substring(0, 1). @resume.MiddleName.Substring(0, 1).</p>
                                             </div>
-                                            <div class="stroka2">
-                                                <div class="vacancysalary1">
-                                                    <p class="">@a.DateAndTime.ToString("D")</p>
-                                                </div>
+                                            <div class="vacancysalary1 mrbottom32">
+                                                <p class="">@a.DateAndTime.ToString("D")</p>
                                             </div>
                                         </div>
                                         @if (a.IsAccepted == 1)
                                         {
-                                            <div class="right">
+                                            <div class="rightresponses">
                                                 @if (Model.User != null)
                                                 {
-                                                    <div class="mrtop16">
-                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
+                                                    <div class="">
+                                                        <a class="font20num2 font-bolder text-decoration-none mrright32">Принят</a>
                                                     </div>
                                                 }
                                             </div>
                                         }
                                         else if (a.IsAccepted == 2)
                                         {
-                                            <div class="right">
+                                            <div class="rightresponses">
                                                 @if (Model.User != null)
                                                 {
-                                                    <div class="mrtop16">
-                                                        <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
+                                                    <div class="">
+                                                        <a class="font20num2 font-bolder text-decoration-none mrright32">Отклонен</a>
                                                     </div>
                                                 }
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="right">
+                                            <div class="rightresponses">
                                                 @if (Model.User != null)
                                                 {
-                                                    <div class="btnacceptresponse mrtop16">
-                                                        <a class="btn btn-outline-dark w-200" onclick="AcceptResponse('@a.Id'); RedirectResponseToMeeting('@resume.Id');">Принять</a>
+                                                    <div class="btnacceptresponse mrtop8">
+                                                        <a class="btn btn-outline-dark w-80 mrright16" onclick="AcceptResponse('@a.Id'); RedirectResponsesToAddMeeting('@Model.User.Id', '@resume.Id');">Принять</a>
                                                     </div>
                                                 }
                                             </div>
-                                            <div class="right">
+                                            <div class="rightresponses">
                                                 @if (Model.User != null)
                                                 {
-                                                    <div class="btndismissresponse mrtop16">
-                                                        <a class="btn btn-outline-dark w-200" onclick="DismissResponse('@a.Id');">Отклонить</a>
+                                                    <div class="btndismissresponse mrtop8">
+                                                        <a class="btn btn-outline-dark w-80 mrright32" onclick="DismissResponse('@a.Id'); AutoRefreshResponses();">Отклонить</a>
                                                     </div>
                                                 }
                                             </div>
@@ -180,7 +174,7 @@
                         {
                             if (a.IdUser == seekerResume.Id)
                             {
-                                <div class="responsesback mrtop32 mrleft128">
+                                <div class="responsesback mrtop16 mrleft128">
                                     <div class="left">
                                         <div class="stroka1">
                                             <div class="vacancyname1 mrtop20">
@@ -194,7 +188,7 @@
                                         </div>
                                         <div class="stroka2">
                                             <div class="vacancysalary1">
-                                                <p class="">@a.DateAndTime.ToString("D")</p>
+                                                <p class="mrbottom32">@a.DateAndTime.ToString("D")</p>
                                             </div>
                                         </div>
                                     </div>
@@ -203,8 +197,8 @@
                                         <div class="right">
                                             @if (Model.User != null)
                                             {
-                                                <div class="mrtop16">
-                                                    <a class="font20 font-bolder text-decoration-none mrleft128">Принят</a>
+                                                <div class="">
+                                                    <a class="font20num2 font-bolder mrright32">Принят</a>
                                                 </div>
                                             }
                                         </div>
@@ -214,8 +208,8 @@
                                         <div class="right">
                                             @if (Model.User != null)
                                             {
-                                                <div class="mrtop16">
-                                                    <a class="font20 font-bolder text-decoration-none mrleft128">Отклонен</a>
+                                                <div class="">
+                                                    <a class="font20num2 font-bolder mrright32">Отклонен</a>
                                                 </div>
                                             }
                                         </div>
@@ -225,8 +219,8 @@
                                         <div class="right">
                                             @if (Model.User != null)
                                             {
-                                                <div class="mrtop16">
-                                                    <a class="font20 font-bolder text-decoration-none">В обработке</a>
+                                                <div class="">
+                                                    <a class="font20num2 font-bolder mrright32">В обработке</a>
                                                 </div>
                                             }
                                         </div>

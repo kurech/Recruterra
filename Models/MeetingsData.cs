@@ -7,8 +7,11 @@ namespace WebApplication2.Models
 {
     public class MeetingsData
     {
-        public IEnumerable<User> Users { get; set; }
+        public User User { get; set; }
+        public Resume Resume { get; set; }
         public IEnumerable<Resume> Resumes { get; set; }
         public IEnumerable<Meeting> Meetings { get; set; }
+        public IEnumerable<Employer> Employers { get; set; }
+        public IEnumerable<Account> Accounts { get; set; }
     }
 }

@@ -31,5 +31,6 @@ namespace WebApplication2.Models
         public virtual City City { get; set; }
 
         public virtual ICollection<Vacancy> Vacancies { get; set; }
+        public virtual ICollection<Meeting> Meetings { get; set; }
     }
 }

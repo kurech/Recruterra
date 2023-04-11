@@ -64,8 +64,6 @@ a{
     float: right;
     padding: 0px;
     text-align: center;
-    margin-top: 16px;
-    margin-right: 32px;
 }
 .btnaddresponse{
     vertical-align: middle;
@@ -83,6 +81,12 @@ a{
     margin-left: 32px;
 }
 
+.btneditresume {
+    vertical-align: middle;
+    padding: 0px;
+    text-align: center;
+}
+
 .container{
     position: relative;
     width: 1600px;
@@ -98,8 +102,8 @@ a{
 .height950 {
     height: 950px;
 }
-.height650 {
-    height: 650px;
+.min-height200 {
+    min-height: 200px;
 }
 
 .height2000 {
@@ -145,7 +149,7 @@ a{
     margin-top: 16px;
     margin-bottom: 16px;
     background-color: #ffffff;
-    height: 700px;
+    height: 693px;
     width: 840px;
     border-radius: 5px;
 }
@@ -202,13 +206,12 @@ a{
 }
 .accback {
     width: 600px;
-    height: 750px;
+    min-height: 780px;
     background-color: #ffffff;
     border-radius: 5px;
 }
 .meetingssback {
     width: 600px;
-    height: 550px;
     background-color: #ffffff;
     border-radius: 5px;
 }
@@ -237,6 +240,19 @@ a{
     font-weight: bolder;
     margin-top: 32px;
     margin-left: 32px;
+    display: inline-block;
+}
+.resumesinfo {
+    font-size: 16px;
+    font-weight: bolder;
+    margin-left: 32px;
+    display: inline-block;
+}
+.responsesinfo {
+    font-size: 16px;
+    font-weight: bolder;
+    margin-top: 32px;
+    margin-left: 16px;
     display: inline-block;
 }
 
@@ -327,7 +343,6 @@ a{
     border-radius: 5px;
     margin-top: 16px;
     width: 808px;
-    height: 150px;
     background-color: #ffffff;
 }
 
@@ -394,11 +409,17 @@ a{
 .mrleft32{
     margin-left: 32px;
 }
+.mrleft50 {
+    margin-left: 50px;
+}
 .mrleft64{
     margin-left: 64px;
 }
 .mrleft128{
     margin-left: 128px;
+}
+.mrleft110 {
+    margin-left: 110px;
 }
 .mrleft28{
     margin-left: 28px;
@@ -415,6 +436,9 @@ a{
 .mrleft2256 {
     margin-left: 200px;
 }
+.mrleft170 {
+    margin-left: 170px;
+}
 
 .imgresume {
     margin-top: 16px;
@@ -425,6 +449,9 @@ a{
 
 .mrright16 {
     margin-right: 16px;
+}
+.mrright32 {
+    margin-right: 32px;
 }
 
 .mrright-40 {
@@ -526,8 +553,25 @@ select {
     vertical-align: middle;
 }
 
+.rightresponses {
+    vertical-align: middle;
+    position: relative;
+    display: table-cell;
+    margin-left: auto;
+}
+
+.rightmeetings {
+    vertical-align: middle;
+    position: relative;
+    display: table-cell;
+    margin-left: auto;
+}
+
 .w-200 {
     width: 200px!important;
+}
+.w-535 {
+    width: 535px !important;
 }
 
 .resumeleft {
@@ -790,25 +834,32 @@ vertical-align:middle;
     background-color: #ffffff;
     border-radius: 5px;
 }
-.meetingback{
+.meetingback {
     width: 1070px;
-    height: 100px;
+    min-height: 80px;
     background-color: #ffffff;
     border-radius: 5px;
 }
 
 .responsesback {
     width: 600px;
-    height: 120px;
+    min-height: 80px;
     background-color: #ffffff;
     border-radius: 5px;
 }
 
 .accimg {
-    margin-top: 16px;
-    margin-left: 32px;
-    width: 400px;
-    height: 400px;
+    margin-left: 90px;
+    width: 200px;
+    height: 250px;
+}
+
+.w-174{
+    width: 174px;
+}
+
+.w-80 {
+    width: 120px;
 }
 
 .field {
@@ -817,6 +868,10 @@ vertical-align:middle;
 }
 
 .fieldvacancy {
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.fieldaddmeeting {
     margin-top: 0px;
     margin-left: 0px;
 }
@@ -858,6 +913,20 @@ vertical-align:middle;
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(60, 66, 87, 0.16) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
 
+.fieldaddmeeting input {
+    margin-left: 0px;
+    font-size: 16px;
+    line-height: 28px;
+    padding: 8px 16px;
+    width: 95%;
+    min-height: 44px;
+    border: unset;
+    border-radius: 4px;
+    outline-color: #8DD7AB;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(60, 66, 87, 0.16) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+}
+
 .articleback {
     width: 1070px;
     height: 200px;
@@ -876,7 +945,7 @@ vertical-align:middle;
 
 .resumeback {
     width: 1070px;
-    height: 200px;
+    min-height:100px;
     background-color: #ffffff;
     border-radius: 5px;
 }

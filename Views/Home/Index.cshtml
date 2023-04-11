@@ -22,7 +22,7 @@
     <main>
         <header>
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a>
+                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a> 
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link under-line color-green font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
@@ -31,13 +31,13 @@
                         <a class="nav-link font-bold" href="/Home/Vacancy/@Model.User.Id">Вакансии</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Meeting">Встречи</a>
+                        <a class="nav-link font-bold" href="/Home/Meeting/@Model.User.Id">Встречи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Article">Сообщество</a>
+                        <a class="nav-link font-bold" href="/Home/Article/@Model.User.Id">Сообщество</a>
                     </li>
                 </ul>
                 
@@ -62,38 +62,36 @@
         <div class="container">
             <div class="leftbar">
                 <div class="openvakansii">
-                    <a class="opvacancy-text" href="vacancy.html">Открытые вакансии</a>
+                    <a class="opvacancy-text" href="/Home/Vacancy/@Model.User.Id">Открытые вакансии</a>
                 </div>
-                <a href="vacancy.html"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в вакансии"></a>
+                <a href="/Home/Vacancy/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в вакансии"></a>
 
                 <div class="allvacancyback">
-                    @{Random random1 = new Random(); int rnd1 = random1.Next(1, Model.Vacancies.Count());}
-                    <div class="vacancy1back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 58).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 58).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 58).Education образование.">
+                    <div class="vacancy1back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 1).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 1).Education образование.">
                         <div class="left">
                             <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 58).Position</p>
+                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Position</p>
                             </div>
                             <div class="stroka1">
                                 <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 58).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 58).WorkExperience)</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 1).WorkExperience)</p>
                                 </div>
                                 <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 58).IdTypeOfEmployment) занятость</p>
+                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 1).IdTypeOfEmployment) занятость</p>
                                 </div>
                             </div>
                             <div class="stroka2">
                                 <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 58).Salary руб.</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Salary руб.</p>
                                 </div>
                                 <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 58).IdEmployer)).City.Name</p>
+                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 1).IdEmployer)).City.Name</p>
                                 </div>
                             </div>
                         </div>
                         <div class="right">
                             <div class="btnaddresponse">
                                 <form method="post">
-                                    <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
                                         @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
@@ -115,26 +113,26 @@
                         </div>
                     </div>
 
-                    <div class="vacancy2back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 59).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 59).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 59).Education образование.">
+                    <div class="vacancy2back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 2).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 2).Education образование.">
                         <div class="left">
 
                             <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 59).Position</p>
+                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Position</p>
                             </div>
                             <div class="stroka1">
                                 <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 59).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 59).WorkExperience)</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 2).WorkExperience)</p>
                                 </div>
                                 <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 59).IdTypeOfEmployment) занятость</p>
+                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 2).IdTypeOfEmployment) занятость</p>
                                 </div>
                             </div>
                             <div class="stroka2">
                                 <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 59).Salary руб.</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Salary руб.</p>
                                 </div>
                                 <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@*@Model.GetCity(Model.Vacancies.FirstOrDefault(m => m.Id == 2).IdCity)*@</p>
+                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 2).IdEmployer)).City.Name</p>
                                 </div>
                             </div>
                         </div>
@@ -163,25 +161,25 @@
                         </div>
                     </div>
 
-                    <div class="vacancy3back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 60).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 60).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 60).Education образование.">
+                    <div class="vacancy3back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 3).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 3).Education образование.">
                         <div class="left">
                             <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 60).Position</p>
+                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Position</p>
                             </div>
                             <div class="stroka1">
                                 <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 60).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 60).WorkExperience)</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 3).WorkExperience)</p>
                                 </div>
                                 <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 60).IdTypeOfEmployment) занятость</p>
+                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 3).IdTypeOfEmployment) занятость</p>
                                 </div>
                             </div>
                             <div class="stroka2">
                                 <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 60).Salary руб.</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Salary руб.</p>
                                 </div>
                                 <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@*@Model.GetCity(Model.Vacancies.FirstOrDefault(m => m.Id == 3).IdCity)*@</p>
+                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 3).IdEmployer)).City.Name</p>
                                 </div>
                             </div>
                         </div>
@@ -210,25 +208,25 @@
                         </div>
                     </div>
                     
-                    <div class="vacancy4back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 61).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 61).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 61).Education образование.">
+                    <div class="vacancy4back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 4).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 4).Education образование.">
                         <div class="left">
                             <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 61).Position</p>
+                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Position</p>
                             </div>
                             <div class="stroka1">
                                 <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 61).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 61).WorkExperience)</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 4).WorkExperience)</p>
                                 </div>
                                 <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 61).IdTypeOfEmployment) занятость</p>
+                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 4).IdTypeOfEmployment) занятость</p>
                                 </div>
                             </div>
                             <div class="stroka2">
                                 <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 61).Salary руб.</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Salary руб.</p>
                                 </div>
                                 <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@*@Model.GetCity(Model.Vacancies.FirstOrDefault(m => m.Id == 4).IdCity)*@</p>
+                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 4).IdEmployer)).City.Name</p>
                                 </div>
                             </div>
                         </div>
@@ -257,32 +255,31 @@
                         </div>
                     </div>
 
-                    <div class="vacancy5back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 62).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 62).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 62).Education образование.">
+                    <div class="vacancy5back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 5).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 5).Education образование.">
                         <div class="left">
                             <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 62).Position</p>
+                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Position</p>
                             </div>
                             <div class="stroka1">
                                 <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 62).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 62).WorkExperience)</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 5).WorkExperience)</p>
                                 </div>
                                 <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 62).IdTypeOfEmployment) занятость</p>
+                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 5).IdTypeOfEmployment) занятость</p>
                                 </div>
                             </div>
                             <div class="stroka2">
                                 <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 62).Salary руб.</p>
+                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Salary руб.</p>
                                 </div>
                                 <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@*@Model.GetCity(Model.Vacancies.FirstOrDefault(m => m.Id == 5).IdCity)*@</p>
+                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 5).IdEmployer)).City.Name</p>
                                 </div>
                             </div>
                         </div>
                         <div class="right">
                             <div class="btnaddresponse">
                                 <form method="post">
-                                    <script src="~/js/script.js" charset="utf-8"></script>
                                     <p>
                                         @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                                         {
@@ -311,12 +308,12 @@
                     <a class="opvacancy-text">Встречи сегодня</a>
                 </div>
                 @{Meeting meet = null;}
-                <a href="/Home/Meeting"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
+                <a href="/Home/Meeting/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
                 @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
                 {
                     if (Model.User != null && Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
                     {
-                        meet = Model.Meetings.FirstOrDefault(m => m.IdUser == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
+                        meet = Model.Meetings.FirstOrDefault(m => m.IdEmployer == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
                     }
                 }
                 <div class="allmeetingback">
@@ -343,7 +340,7 @@
                             <div class="namemeet">
                                 @if (meet != null)
                                 {
-                                    <p>@meet.LastName @meet.FirstName</p>
+                                    <p>@meet.Resume.LastName @meet.Resume.FirstName</p>
                                 }
                                 else
                                 {
@@ -351,7 +348,7 @@
                                 }
                             </div>
                         </div>
-                        <div class="descripmeet mrtop16 mrleft32">
+                        <div class="descripmeet mrtop16 mrleft32 mrbottom32">
                             @if (meet != null)
                             {
                                 <p>Собеседование</p>
@@ -376,9 +373,9 @@
                 </div>
 
                 <div class="resume mrtop32">
-                    <a class="opvacancy-text">Базы резюме</a>
+                    <a class="opvacancy-text" href="/Home/Resume/@Model.User.Id">Базы резюме <img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в резюме"></a>
                 </div>
-                <a href="/Home/Resume"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в резюме"></a>
+                <a href="/Home/Resume/@Model.User.Id"></a>
                 <div class="allresume mrtop16">
                     <div class="resume1back mrright16">
                         <div class="strokaresume">
@@ -404,9 +401,9 @@
                 </div>
 
                 <div class="article mrtop32">
-                    <a class="opvacancy-text">Сообщество</a>
+                    <a class="opvacancy-text" href="/Home/Article/@Model.User.Id">Сообщество</a>
                 </div>
-                <a href="/Home/Article"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в сообщество"></a>
+                <a href="/Home/Article/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в сообщество"></a>
                 <div class="allarticle mrtop16">
                     @{Random randomArticle1 = new Random(); int rndArticle1 = randomArticle1.Next(1, Model.Articles.Count());}
                     <div class="article1back mrright16 mrtop20 mrleft28">

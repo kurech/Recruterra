@@ -44,5 +44,7 @@ namespace WebApplication2.Models
 
         [ForeignKey("IdTypeOfEmployment")]
         public virtual TypeOfEmployment TypeOfEmployment { get; set; }
+
+        public virtual ICollection<Meeting> Meetings { get; set; }
     }
 }

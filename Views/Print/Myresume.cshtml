@@ -1,4 +1,4 @@
-﻿@model IndexData
+﻿@model ResumeData
 
 @{
     Layout = null;
@@ -81,69 +81,244 @@
             </div>
 
             <div class="rightbarvacancy w-100px">
-                <div class="accback mrtop32 mrleft128 height2050">
-                    <form id="stripe-login">
-                        <label class="toggle mrleft32 mrtop32">
-                            <input id="resumeIsPublish" class="toggle-checkbox" type="checkbox" checked>
-                            <div class="toggle-switch"></div>
-                            <span class="toggle-label">Ваше резюме публичное</span>
-                        </label>
-                        <input type="button" class="btn btn-outline-dark w-200" onclick="PrintResume('@Model.User.Id')" value="Печать" />
-                        <img src="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Photo" class="accimg" alt="">
-                        <div class="field padding-bottom--24">
-                            <label for="photoprof" class="font-bolder">Фотография резюме</label><br>
-                            <input type="text" maxlength="255" name="photoprof" id="photoresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Photo">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Имя</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="nameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).LastName">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Фамилия</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="surnameresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).FirstName">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Должность</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="positionresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Position">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Ожидаемая зарплата</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="salaryresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Salary">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Дата рождения</label><br>
-                            <input type="datetime" class="w-50" name="passwordprof" id="dateofresume" placeholder="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).DateOfBirth" value="">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Номер телефона</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="phoneresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).PhoneNumber">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Город</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="cityresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdCity)">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Гражданство</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="citizenshipresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdCitizenship)">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Образование</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="eduresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Education">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Стаж работы (количество лет)</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="workresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).WorkExperience">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Тип занятости</label><br>
-                            <input type="text" class="w-50" name="passwordprof" id="employresume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).IdTypeOfEmployment)">
-                        </div>
-                        <div class="field padding-bottom--24">
-                            <label for="passwordprof" class="font-bolder">Дополнительная информация</label><br>
-                            <input type="text" name="passwordprof" id="addinforesume" value="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).AdditionalInformation">
-                        </div>
-                        <div class="btneditacc mrtop32">
-                            <input type="button" class="btn btn-outline-dark w-200" onclick="UpdateResume('@Model.User.Id', this.form.photoresume.value, this.form.nameresume.value, this.form.surnameresume.value, this.form.positionresume.value, this.form.salaryresume.value, this.form.dateofresume.value, this.form.phoneresume.value, this.form.cityresume.value, this.form.citizenshipresume.value, this.form.eduresume.value, this.form.workresume.value, this.form.employresume.value, this.form.addinforesume.value)" value="Обновить" />
+                <div class="accback mrtop32 mrleft128">
+                    <form id="stripe-login" method="post" enctype="multipart/form-data">
+                        <table class="display-flex">
+                            <tbody class="mrleft32">
+                                <tr class="display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="photo" class="font-bolder mrtop32">Фотография</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <img src="@Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id).Photo" class="accimg mrtop32" alt="">
+                                            <input id="photo" type="file">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="postcode" class="font-bolder">Почтовый<br>индекс</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="postcode" placeholder="420140" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Postcode">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="street" class="font-bolder">Улица</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="street" placeholder="Пушкина" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Street">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="house" class="font-bolder">Дом</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="house" placeholder="3" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).House">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="apartment" class="font-bolder">Квартира</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="apartment" placeholder="185" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Apartment">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="position" class="font-bolder">Рассчитываемая<br>должность</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="position" placeholder="Python программист" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Position">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="salary" class="font-bolder">Рассчитываемая<br>з/п</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="salary" placeholder="40000" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Salary">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="edu" class="font-bolder">Образование</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            @{var edu = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Education; }
+                                            <select id="edu">
+                                                @if (edu == "Высшее")
+                                                {
+                                                    <option value="Высшее" selected>Высшее</option>
+                                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                                    <option value="Среднее общее">Среднее общее</option>
+                                                    <option value="Основное общее">Основное общее</option>
+                                                }
+                                                else if (edu == "Среднее профессиональное")
+                                                {
+                                                    <option value="Высшее">Высшее</option>
+                                                    <option value="Среднее профессиональное" selected>Среднее профессиональное</option>
+                                                    <option value="Среднее общее">Среднее общее</option>
+                                                    <option value="Основное общее">Основное общее</option>
+                                                }
+                                                else if (edu == "Среднее общее")
+                                                {
+                                                    <option value="Высшее">Высшее</option>
+                                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                                    <option value="Среднее общее" selected>Среднее общее</option>
+                                                    <option value="Основное общее">Основное общее</option>
+                                                }
+                                                else if (edu == "Основное общее")
+                                                {
+                                                    <option value="Высшее">Высшее</option>
+                                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                                    <option value="Среднее общее">Среднее общее</option>
+                                                    <option value="Основное общее" selected>Основное общее</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="university" class="font-bolder">Учебное<br>заведение</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="university" placeholder="КНИТУ-КАИ" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).University">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="workex" class="font-bolder">Опыт<br>работы</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            @{var work = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).WorkExperience; }
+                                            <select id="workex">
+                                                @if (work == 0)
+                                                {
+                                                    <option value="0" selected>Без опыта</option>
+                                                    <option value="1">1 год</option>
+                                                    <option value="2">2 года</option>
+                                                    <option value="3">3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5">5 лет</option>
+                                                }
+                                                else if (work == 1)
+                                                {
+                                                    <option value="0">Без опыта</option>
+                                                    <option value="1" selected>1 год</option>
+                                                    <option value="2">2 года</option>
+                                                    <option value="3">3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5">5 лет</option>
+                                                }
+                                                else if (work == 2)
+                                                {
+                                                    <option value="0">Без опыта</option>
+                                                    <option value="1">1 год</option>
+                                                    <option value="2" selected>2 года</option>
+                                                    <option value="3">3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5">5 лет</option>
+                                                }
+                                                else if (work == 3)
+                                                {
+                                                    <option value="0">Без опыта</option>
+                                                    <option value="1">1 год</option>
+                                                    <option value="2">2 года</option>
+                                                    <option value="3" selected>3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5">5 лет</option>
+                                                }
+                                                else if (work == 4)
+                                                {
+                                                    <option value="0">Без опыта</option>
+                                                    <option value="1">1 год</option>
+                                                    <option value="2">2 года</option>
+                                                    <option value="3">3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5">5 лет</option>
+                                                }
+                                                else if (work == 5)
+                                                {
+                                                    <option value="0">Без опыта</option>
+                                                    <option value="1">1 год</option>
+                                                    <option value="2">2 года</option>
+                                                    <option value="3">3 года</option>
+                                                    <option value="4">4 года</option>
+                                                    <option value="5" selected>5 лет</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="typeofemp" class="font-bolder">Тип<br>занятости</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            <input type="text" class="w-95" id="typeofemp" placeholder="Полная занятость" value="@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdTypeOfEmployment).Type">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="additionalinformation" class="font-bolder">Доп.<br>информация</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <textarea id="additionalinformation" placeholder="Профессиональные навыки:— опыт работы в ...">@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).AdditionalInformation</textarea>
+                                    </td>
+                                </tr>
+                                <tr class="mrtop32 display-flex">
+                                    <td width="150" class="leftaddvacancy">
+                                        <label for="itspublic" class="font-bolder">Публично</label>
+                                    </td>
+                                    <td width="400" class="rightaddvacancy">
+                                        <div class="fieldvacancy">
+                                            @{ var itspublic = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).ItsPublic; }
+                                            <select id="itspublic">
+                                                @if (itspublic == true)
+                                                {
+                                                    <option value="true" selected>Публично</option>
+                                                    <option value="false">Непублично</option>
+                                                }
+                                                else if (itspublic == false)
+                                                {
+                                                    <option value="true">Публично</option>
+                                                    <option value="false" selected>Непублично</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btneditresume mrtop32 mrleft110">
+                            <div class="display-flex">
+                                <input type="button" class="btn btn-outline-dark mrright16 w-174 mrbottom32" onclick="UpdateProfileResumePage('@Model.User.Id', this.form.photo.value, this.form.postcode.value, this.form.street.value, this.form.house.value, this.form.apartment.value, this.form.position.value, this.form.salary.value, this.form.edu.value, this.form.university.value, this.form.workex.value, this.form.typeofemp.value, this.form.additionalinformation.value, this.form.itspublic.value)" value="Обновить" />
+                                <input type="button" class="btn btn-outline-dark mrleft16 w-174 mrbottom32" onclick="PrintResume('@Model.User.Id')" value="Печать" />
+                            </div>
                         </div>
                     </form>
                 </div>
