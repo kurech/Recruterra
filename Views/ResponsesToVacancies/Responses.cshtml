@@ -90,6 +90,7 @@
             </div>
 
             <div class="rightbarvacancy w-100px mrbottom32">
+                <div class="font20num2 mrtop32 mrleft128"><a class="color-bububu text-decoration-none" href="@Url.RouteUrl("downloadseekerstats", new { controller = "ResponsesToVacancies", action = "Export", seekerId = Model.User.Id})">Скачать статистику</a></div>
                 @{ string role = Model.User.Role;
 
                     if (role == "Работодатель")
@@ -112,10 +113,10 @@
                                     <div class="responsesback mrtop16 mrleft128">
                                         <div class="left">
                                             <div class="vacancyname1 mrtop32">
-                                                    <p class="font-bold">@c.Position</p>
+                                                <p class="font-bold">@c.Position</p>
                                             </div>
                                             <div class="vacancysalary1">
-                                                    <p class="">@resume.LastName @resume.FirstName.Substring(0, 1). @resume.MiddleName.Substring(0, 1).</p>
+                                                <p class="">@resume.LastName @resume.FirstName.Substring(0, 1). @resume.MiddleName.Substring(0, 1).</p>
                                             </div>
                                             <div class="vacancysalary1 mrbottom32">
                                                 <p class="">@a.DateAndTime.ToString("D")</p>

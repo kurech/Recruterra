@@ -41,6 +41,14 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> PasswordRecovery()
+        {
+            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == 1);
+            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Index(int? id)
         {
             if (id != null)
@@ -195,7 +203,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signup(string email, string password, string role, string photo) // регистрация
+        public IActionResult Signup(string email, string password, string role) // регистрация
         {
             User user = new User() { Login = email, Password = PasswordHashing.GetHashString(password), Role = role, CreateDate = DateTime.Now };
             db.Users.Add(user);
@@ -230,6 +238,40 @@ namespace WebApplication2.Controllers
             db.SaveChanges();
 
             return Redirect($"~/Home/Index/{user.Id}");
+        }
+
+        public EmptyResult RecoverySendCodeToEmail(string email)
+        {
+            User user = db.Users.FirstOrDefault(m => m.Login == email);
+
+            if(user != null)
+            {
+                MailAddress from = new MailAddress("recruterra@mail.ru", "Recruterra");
+                to = new MailAddress(email);
+                MailMessage m = new MailMessage(from, to);
+                m.Subject = "Вам отправлен код для восстановления пароля!";
+                m.Body = $"Здравствуйте, {email}.<br>Ваш код восстановления {GenerateCodeForRecoveryPassword.Generate()}<br><br><br> --------------------- <br> 2023 - Recruterra";
+                m.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+                smtp.Credentials = new NetworkCredential("recruterra@mail.ru", "WkEXb6t8ULG0u7rVRbwj");
+                smtp.EnableSsl = true;
+                smtp.SendMailAsync(m);
+            }
+
+            return new EmptyResult();
+        }
+
+        public EmptyResult UpdatePasswordInRecovery(string email, string code, string newpassword)
+        {
+            User user = db.Users.FirstOrDefault(m => m.Login == email);
+            if (code == GenerateCodeForRecoveryPassword.CurentCode)
+            {
+                user.Password = PasswordHashing.GetHashString(newpassword);
+                db.Update(user);
+                db.SaveChanges();
+            }
+
+            return new EmptyResult();
         }
 
         public EmptyResult AddResponse(int iduser, int idvacancy)

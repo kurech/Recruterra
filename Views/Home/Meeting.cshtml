@@ -73,13 +73,10 @@
                                 <div class="meetingback mrtop16 mrleft256 mrleftvacan">
                                     <div class="left">
                                         <div class="vacancyname1 mrtop32">
-                                            <p class="font-bold">@a.Resume.LastName @a.Resume.FirstName</p>
-                                        </div>
-                                        <div class="vacancysalary1">
-                                            <p class="">@a.DateAndTime.ToString("D") @a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>
+                                            <p class="font-bold">@a.Employer.СompanyName - @a.Employer.City.Name @a.Employer.Street @a.Employer.House @a.Employer.Apartment</p>
                                         </div>
                                         <div class="vacancysalary1 mrbottom32">
-                                            <p class="">@Model.Cities.FirstOrDefault(c => c.Id == Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).IdCity).Name, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Postcode, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Street, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).House, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Apartment</p>
+                                            <p class="">@a.DateAndTime.ToString("D") @a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>
                                         </div>
                                     </div>
                                     <div class="rightmeetings">
@@ -103,13 +100,10 @@
                                 <div class="meetingback mrtop16 mrleft256 mrleftvacan">
                                     <div class="left">
                                         <div class="vacancyname1 mrtop32">
-                                            <p class="font-bold">@a.Resume.LastName @a.Resume.FirstName</p>
-                                        </div>
-                                        <div class="vacancysalary1">
-                                            <p class="">@a.DateAndTime.ToString("D") @a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>
+                                            <p class="font-bold">@a.Resume.LastName @a.Resume.FirstName @a.Resume.MiddleName</p>
                                         </div>
                                         <div class="vacancysalary1 mrbottom32">
-                                            <p class="">@Model.Cities.FirstOrDefault(c => c.Id == Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).IdCity).Name, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Postcode, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Street, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).House, @Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id).Apartment</p>
+                                            <p class="">@a.DateAndTime.ToString("D") @a.DateAndTime.Hour.ToString():@a.DateAndTime.Minute.ToString()</p>
                                         </div>
                                     </div>
                                     <div class="rightmeetings">

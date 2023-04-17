@@ -60,10 +60,13 @@ a{
     text-align: center;
 }
 
-.btndelmeet{
+.btndelmeet {
+    vertical-align: middle;
     float: right;
     padding: 0px;
     text-align: center;
+    width: 200px;
+    margin-right: 32px;
 }
 .btnaddresponse{
     vertical-align: middle;
@@ -554,6 +557,12 @@ select {
 }
 
 .rightresponses {
+    vertical-align: middle;
+    position: relative;
+    display: table-cell;
+    margin-left: auto;
+}
+.rightdelmeet {
     vertical-align: middle;
     position: relative;
     display: table-cell;

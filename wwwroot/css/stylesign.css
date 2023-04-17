@@ -17,6 +17,10 @@ h1 {
     letter-spacing: -1px;
 }
 
+.mrtop16{
+    margin-top: 16px;
+}
+
 a {
     color: #000;
     text-decoration: unset;

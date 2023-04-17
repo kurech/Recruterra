@@ -307,69 +307,132 @@
                 <div class="meeting">
                     <a class="opvacancy-text">Встречи сегодня</a>
                 </div>
-                @{Meeting meet = null;}
-                <a href="/Home/Meeting/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
-                @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                {
-                    if (Model.User != null && Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
+                @{ string role = Model.User.Role;
+                    Meeting meet = null;
+                    if (role == "Соискатель")
+                    {
+                        meet = Model.Meetings.FirstOrDefault(m => m.IdResume == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
+                    }
+                    else
                     {
                         meet = Model.Meetings.FirstOrDefault(m => m.IdEmployer == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
                     }
-                }
+                    }
+                <a href="/Home/Meeting/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
                 <div class="allmeetingback">
-                    <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
-                        <div class="stroka">
-                            <div class="photomeet">
-                                @if (meet != null)
-                                {
-                                    <img src="~/images/user.png" class="mrtop16 mrleft32" alt="">
-                                }
+                    @if (role == "Соискатель")
+                    {
+                        <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
+                            <div class="stroka">
+                                <div class="photomeet">
+                                    @if (meet != null)
+                                    {
+                                        <img src="~/images/user.png" class="mrtop8 mrleft32" alt="">
+                                    }
+                                </div>
+                                <div class="timemeet">
+                                    @if (meet != null)
+                                    {
+                                        <p class="mrtop16 mrleft32">@meet.DateAndTime.Hour:@meet.DateAndTime.Minute</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mrtop32 mrleft32">00:00</p>
+                                    }
+                                </div>
                             </div>
-                            <div class="timemeet">
+                            <div class="stroka">
+                                <div class="namemeet">
+                                    @if (meet != null)
+                                    {
+                                    <p>@meet.Employer.СompanyName - @meet.Employer.City.Name @meet.Employer.Street @meet.Employer.House @meet.Employer.Apartment</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Сегодня встреч нет</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="descripmeet mrtop16 mrleft32 mrbottom16">
                                 @if (meet != null)
                                 {
-                                    <p class="mrtop16 mrleft32">@meet.DateAndTime.Hour:@meet.DateAndTime.Minute</p>
+                                    <p>Собеседование</p>
                                 }
                                 else
                                 {
-                                    <p class="mrtop32 mrleft32">00:00</p>
+                                    <p>Возможно у вас назначены встречи на другие дни.</p>
                                 }
                             </div>
                         </div>
-                        <div class="stroka">
-                            <div class="namemeet">
-                                @if (meet != null)
-                                {
-                                    <p>@meet.Resume.LastName @meet.Resume.FirstName</p>
-                                }
-                                else
-                                {
-                                    <p>Сегодня встреч нет</p>
-                                }
-                            </div>
-                        </div>
-                        <div class="descripmeet mrtop16 mrleft32 mrbottom32">
+                        <div class="rightdelmeet">
                             @if (meet != null)
                             {
-                                <p>Собеседование</p>
-                            }
-                            else
-                            {
-                                <p>Возможно у вас назначены встречи на другие дни.</p>
+                                @if (Model.User != null)
+                                {
+                                    <div class="mrtop8">
+                                        <a class="btn btn-outline-dark w-200 mrright32" onclick="DeleteMeetingForSeekers('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
+                                    </div>
+                                }
                             }
                         </div>
-                    </div>
-                    <div class="right">
-                        @if (meet != null)
-                        {
-                            @if (Model.User != null)
-                            {
-                                <div class="btndelmeet">
-                                    <a class="btn btn-outline-dark w-200" onclick="DeleteMeeting('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
+                    }
+                    else
+                    {
+                        <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
+                            <div class="stroka">
+                                <div class="photomeet">
+                                    @if (meet != null)
+                                    {
+                                        <img src="~/images/user.png" class="mrtop32 mrleft32" alt="">
+                                    }
                                 </div>
+                                <div class="timemeet">
+                                    @if (meet != null)
+                                    {
+                                        <p class="mrtop16 mrleft32">@meet.DateAndTime.Hour:@meet.DateAndTime.Minute</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mrtop32 mrleft32">00:00</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="stroka">
+                                <div class="namemeet">
+                                    @if (meet != null)
+                                    {
+                                    <p>@meet.Resume.LastName @meet.Resume.FirstName @meet.Resume.MiddleName</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Сегодня встреч нет</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="descripmeet mrtop16 mrleft32 mrbottom32">
+                                @if (meet != null)
+                                {
+                                    <p>Собеседование</p>
+                                }
+                                else
+                                {
+                                    <p>Возможно у вас назначены встречи на другие дни.</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="rightdelmeet">
+                            @if (meet != null)
+                            {
+                                @if (Model.User != null)
+                                {
+                                    <div class="mrtop8">
+                                        <a class="btn btn-outline-dark w-200 mrright32" onclick="DeleteMeetingForEmployers('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
+                                    </div>
+                                }
                             }
-                        }
-                    </div>
+                        </div>
+                    }
+
                 </div>
 
                 <div class="resume mrtop32">

@@ -65,6 +65,23 @@ function DismissResponse(idresponse) {
     $.get(`/Home/DismissResponse?idresponse=${idresponse}`);
 };
 
+function RecoverySendCode(email) {
+    $.get(`/Home/RecoverySendCodeToEmail?email=${email}`);
+
+    var target = document.getElementById('lastelemonpage');
+    var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field padding-bottom--24 mrtop16"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field padding-bottom--24"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value); RedirectToSignin();"></div>';
+
+    var temp = document.createElement('div');
+    temp.innerHTML = str;
+    while (temp.firstChild) {
+        target.appendChild(temp.firstChild);
+    }
+};
+
+function UpdatePassword(email, code, newpassword) {
+    $.get(`/Home/UpdatePasswordInRecovery?email=${email}&code=${code}&newpassword=${newpassword}`);
+}
+
 function Message() {
     alert('Вы уже откликались на эту вакансию!');
 };
@@ -104,6 +121,10 @@ function RedirectOneOfTheVacancyToVacancy(id) {
 
 function RedirectToIndex(id) {
     window.location.href = '/Home/Index/' + id;
+};
+
+function RedirectToSignin(id) {
+    window.location.href = '/Home/Signin/';
 };
 
 function PrintResume(id) {
