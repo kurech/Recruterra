@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/erik.css">
     <link rel="stylesheet" href="~/css/style.css">
-    <link rel="shortcut icon" type="image/x-icon" href="~/images/user.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/recruterra.png" />
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="~/js/script.js" charset="utf-8"></script>
 </head>
@@ -138,75 +138,185 @@
                 }
                 else
                 {
-                    <p class="color-bububu mrtop24 font-bold font24 mrleft256 mrleftvacan">@Model.Vacancies.Count(vacancy => vacancy.IsActive == 1) вакансий</p>
+                    <p class="color-bububu mrtop24 font-bold font24 mrleft455">@Model.Vacancies.Count(vacancy => vacancy.IsActive == 1) вакансий</p>
                     <form method="post">
-                        <div class="rightbarvacancy">
-                            @foreach (var vacancy in Model.Vacancies)
-                            {
-                                if (vacancy.IsActive == 1)
-                                {
-                                    <div class="vacancyback mrtop16 mrleft256 mrleftvacan cursor-pointer">
-                                        <div class="left" onclick="RedirectVacancyToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id');">
-                                            <div class="stroka1">
-                                                <div class="vacancyname1" >
-                                                    <p class="">@vacancy.Position</p>
-                                                </div>
-                                                <div class="vacancycompanyname1 mrleft32">
-                                                    <p class="">@vacancy.Salary руб.</p>
-                                                </div>
-                                            </div>
-                                            <div class="stroka2">
-                                                <div class="vacancysalary1">
-                                                    @if (vacancy.WorkExperience != 0)
-                                                    {
-                                                        <p class="">
-                                                            @vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience) - @Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type
-                                                        </p>
-                                                    }
-                                                    else
-                                                    {
-                                                        <p class="">@Model.GetYearNameInRussian(vacancy.WorkExperience) - @Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
-                                                    }
-                                                </div>
-                                                <div class="vacancycity1 mrleft32">
-                                                    <p class="">Город: @Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
-                                                </div>
-                                            </div>
+                        <div class="vacancies-inline">
+                            <div class="leftbarvacancy mrleft170">
+                                <p class="color-bububu mrtop32 font-bold font20">Фильтры</p>
 
-                                            <div class="vacancyaddinfo1">
-                                                <p class="mrbottom32">@vacancy.Description</p>
+                                <p class="color-bububu mrtop32 font-bolder font16">Уровень дохода</p>
+                                <fieldset id="class1">
+                                    <div class="form-check mrtop16">
+                                        <input class="form-check-input" value="0" type="radio" name="class1" id="salaryRadio1" checked>
+                                        <label class="form-check-label mrtop3" for="salaryRadio1">Не имеет значения</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="30000" type="radio" name="class1" id="salaryRadio2">
+                                        <label class="form-check-label mrtop3" for="salaryRadio2">От 30 000 руб.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="50000" type="radio" name="class1" id="salaryRadio3">
+                                        <label class="form-check-label mrtop3" for="salaryRadio3">От 50 000 руб.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="75000" type="radio" name="class1" id="salaryRadio4">
+                                        <label class="form-check-label mrtop3" for="salaryRadio4">От 75 000 руб.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="95000" type="radio" name="class1" id="salaryRadio5">
+                                        <label class="form-check-label mrtop3" for="salaryRadio5">От 95 000 руб.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="120000" type="radio" name="class1" id="salaryRadio6">
+                                        <label class="form-check-label mrtop3" for="salaryRadio6">От 120 000 руб.</label>
+                                    </div>
+                                </fieldset>
+
+                                <p class="color-bububu mrtop32 font-bolder font16">Город</p>
+                                <fieldset id="class2">
+                                    <div class="form-check mrtop16">
+                                        <input class="form-check-input" value="Казань" type="radio" name="class2" id="cityRadio1" checked>
+                                        <label class="form-check-label mrtop3" for="cityRadio1">Казань</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="Зеленодольск" type="radio" name="class2" id="cityRadio1">
+                                        <label class="form-check-label mrtop3" for="cityRadio1">Зеленодольск</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="Уфа" type="radio" name="class2" id="cityRadio1">
+                                        <label class="form-check-label mrtop3" for="cityRadio1">Уфа</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="Иннополис" type="radio" name="class2" id="cityRadio1">
+                                        <label class="form-check-label mrtop3" for="cityRadio1">Иннополис</label>
+                                    </div>
+                                </fieldset>
+
+                                <p class="color-bububu mrtop32 font-bolder font16">Образование</p>
+                                <fieldset id="class3">
+                                    <div class="form-check mrtop16">
+                                        <input class="form-check-input" value="Высшее" type="radio" name="class3" id="educationRadio1" checked>
+                                        <label class="form-check-label mrtop3" for="educationRadio1">Высшее</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="Среднее профессиональное" type="radio" name="class3" id="educationRadio2">
+                                        <label class="form-check-label mrtop3" for="educationRadio2">Среднее профессиональное</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="Среднее общее" type="radio" name="class3" id="educationRadio3">
+                                        <label class="form-check-label mrtop3" for="educationRadio3">Среднее общее</label>
+                                    </div>
+                                </fieldset>
+
+                                <p class="color-bububu mrtop32 font-bolder font16">Опыт работы</p>
+                                <fieldset id="class4">
+                                    <div class="form-check mrtop16">
+                                        <input class="form-check-input" value="0" type="radio" name="class4" id="workexRadio1" checked>
+                                        <label class="form-check-label mrtop3" for="workexRadio1">Нет опыта</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="1" type="radio" name="class4" id="workexRadio2">
+                                        <label class="form-check-label mrtop3" for="workexRadio2">Более 1 года</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="3" type="radio" name="class4" id="workexRadio3">
+                                        <label class="form-check-label mrtop3" for="workexRadio3">Более 3 лет</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="6" type="radio" name="class4" id="workexRadio4">
+                                        <label class="form-check-label mrtop3" for="workexRadio4">Более 6 лет</label>
+                                    </div>
+                                </fieldset>
+
+                                <p class="color-bububu mrtop32 font-bolder font16">Тип занятости</p>
+                                <fieldset id="class5">
+                                    <div class="form-check mrtop16">
+                                        <input class="form-check-input" value="2" type="radio" name="class5" id="employmenttypeRadio1" checked>
+                                        <label class="form-check-label mrtop3" for="employmenttypeRadio1">Полная</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="1" type="radio" name="class5" id="employmenttypeRadio2">
+                                        <label class="form-check-label mrtop3" for="employmenttypeRadio2">Частичная</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="3" type="radio" name="class5" id="employmenttypeRadio3">
+                                        <label class="form-check-label mrtop3" for="employmenttypeRadio3">Стажировка</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" value="4" type="radio" name="class5" id="employmenttypeRadio4">
+                                        <label class="form-check-label mrtop3" for="employmenttypeRadio4">Проектная работа</label>
+                                    </div>
+                                </fieldset>
+                                <input type="button" class="btn btn-outline-dark w-200 mrtop16" value="Применить" onclick="FilterAccept('@Model.User.Id', this.form.class1.value, this.form.class2.value, this.form.class3.value, this.form.class4.value,this.form.class5.value)" />
+                            </div>
+                            <div class="rightbarvacancy mrleft32">
+                                @foreach (var vacancy in Model.Vacancies)
+                                {
+                                    if (vacancy.IsActive == 1)
+                                    {
+                                        <div class="vacancyback mrtop16 cursor-pointer">
+                                            <div class="left" onclick="RedirectVacancyToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id');">
+                                                <div class="stroka1">
+                                                    <div class="vacancyname1">
+                                                        <p class="">@vacancy.Position</p>
+                                                    </div>
+                                                    <div class="vacancycompanyname1 mrleft32">
+                                                        <p class="">@vacancy.Salary руб.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="stroka2">
+                                                    <div class="vacancysalary1">
+                                                        @if (vacancy.WorkExperience != 0)
+                                                        {
+                                                            <p class="">
+                                                                @vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience) - @Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type
+                                                            </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="">@Model.GetYearNameInRussian(vacancy.WorkExperience) - @Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
+                                                        }
+                                                    </div>
+                                                    <div class="vacancycity1 mrleft32">
+                                                        <p class="">Город: @Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="vacancyaddinfo1">
+                                                    <p class="mrbottom32">@vacancy.Description</p>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                @if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id) != null)
+                                                {
+                                                    if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 0)
+                                                    {
+                                                        <div class="display-flex">
+                                                            <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик отправлен</a>
+                                                        </div>
+                                                    }
+                                                    else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 1)
+                                                    {
+                                                        <div class="display-flex">
+                                                            <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик принят</a>
+                                                        </div>
+                                                    }
+                                                    else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 2)
+                                                    {
+                                                        <div class="display-flex">
+                                                            <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик отклонен</a>
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="CreateResponse('@Model.User.Id', '@vacancy.Id'); AutoRefresh(5000);" value="Откликнуться" />
+                                                }
                                             </div>
                                         </div>
-                                        <div class="right">
-                                            @if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id) != null)
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 0)
-                                                {
-                                                    <div class="display-flex">
-                                                        <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик отправлен</a>
-                                                    </div>
-                                                }
-                                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 1)
-                                                {
-                                                    <div class="display-flex">
-                                                        <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик принят</a>
-                                                    </div>
-                                                }
-                                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 2)
-                                                {
-                                                    <div class="display-flex">
-                                                        <a class="font20num2 font-bolder text-decoration-none mrleft32">Отклик отклонен</a>
-                                                    </div>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <input type="button" class="btn btn-outline-dark w-200 mrleft32" onclick="CreateResponse('@Model.User.Id', '@vacancy.Id'); AutoRefresh(5000);" value="Откликнуться" />
-                                            }
-                                        </div>
-                                    </div>
+                                    }
                                 }
-                            }
+                            </div>
                         </div>
                     </form>
                 }

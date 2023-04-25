@@ -31,9 +31,8 @@ function UpdateAccount(id) {
     window.location.href = '/Home/Index/';
 };
 
-function UpdateProfileResumePage(id, photo, postcode, street, house, apartment, position, salary, edu, university, workex, typeofemp, additionalinformation, itspublic) {
-    console.log(photo);
-    $.get(`/Print/UpadateSeekerResumeSettings?iduser=${id}&photo=${photo}&postcode=${postcode}&street=${street}&house=${apartment}&apartment=${apartment}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`);
+function UpdateProfileResumePage(id, postcode, street, house, apartment, position, salary, edu, university, workex, typeofemp, additionalinformation, itspublic) {
+    $.get(`/Print/UpadateSeekerResumeSettings?iduser=${id}&postcode=${postcode}&street=${street}&house=${apartment}&apartment=${apartment}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`);
 }
 
 function UpdateProfileResume(id, rlogin, rlastname, rfirstname, rmiddlename, rgender, rdateofbirth, rphone, rcity, rcitizenship) {
@@ -105,6 +104,12 @@ function AddVacancyMassage() {
 function RedirectResponsesToAddMeeting(iduser, idresume) {
     window.location.href = '/Home/AddMeeting/' + iduser + '/' + idresume;
 };
+
+function FilterAccept(id, class1, class2, class3, class4, class5) {
+    $.get(`/Home/Vacancy?id=${id}&salary=${class1}&city=${class2}&education=${class3}&workexperience=${class4}&employment=${class5}`).then(_ => {
+        window.location.href = `/Home/Vacancy?id=${id}&salary=${class1}&city=${class2}&education=${class3}&workexperience=${class4}&employment=${class5}`;
+    }); 
+}
 
 function RedirectAddMeetingToResponse(id) {
     window.location.href = '/ResponsesToVacancies/Responses/' + id;

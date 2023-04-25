@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace WebApplication2.Models
 {
     public static class PDFTemplateGenerator
     {
+        
         public static string GetHTMLString(Resume resume)
         {
             var sb = new StringBuilder();

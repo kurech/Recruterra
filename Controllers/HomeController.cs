@@ -67,11 +67,48 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Vacancy(int? id)
+        public async Task<IActionResult> Vacancy(int? id, int? salary, string? city, string? education, int? workexperience, int? employment)
         {
             User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
+            List<Employer> employersByCity = new List<Employer>();
+            if (city != null)
+            {
+                City searchcity = db.Cities.FirstOrDefault(c => c.Name == city);
+                employersByCity = db.Employers.Where(emp => emp.IdCity == searchcity.Id).ToList();
+            }
+
+            List<Vacancy> searchvacancies = new List<Vacancy>(); // нужный город
+            List<Vacancy> vacancies = new List<Vacancy>();
+            if (salary != null && city != null && education != null && workexperience != null && employment != null)
+            {
+                int[] ids = new int[employersByCity.Count];
+                for (int i = 0; i < employersByCity.Count; i++)
+                {
+                    ids[i] = employersByCity[i].Id;
+                }
+
+                vacancies = await db.Vacancies.Where(v => v.Salary >= salary).Where(v => v.Education == education).Where(v => v.WorkExperience >= workexperience).Where(v => v.IdTypeOfEmployment == employment).ToListAsync();
+
+                for (int j = 0; j < vacancies.Count; j++)
+                {
+                    for (int o = 0; o < ids.Length; o++)
+                    {
+                        if (vacancies[j].IdEmployer == ids[o])
+                        {
+                            searchvacancies.Add(vacancies[j]);
+                        }
+                    }
+                }
+
+                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                return View(model);
+            }
+            else
+            {
+                vacancies = await db.Vacancies.ToListAsync();
+                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                return View(model);
+            }  
         }
 
         [HttpGet]

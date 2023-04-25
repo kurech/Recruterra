@@ -39,7 +39,13 @@ a{
     color: #8DD7AB;
 }
 
-.color-green{
+.hover-underline:hover {
+    text-decoration: underline;
+    text-decoration-color: #8DD7AB;
+    text-decoration-thickness: 3px;
+}
+
+.color-green {
     color: #8DD7AB;
 }
 
@@ -436,6 +442,9 @@ a{
 .mrleft256 {
     margin-left: 360px;
 }
+.mrleft455 {
+    margin-left: 455px;
+}
 .mrleft2256 {
     margin-left: 200px;
 }
@@ -578,6 +587,10 @@ select {
 
 .w-200 {
     width: 200px!important;
+}
+
+.w-96 {
+    width: 95.1% !important;
 }
 .w-535 {
     width: 535px !important;
@@ -814,13 +827,17 @@ select {
 }
 
 .leftbarvacancy{
-    
+    display: inline-block;
+    vertical-align: top;
+}
+
+.vacancies-inline {
     display: inline-block;
     vertical-align: top;
 }
 
 .rightbarvacancy {
-    width: 1800px;
+    width: 1000px;
     display: inline-block;
     vertical-align: top;
 }

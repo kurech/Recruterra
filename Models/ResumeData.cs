@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +13,8 @@ namespace WebApplication2.Models
         public IEnumerable<Resume> Resumes { get; set; }
         public IEnumerable<Account> Accounts { get; set; }
         public IEnumerable<TypeOfEmployment> TypeOfEmployments { get; set; }
-        public IFormFile MyImage { set; get; }
+        public IFormFile ProfileImage { set; get; }
+        public int ResumeId { set; get; }
         public string GetTypeOfEmployment(int id)
         {
             return TypeOfEmployments.FirstOrDefault(type => type.Id == id).Type;
