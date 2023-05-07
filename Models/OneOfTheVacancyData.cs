@@ -25,15 +25,19 @@ namespace WebApplication2.Models
                 case 0:
                     return "Без опыта";
                 case 1:
-                    return $"{Vacancy.WorkExperience} год";
+                    return $"от {Vacancy.WorkExperience} года";
                 case 2:
-                    return $"{Vacancy.WorkExperience} года";
+                    return $"от {Vacancy.WorkExperience} лет";
                 case 3:
-                    return $"{Vacancy.WorkExperience} года";
+                    return $"от {Vacancy.WorkExperience} лет";
                 case 4:
-                    return $"{Vacancy.WorkExperience} года";
+                    return $"от {Vacancy.WorkExperience} лет";
+                case 5:
+                    return $"от {Vacancy.WorkExperience} лет";
+                case 6:
+                    return $"от {Vacancy.WorkExperience} лет";
                 default:
-                    return $"{Vacancy.WorkExperience} лет";
+                    return $"от {Vacancy.WorkExperience} лет";
             }
         }
 

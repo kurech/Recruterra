@@ -1,5 +1,80 @@
-﻿function CreateResponse(iduser, idvacancy) {
-    $.get(`/Home/AddResponse?iduser=${iduser}&idvacancy=${idvacancy}`);
+﻿function menuDropDown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function menuDropDown2() {
+    document.getElementById("myDropdown2").classList.toggle("show");
+}
+
+function SelectedChooseRole(select) {
+    const option = select.querySelector(`option[value="${select.value}"]`);
+    var temp = document.createElement('div');
+    var target = document.getElementById('selectrole');
+    if (option.value == "Работодатель") {
+        var str = '<p class="font-bolder color-green" id="labelcheckemployer">В дальнейшем нужно будет пройти проверку</p>';
+
+        temp.innerHTML = str;
+        while (temp.firstChild) {
+            target.appendChild(temp.firstChild);
+        }
+    }
+    else if (option.value === "Соискатель") {
+        var elem = document.getElementById('labelcheckemployer');
+        elem.parentNode.removeChild(elem);
+    }
+}
+
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+function filterDropDown() {
+    document.getElementById("myDropdownFilter").classList.toggle("show");
+}
+
+function CreateResponse(iduser, idvacancy) {
+    $.get(`/Home/AddResponse?iduser=${iduser}&idvacancy=${idvacancy}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Ваш отклик записан!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось записать отклик! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
+};
+
+function CreateFakeResponse() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Ошибка!',
+        text: 'Заполните свое резюме!',
+        buttonsStyling: true,
+        confirmButtonColor: "#8DD7AB",
+    }).then(() => {
+        location.reload();
+    });
 };
 
 function RedirectVacancyToOneOfTheVacancy(idvacancy, iduser) {
@@ -7,40 +82,247 @@ function RedirectVacancyToOneOfTheVacancy(idvacancy, iduser) {
 };
 
 function CreateMeeting(idemployer, idresume, dateandtime) {
-    $.get(`/Home/AddMeet?idemployer=${idemployer}&idresume=${idresume}&dateandtime=${dateandtime}`);
+    $.get(`/Meetings/AdditionalMeeting?idemployer=${idemployer}&idresume=${idresume}&dateandtime=${dateandtime}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Встреча была добавлена',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Settings/Responses';
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось добавить встречу! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Settings/Responses';
+        });
+    });
 };
 
 function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdescrip, vacedu, vactypeofemp, vacisactive, vacidemployer) {
-    $.get(`/Home/AddVac?vacposition=${vacposition}&vacobligations=${vacobligations}&vacsalary=${vacsalary}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&vacisactive=${vacisactive}&idemployer=${vacidemployer}`);
+    $.get(`/Vacancys/AdditionalVacancy?vacposition=${vacposition}&vacobligations=${vacobligations}&vacsalary=${vacsalary}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&vacisactive=${vacisactive}&idemployer=${vacidemployer}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Вакансия была добавлена',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Home/Vacancy/';
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось добавить вакансию! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Home/Vacancy/';
+        });
+    });
 };
 
-function DeleteVacancy(idvacancy) {
-    $.get(`/Home/DelVacancy?idvacancy=${idvacancy}`);
+function CreateVacancyFake() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Ошибка!',
+        text: 'Заполните данные о компании!',
+        buttonsStyling: true,
+        confirmButtonColor: "#8DD7AB",
+    }).then(() => {
+        window.location.href = '/Home/Vacancy/';
+    });
 }
 
+function DeleteVacancy(idvacancy) {
+    $.get(`/Home/DelVacancy?idvacancy=${idvacancy}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Вакансия удалена!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось удалить вакансию! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
+};
+
+function DeleteVacancyInOOTV(idvacancy) {
+    $.get(`/Home/DelVacancy?idvacancy=${idvacancy}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Вакансия удалена!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Home/Vacancy/';
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось удалить вакансию! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Home/Vacancy/';
+        });
+    });
+};
+
 function DeleteMeetingForSeekers(idseeker, idmeeting) {
-    $.get(`/Home/DelMeetingSeeker?idseeker=${idseeker}&idmeet=${idmeeting}`);
+    $.get(`/Home/DelMeetingSeeker?idseeker=${idseeker}&idmeet=${idmeeting}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Встреча отменена!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось отменить встречу! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 };
 
 function DeleteMeetingForEmployers(idemployer, idmeeting) {
-    $.get(`/Home/DelMeetingEmployer?idemployer=${idemployer}&idmeet=${idmeeting}`);
+    $.get(`/Home/DelMeetingEmployer?idemployer=${idemployer}&idmeet=${idmeeting}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Встреча отменена!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось отменить встречу! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 };
 
 function UpdateAccount(id) {
-    $.get(`/Home/UpadateAccountAfterLogout?idaccount=${id}`);
-    window.location.href = '/Home/Index/';
+    $.get(`/Access/UpadateAccountAfterLogout?idaccount=${id}`).then(() => {
+        window.location.href = '/Access/Signin/';
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось выйти из аккаунта!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 };
 
 function UpdateProfileResumePage(id, postcode, street, house, apartment, position, salary, edu, university, workex, typeofemp, additionalinformation, itspublic) {
-    $.get(`/Print/UpadateSeekerResumeSettings?iduser=${id}&postcode=${postcode}&street=${street}&house=${apartment}&apartment=${apartment}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`);
+    $.get(`/Settings/UpadateSeekerResumeSettings?iduser=${id}&postcode=${postcode}&street=${street}&house=${house}&apartment=${apartment}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Ваше резюме успешно обновлено!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось обновить резюме! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 }
 
-function UpdateProfileResume(id, rlogin, rlastname, rfirstname, rmiddlename, rgender, rdateofbirth, rphone, rcity, rcitizenship) {
-    $.get(`/Home/UpadateSeekerProfileSettings?iduser=${id}&login=${rlogin}&lastname=${rlastname}&firstname=${rfirstname}&middlename=${rmiddlename}&gender=${rgender}&dateofbirth=${rdateofbirth}&phone=${rphone}&city=${rcity}&citizenship=${rcitizenship}`);
+function UpdateProfileResume(id, rlastname, rfirstname, rmiddlename, rgender, rdateofbirth, rphone, rcity, rcitizenship) {
+    $.get(`/Settings/UpadateSeekerProfileSettings?iduser=${id}&lastname=${rlastname}&firstname=${rfirstname}&middlename=${rmiddlename}&gender=${rgender}&dateofbirth=${rdateofbirth}&phone=${rphone}&city=${rcity}&citizenship=${rcitizenship}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Ваши данные успешно обновлены!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось обновить информацию!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 }
 
-function UpdateProfileEmployer(id, elogin, ecompanyname, emsrn, elastname, efirstname, emiddlename, ecreationdate, ecity, epostcode, estreet, ehouse, eapartment) {
-    $.get(`/Home/UpadateEmployerProfileSettings?iduser=${id}&login=${elogin}&companyname=${ecompanyname}&msrn=${emsrn}&lastname=${elastname}&firstname=${efirstname}&middlename=${emiddlename}&creationdate=${ecreationdate}&city=${ecity}&postcode=${epostcode}&street=${estreet}&house=${ehouse}&apartment=${eapartment}`);
+function UpdateProfileEmployer(id, ecompanyname, emsrn, elastname, efirstname, emiddlename, ecreationdate, ecity, epostcode, estreet, ehouse, eapartment) {
+    $.get(`/Settings/UpadateEmployerProfileSettings?iduser=${id}&companyname=${ecompanyname}&msrn=${emsrn}&lastname=${elastname}&firstname=${efirstname}&middlename=${emiddlename}&creationdate=${ecreationdate}&city=${ecity}&postcode=${epostcode}&street=${estreet}&house=${ehouse}&apartment=${eapartment}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Ваши данные успешно обновлены!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось обновить информацию!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 }
 
 function UpdateResume(id, photoresume, nameresume, surnameresume, positionresume,salaryresume,dateofresume,phoneresume,cityresume,citizenshipresume,eduresume,workresume,employresume,addinforesume) {
@@ -56,19 +338,59 @@ function UpdateMeetingFilter(iduser) {
     location.reload(), history.go(0), location.href = location.href, location.href = location.pathname, location.replace(location.pathname), location.reload(false)
 };
 
-function AcceptResponse(idresponse) {
-    $.get(`/Home/AcceptResponse?idresponse=${idresponse}`);
+function AcceptResponse(idresponse, idemployer, idresume) {
+    $.get(`/Settings/AcceptResponse?idresponse=${idresponse}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Отклик был принят!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            AddMettingPage(idemployer, idresume);
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось принять отклик! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 };
 
 function DismissResponse(idresponse) {
-    $.get(`/Home/DismissResponse?idresponse=${idresponse}`);
+    $.get(`/Settings/DismissResponse?idresponse=${idresponse}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Отклик был отменен!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось удалить отклик! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            location.reload();
+        });
+    });
 };
 
 function RecoverySendCode(email) {
-    $.get(`/Home/RecoverySendCodeToEmail?email=${email}`);
+    $.get(`/Access/RecoverySendCodeToEmail?email=${email}`);
 
     var target = document.getElementById('lastelemonpage');
-    var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field padding-bottom--24 mrtop16"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field padding-bottom--24"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value); RedirectToSignin();"></div>';
+    var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field mrtop16"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value);"></div>';
 
     var temp = document.createElement('div');
     temp.innerHTML = str;
@@ -78,12 +400,16 @@ function RecoverySendCode(email) {
 };
 
 function UpdatePassword(email, code, newpassword) {
-    $.get(`/Home/UpdatePasswordInRecovery?email=${email}&code=${code}&newpassword=${newpassword}`);
+    $.get(`/Access/UpdatePasswordInRecovery?email=${email}&code=${code}&newpassword=${newpassword}`);
 }
 
-function Message() {
-    alert('Вы уже откликались на эту вакансию!');
+function AddMettingPage(iduser, idresume) {
+    window.location.href = '/Meetings/AddMeeting/' + iduser + '/' + idresume;
 };
+
+function RedirectToOneOfTheVacancy(idvacancy, iduser) {
+    window.location.href = '/Vacancys/OneOfTheVacancy/' + idvacancy + '/' + iduser;
+}
 
 function HappyMassage() {
     alert('Отлик записан ʕ•ᴥ•ʔ!');
@@ -102,7 +428,7 @@ function AddVacancyMassage() {
 };
 
 function RedirectResponsesToAddMeeting(iduser, idresume) {
-    window.location.href = '/Home/AddMeeting/' + iduser + '/' + idresume;
+    window.location.href = '/Meetings/AddMeeting/' + iduser + '/' + idresume;
 };
 
 function FilterAccept(id, class1, class2, class3, class4, class5) {
@@ -112,12 +438,7 @@ function FilterAccept(id, class1, class2, class3, class4, class5) {
 }
 
 function RedirectAddMeetingToResponse(id) {
-    window.location.href = '/ResponsesToVacancies/Responses/' + id;
-};
-
-function RedirectAddVacancyToVacancy(id) {
-    window.location.href = '/Home/Vacancy/' + id;
-
+    window.location.href = '/Settings/Responses/' + id;
 };
 
 function RedirectOneOfTheVacancyToVacancy(id) {

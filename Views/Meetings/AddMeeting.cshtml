@@ -1,6 +1,6 @@
-﻿@model OneOfTheVacancyData
+﻿@model MeetingsData
 @{
-    ViewBag.Title = $"Recruterra - Вакансия: {Model.Vacancy.Position}";
+    ViewBag.Title = "Recruterra - Добавление встречи";
 }
 
 <header>
@@ -11,12 +11,13 @@
                 <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
                 <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="/Home/Index" class="color-green">Сводка</a>
+                    <a href="/Home/Index" class="color-2c2c2c">Сводка</a>
                     <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
                     <a href="/Home/Meeting" class="color-2c2c2c">Встречи</a>
                     <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
                     <a href="/Home/Article" class="color-2c2c2c">Сообщество</a>
-                    <a href="#" class="color-green">Войти</a>
+                    <a href="/Settings/Account" class="color-2c2c2c">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
                 </div>
             }
             else
@@ -24,7 +25,7 @@
                 <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
                 <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="/Home/Signin" class="color-green">Войти</a>
+                    <a href="/Access/Signin" class="color-green">Войти</a>
                 </div>
             }
         </div>
@@ -45,7 +46,7 @@
                         <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
                     </li>
                     <li class="nav-item mr-right-1dot6percent">
-                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                        <a class="nav-link font-18 fontbold color-green" href="/Home/Meeting">Встречи</a>
                     </li>
                     <li class="nav-item mr-right-1dot6percent">
                         <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
@@ -76,49 +77,12 @@
 </header>
 
 <div class="container margin-0-auto minheight">
-    <div class="mrtop16">
-        <a href="/Home/Vacancy" class="font-18 color-2c2c2c font-bolder color-green-hover">Вакансии</a>
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18">
-            <path fill="currentColor"
-                  d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z">
-            </path>
-        </svg>
-        <a class="font-18 color-2c2c2c font-bolder">@Model.Vacancy.Position</a>
-    </div>
-    <div class="oneofthevacancy-back mrtop16">
-        @{ var emloyer = Model.Employers.FirstOrDefault(e => e.Id == Model.Vacancy.IdEmployer);}
-        <div class="employer-info">
-            <p class="mr-right-1dot6percent">@emloyer.СompanyName</p>
-            <p class="mr-right-1dot6percent">город: @Model.Cities.FirstOrDefault(city => city.Id == emloyer.IdCity).Name</p>
-            <p class="mr-right-1dot6percent">улица: @emloyer.Street</p>
-            <p class="mr-right-1dot6percent">дом: @emloyer.House</p>
-            <p>помещение: @emloyer.Apartment</p>
-        </div>
-        <hr class="bg-dark border-2 border-top border-dark">
-        <div class="vacancy-info">
-            <p class="font-24 font-bolder">@Model.Vacancy.Position</p>
-            <p class="font-18">@Model.Vacancy.Salary рублей</p>
-            <p class="font-16 mrtop8">Требуемый опыт работы: @Model.GetWorkEx()</p>
-            <p class="font-16">Образование: @Model.Vacancy.Education</p>
-            <p class="font-16">@Model.TypeOfEmployments.FirstOrDefault(t => t.Id == Model.Vacancy.IdTypeOfEmployment).Type</p>
-            <p class="font-16 mrtop8" style="text-align: justify;">
-                @Model.Vacancy.Obligations
-            </p>
-            <p class="font-16 mrtop8" style="text-align: justify;">
-                @Model.Vacancy.Description
-            </p>
-            @if (Model.User.Role == "Соискатель")
-            {
-                <input type="button" class="btn btn-outline-dark w-200 mrtop16"
-                       onclick="CreateResponse('@Model.User.Id', '@Model.Vacancy.Id');"
-                       value="Откликнуться" />
-            }
-            else if (Model.User.Role == "Работодатель")
-            {
-                <input type="button" class="btn btn-outline-dark w-200 mrtop16"
-                       onclick="DeleteVacancyInOOTV('@Model.Vacancy.Id');"
-                       value="Удалить" />
-            }
-        </div>
-    </div>
+    <form class="add-meeting-back mrtop16">
+        <p title="Фамилия соискателя"><b>Фамилия:</b> @Model.Resume.LastName</p>
+        <p title="Имя соискателя"><b>Имя:</b> @Model.Resume.FirstName</p>
+        <p title="Отчество соискателя"><b>Отчество:</b> @Model.Resume.MiddleName</p>
+        <p class="mrtop16" title="Отчество соискателя"><b>Дата и время встречи:</b></p>
+        <input class="add-meeting-input" id="meetdateandtime" type="datetime-local"><br>
+        <input type="button" class="btn btn-outline-dark w-200 mrtop16" value="Добавить" onclick="CreateMeeting('@Model.User.Id', '@Model.Resume.Id', this.form.meetdateandtime.value);" />
+    </form>
 </div>

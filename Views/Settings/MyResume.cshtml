@@ -1,0 +1,334 @@
+﻿@model ResumeData
+
+@{
+    ViewBag.Title = "Recruterra - Мое резюме";
+}
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light media-header-true">
+        <div class="container d-flex justify-content-center ">
+            @if (Model.User != null)
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="/Home/Index" class="color-2c2c2c">Сводка</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
+                    <a href="/Home/Meeting" class="color-2c2c2c">Встречи</a>
+                    <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
+                    <a href="/Home/Article" class="color-2c2c2c">Сообщество</a>
+                    <a href="/Settings/Account" class="color-green">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
+                </div>
+            }
+            else
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="/Access/Signin" class="color-green">Войти</a>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light media-header">
+        <div class="container d-flex justify-content-center ">
+            <ul class="navbar-nav mr-auto d-flex justify-content-center align-items-center">
+                @if (Model.User != null)
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Index">Сводка</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover"
+                           href="/Home/Article">Сообщество</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Settings/Account">Профиль</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black cursor-pointer" onclick="UpdateAccount()">Выйти</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black" href="/Access/Signin">Войти</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="container justify-content-center mrtop16 dd-flex minheight">
+    <div class="myresume-left">
+        <p class="font-bolder font-18">Настройки пользователя</p>
+        <p class="font-bolder font-16 mrleft16 mrtop16">Выберите нужное</p>
+        @if (Model.User != null)
+        {
+            if (Model.User.Role == "Соискатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/MyResume" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Резюме</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+            else if (Model.User.Role == "Работодатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+        }
+    </div>
+
+    <div class="myresume-right justify-content-start">
+        <div class="myresume-back">
+            @if (Model.User.Role == "Соискатель")
+            {
+                <form asp-action="Upld" enctype="multipart/form-data">
+                    <div class="justify-content-center">
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="photo">Фотография</p>
+                            <div class="account-input">
+                                <img src="~/images/@Model.Resumes.FirstOrDefault(q => q.Id == Model.User.Id).Photo" width="145" height="175">
+                                <input asp-for="ResumeId" value="@Model.User.Id" hidden="hidden">
+                                <input asp-for="ProfileImage" class="form-control-file mrtop16" accept="image/png" />
+                                <span asp-validation-for="ProfileImage" class=""></span>
+                                <input type="submit" value="Сохранить" class="btn btn-outline-dark w-200 mrtop16" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form id="myFormUpdateResume">
+                    <div class="justify-content-center">
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="postcode">Почтовый<br>индекс</p>
+                            <input type="text" class="account-input" id="postcode" placeholder="420140" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Postcode">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="street">Улица</p>
+                            <input type="text" class="account-input" id="street" placeholder="Пушкина" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Street">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="house">Дом</p>
+                            <input type="text" class="account-input" id="house" placeholder="3" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).House">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="apartment">Квартира</p>
+                            <input type="text" class="account-input" id="apartment" placeholder="185" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Apartment">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="position">Должность</p>
+                            <input type="text" class="account-input" id="position" placeholder="Python программист" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Position">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="salary">Ожидаемая<br>з/п</p>
+                            <input type="text" class="account-input" id="salary" placeholder="40000" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Salary">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="edu">Образование</p>
+                            @{var edu = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Education; }
+                            <select id="edu" class="media-wrap-inputs">
+                                @if (edu == "Высшее")
+                                {
+                                    <option value="Высшее" selected>Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Среднее профессиональное")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное" selected>Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Среднее общее")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее" selected>Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Основное общее")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее" selected>Основное общее</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="university">Учебное заведение</p>
+                            <input type="text" class="account-input" id="university" placeholder="КНИТУ-КАИ" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).University">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="workex">Опыт работы</p>
+                            @{var work = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).WorkExperience; }
+                            <select id="workex" class="media-wrap-inputs">
+                                @if (work == 0)
+                                {
+                                    <option value="0" selected>Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                                else if (work == 1)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1" selected>1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                                else if (work == 2)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2" selected>2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                                else if (work == 3)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3" selected>3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                                else if (work == 4)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                                else if (work == 5)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5" selected>5 лет</option>
+                                }
+                                else if (work == null)
+                                {
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">1 год</option>
+                                    <option value="2">2 года</option>
+                                    <option value="3">3 года</option>
+                                    <option value="4">4 года</option>
+                                    <option value="5">5 лет</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="typeofemp">Тип занятости</p>
+                            @{var type = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdTypeOfEmployment; }
+                            <select id="typeofemp" class="media-wrap-inputs">
+                                @if (type == 1)
+                                {
+                                    <option value="1" selected>Частичная занятость</option>
+                                    <option value="2">Полная занятость</option>
+                                    <option value="3">Стажировка</option>
+                                    <option value="4">Проектная работа</option>
+                                }
+                                else if (type == 2)
+                                {
+                                    <option value="1">Частичная занятость</option>
+                                    <option value="2" selected>Полная занятость</option>
+                                    <option value="3">Стажировка</option>
+                                    <option value="4">Проектная работа</option>
+                                }
+                                else if (type == 3)
+                                {
+                                    <option value="1">Частичная занятость</option>
+                                    <option value="2">Полная занятость</option>
+                                    <option value="3" selected>Стажировка</option>
+                                    <option value="4">Проектная работа</option>
+                                }
+                                else if (type == 4)
+                                {
+                                    <option value="1">Частичная занятость</option>
+                                    <option value="2">Полная занятость</option>
+                                    <option value="3">Стажировка</option>
+                                    <option value="4" selected>Проектная работа</option>
+                                }
+                                else if (type == null)
+                                {
+                                    <option value="1">Частичная занятость</option>
+                                    <option value="2">Полная занятость</option>
+                                    <option value="3">Стажировка</option>
+                                    <option value="4">Проектная работа</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="additionalinformation">Доп.<br>информация</p>
+                            <textarea id="additionalinformation" class="account-input" placeholder="Профессиональные навыки:— опыт работы в ...">@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).AdditionalInformation</textarea>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                            <p class="w-12" for="itspublic">Статус резюме</p>
+                            @{ var itspublic = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).ItsPublic; }
+                            <select id="itspublic" class="media-wrap-inputs">
+                                @if (itspublic == true)
+                                {
+                                    <option value="true" selected>Публичное</option>
+                                    <option value="false">Непубличное</option>
+                                }
+                                else if (itspublic == false)
+                                {
+                                    <option value="true">Публичное</option>
+                                    <option value="false" selected>Непубличное</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center media-account-b">
+                            <input type="button" id="updateresume" class="btn btn-outline-dark w-200 mrtop16 mrright8" value="Обновить" onclick="UpdateProfileResumePage('@Model.User.Id', this.form.postcode.value, this.form.street.value, this.form.house.value, this.form.apartment.value, this.form.position.value, this.form.salary.value, this.form.edu.value, this.form.university.value, this.form.workex.value, this.form.typeofemp.value, this.form.additionalinformation.value, this.form.itspublic.value)" />
+                            <a href="@Url.RouteUrl("printseekerresume", new { controller = "Print", action = "PrintResume", seekerId = Model.User.Id})">
+                                <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrleft8" value="Печать" />
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+            }
+        </div>
+    </div>
+</div>

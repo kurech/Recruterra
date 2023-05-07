@@ -19,6 +19,7 @@ namespace WebApplication2.Models
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<TypeOfEmployment> TypeOfEmployments { get; set; }
         public DbSet<Employer> Employers { get; set; }
+        public DbSet<Administrator> Administrator { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             // Database.EnsureDeleted();

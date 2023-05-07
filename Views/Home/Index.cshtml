@@ -1,534 +1,479 @@
 ﻿@model IndexData
 
 @{
-    Layout = null;
+    ViewBag.Title = "Recruterra - Сводка";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recruterra - Сводка</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/erik.css">
-    <link rel="stylesheet" href="~/css/style.css">
-    <link rel="shortcut icon" type="image/x-icon" href="~/images/recruterra.png" />
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="~/js/script.js" charset="utf-8"></script>
-</head>
-<body>
-    <main>
-        <header>
-            <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/Home/Index/@Model.User.Id">Recruterra</a> 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link under-line color-green font-bold" href="/Home/Index/@Model.User.Id">Сводка</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Vacancy/@Model.User.Id">Вакансии</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Meeting/@Model.User.Id">Встречи</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Resume/@Model.User.Id">Базы резюме</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-bold" href="/Home/Article/@Model.User.Id">Сообщество</a>
-                    </li>
-                </ul>
-                
-                <div class="text-end">
-                    @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) == null)
-                    {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
-                    }
-                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 0)
-                    {
-                        <a class="btn btn-outline-dark me-2" href="/Home/Signin">Войти</a>
-                    }
-                    else if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth == 1)
-                    {
-                        <a class="font16 mrright16" title="Логин" href="/Home/Account/@Model.User.Id" name="">@Model.User.Login</a>
-                        <a class="font16 mrright16" title="Роль" href="/Home/Account/@Model.User.Id" name="">@Model.User.Role</a>
-                        <input type="button" title="Выйти из аккаунта" class="btn btn-outline-dark me-2" onclick="UpdateAccount('@Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Id')" value="Выйти" />
-                    }
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light media-header-true">
+        <div class="container d-flex justify-content-center ">
+            @if (Model.User != null)
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="/Home/Index" class="color-green">Сводка</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
+                    <a href="/Home/Meeting" class="color-2c2c2c">Встречи</a>
+                    <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
+                    <a href="/Home/Article" class="color-2c2c2c">Сообщество</a>
+                    <a href="/Settings/Account" class="color-2c2c2c">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
                 </div>
-            </nav>
-        </header>
-        <div class="container">
-            <div class="leftbar">
-                <div class="openvakansii">
-                    <a class="opvacancy-text" href="/Home/Vacancy/@Model.User.Id">Открытые вакансии</a>
+            }
+            else
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="/Access/Signin" class="color-green">Войти</a>
                 </div>
-                <a href="/Home/Vacancy/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в вакансии"></a>
+            }
+        </div>
+    </nav>
 
-                <div class="allvacancyback">
-                    <div class="vacancy1back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 1).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 1).Education образование.">
-                        <div class="left">
-                            <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Position</p>
-                            </div>
-                            <div class="stroka1">
-                                <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 1).WorkExperience)</p>
-                                </div>
-                                <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 1).IdTypeOfEmployment) занятость</p>
-                                </div>
-                            </div>
-                            <div class="stroka2">
-                                <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 1).Salary руб.</p>
-                                </div>
-                                <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 1).IdEmployer)).City.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="btnaddresponse">
-                                <form method="post">
-                                    <p>
-                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                                        {
-                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == 1) == null)
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '1');HappyMassage();" value="Откликнуться" />
-                                                }
-                                                else
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
-                                                }
-                                            }
-                                        }
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
+    <nav class="navbar navbar-expand-lg navbar-light media-header">
+        <div class="container d-flex justify-content-center ">
+            <ul class="navbar-nav mr-auto d-flex justify-content-center align-items-center">
+                @if (Model.User != null)
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-green" href="/Home/Index">Сводка</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover"
+                           href="/Home/Article">Сообщество</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Settings/Account">Профиль</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black cursor-pointer" onclick="UpdateAccount()">Выйти</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black" href="/Access/Signin">Войти</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="container justify-content-center mrtop16 dd-flex">
+    <div class="summary-left">
+        <div class="d-flex align-items-bottom cursor-pointer">
+            @if (Model.User != null)
+            {
+                <a class="font-24 fontbold mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover"
+                   href="/Home/Vacancy" title="Страница со всеми вакансиями">Вакансии</a>
+            }
+            else
+            {
+                <a class="font-24 fontbold mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover" title="Страница со всеми вакансиями">Вакансии</a>
+            }
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" class="svg">
+                <path fill="currentColor"
+                      d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z">
+                </path>
+            </svg>
+        </div>
+        <div class="summary-allvacancyback">
+            @{ List<Vacancy> defaultVacancies = new List<Vacancy>();
+                defaultVacancies = Model.Vacancies.Where(q => q.IsActive == 1).OrderByDescending(a => a.Id).ToList();}
+            <div class="summary-vacancy-back mrbottom8 align-items-center">
+                <div class="summary-vacancy-left">
+                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(0).Position</a>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(0).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
+                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(0).IdTypeOfEmployment)</p>
                     </div>
 
-                    <div class="vacancy2back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 2).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 2).Education образование.">
-                        <div class="left">
-
-                            <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Position</p>
-                            </div>
-                            <div class="stroka1">
-                                <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 2).WorkExperience)</p>
-                                </div>
-                                <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 2).IdTypeOfEmployment) занятость</p>
-                                </div>
-                            </div>
-                            <div class="stroka2">
-                                <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 2).Salary руб.</p>
-                                </div>
-                                <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 2).IdEmployer)).City.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="btnaddresponse">
-                                <form method="post">
-                                    <script src="~/js/script.js" charset="utf-8"></script>
-                                    <p>
-                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                                        {
-                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == 2) == null)
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '2');HappyMassage();" value="Откликнуться" />
-                                                }
-                                                else
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
-                                                }
-                                            }
-                                        }
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(0).Salary руб.</p>
+                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(0).IdEmployer)).City.Name</p>
                     </div>
-
-                    <div class="vacancy3back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 3).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 3).Education образование.">
-                        <div class="left">
-                            <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Position</p>
-                            </div>
-                            <div class="stroka1">
-                                <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 3).WorkExperience)</p>
-                                </div>
-                                <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 3).IdTypeOfEmployment) занятость</p>
-                                </div>
-                            </div>
-                            <div class="stroka2">
-                                <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 3).Salary руб.</p>
-                                </div>
-                                <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 3).IdEmployer)).City.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="btnaddresponse">
-                                <form method="post">
-                                    <script src="~/js/script.js" charset="utf-8"></script>
-                                    <p>
-                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                                        {
-                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == 3) == null)
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '3');HappyMassage();" value="Откликнуться" />
-                                                }
-                                                else
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
-                                                }
-                                            }
-                                        }
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="vacancy4back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 4).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 4).Education образование.">
-                        <div class="left">
-                            <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Position</p>
-                            </div>
-                            <div class="stroka1">
-                                <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 4).WorkExperience)</p>
-                                </div>
-                                <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 4).IdTypeOfEmployment) занятость</p>
-                                </div>
-                            </div>
-                            <div class="stroka2">
-                                <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 4).Salary руб.</p>
-                                </div>
-                                <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 4).IdEmployer)).City.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="btnaddresponse">
-                                <form method="post">
-                                    <script src="~/js/script.js" charset="utf-8"></script>
-                                    <p>
-                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                                        {
-                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == 4) == null)
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '4');HappyMassage();" href="/Home/Index" value="Откликнуться" />
-                                                }
-                                                else
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
-                                                }
-                                            }
-                                        }
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="vacancy5back" title="@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Position — @Model.Vacancies.FirstOrDefault(m => m.Id == 5).Description — @Model.Vacancies.FirstOrDefault(m => m.Id == 5).Education образование.">
-                        <div class="left">
-                            <div class="vacancy1name">
-                                <p class="vacancyname-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Position</p>
-                            </div>
-                            <div class="stroka1">
-                                <div class="vacancy1workexperience">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).WorkExperience @Model.GetYearNameInRussian(Model.Vacancies.FirstOrDefault(m => m.Id == 5).WorkExperience)</p>
-                                </div>
-                                <div class="vacancy1typeofemployment">
-                                    <p class="vacancyinfo-text">@Model.GetTypeOfEmployment(Model.Vacancies.FirstOrDefault(m => m.Id == 5).IdTypeOfEmployment) занятость</p>
-                                </div>
-                            </div>
-                            <div class="stroka2">
-                                <div class="vacancy1adddate">
-                                    <p class="vacancyinfo-text">@Model.Vacancies.FirstOrDefault(m => m.Id == 5).Salary руб.</p>
-                                </div>
-                                <div class="vacancy1companyname">
-                                    <p class="vacancyinfo-text">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == 5).IdEmployer)).City.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="btnaddresponse">
-                                <form method="post">
-                                    <p>
-                                        @if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id) != null)
-                                        {
-                                            if (Model.Accounts.LastOrDefault(m => m.IdUser == Model.User.Id).Auth != 0 && Model.User.Role == "Соискатель")
-                                            {
-                                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == 5) == null)
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="CreateResponse('@Model.User.Id', '5');HappyMassage();" value="Откликнуться" />
-                                                }
-                                                else
-                                                {
-                                                <input type="button" class="btn btn-outline-dark w-200" onclick="Message()" value="Откликнуться" />
-                                                }
-                                            }
-                                        }
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="summary-vacancy-right">
+                    @if (Model.User != null)
+                    {
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(0).Id) != null)
+                            {
+                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(0).Id).IsAccepted == 0)
+                                {
+                                    <a class="font-18 color-2c2c2c">Отправлен</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(0).Id).IsAccepted == 1)
+                                {
+                                    <a class="font-18 color-green">Принят</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(0).Id).IsAccepted == 2)
+                                {
+                                    <a class="font-18 color-red">Отклонен</a>
+                                }
+                            }
+                            else
+                            {
+                                var resume = Model.Resumes.FirstOrDefault(r => r.Id == Model.User.Id);
+                                if (resume.LastName != null && resume.FirstName != null && resume.MiddleName != null && resume.Gender != null && resume.Photo != null && resume.DateOfBirth != null && resume.PhoneNumber != null && resume.IdCity != null && resume.IdCitizenship != null && resume.Position != null && resume.Salary != null && resume.Education != null && resume.University != null && resume.WorkExperience != null && resume.IdTypeOfEmployment != null && resume.AdditionalInformation != null)
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateFakeResponse();">Отклик</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(0).Id');">Отклик</a>
+                                }
+                            }
+                        }
+                    }
                 </div>
             </div>
 
-            <div class="rightbar">
-                <div class="meeting">
-                    <a class="opvacancy-text">Встречи сегодня</a>
+            <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
+                <div class="summary-vacancy-left">
+                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(1).Position</a>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(1).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(1).WorkExperience)</p>
+                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(1).IdTypeOfEmployment)</p>
+                    </div>
+
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(1).Salary руб.</p>
+                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(1).IdEmployer)).City.Name</p>
+                    </div>
                 </div>
-                @{ string role = Model.User.Role;
-                    Meeting meet = null;
-                    if (role == "Соискатель")
+                <div class="summary-vacancy-right">
+                    @if (Model.User != null)
                     {
-                        meet = Model.Meetings.FirstOrDefault(m => m.IdResume == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
-                    }
-                    else
-                    {
-                        meet = Model.Meetings.FirstOrDefault(m => m.IdEmployer == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
-                    }
-                    }
-                <a href="/Home/Meeting/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти во встречи"></a>
-                <div class="allmeetingback">
-                    @if (role == "Соискатель")
-                    {
-                        <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
-                            <div class="stroka">
-                                <div class="photomeet">
-                                    @if (meet != null)
-                                    {
-                                        <img src="~/images/user.png" class="mrtop8 mrleft32" alt="">
-                                    }
-                                </div>
-                                <div class="timemeet">
-                                    @if (meet != null)
-                                    {
-                                        <p class="mrtop16 mrleft32">@meet.DateAndTime.Hour:@meet.DateAndTime.Minute</p>
-                                    }
-                                    else
-                                    {
-                                        <p class="mrtop32 mrleft32">00:00</p>
-                                    }
-                                </div>
-                            </div>
-                            <div class="stroka">
-                                <div class="namemeet">
-                                    @if (meet != null)
-                                    {
-                                    <p>@meet.Employer.СompanyName - @meet.Employer.City.Name @meet.Employer.Street @meet.Employer.House @meet.Employer.Apartment</p>
-                                    }
-                                    else
-                                    {
-                                        <p>Сегодня встреч нет</p>
-                                    }
-                                </div>
-                            </div>
-                            <div class="descripmeet mrtop16 mrleft32 mrbottom16">
-                                @if (meet != null)
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(1).Id) != null)
+                            {
+                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(1).Id).IsAccepted == 0)
                                 {
-                                    <p>Собеседование</p>
+                                    <a class="font-18 color-2c2c2c">Отправлен</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(1).Id).IsAccepted == 1)
+                                {
+                                    <a class="font-18 color-green">Принят</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(1).Id).IsAccepted == 2)
+                                {
+                                    <a class="font-18 color-red">Отклонен</a>
+                                }
+                            }
+                            else
+                            {
+                                var resume = Model.Resumes.FirstOrDefault(r => r.Id == Model.User.Id);
+                                if (resume.LastName != null && resume.FirstName != null && resume.MiddleName != null && resume.Gender != null && resume.Photo != null && resume.DateOfBirth != null && resume.PhoneNumber != null && resume.IdCity != null && resume.IdCitizenship != null && resume.Position != null && resume.Salary != null && resume.Education != null && resume.University != null && resume.WorkExperience != null && resume.IdTypeOfEmployment != null && resume.AdditionalInformation != null)
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateFakeResponse();">Отклик</a>
                                 }
                                 else
                                 {
-                                    <p>Возможно у вас назначены встречи на другие дни.</p>
-                                }
-                            </div>
-                        </div>
-                        <div class="rightdelmeet">
-                            @if (meet != null)
-                            {
-                                @if (Model.User != null)
-                                {
-                                    <div class="mrtop8">
-                                        <a class="btn btn-outline-dark w-200 mrright32" onclick="DeleteMeetingForSeekers('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
-                                    </div>
+                                    <a class="btn btn-outline-primary nav-link font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(1).Id');">Отклик</a>
                                 }
                             }
-                        </div>
+                        }
                     }
-                    else
+                </div>
+            </div>
+
+            <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
+                <div class="summary-vacancy-left">
+                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(2).Position</a>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(2).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(2).WorkExperience)</p>
+                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(2).IdTypeOfEmployment)</p>
+                    </div>
+
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(2).Salary руб.</p>
+                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(2).IdEmployer)).City.Name</p>
+                    </div>
+                </div>
+                <div class="summary-vacancy-right">
+                    @if (Model.User != null)
                     {
-                        <div class="left" title="@if (meet != null) { meet.DateAndTime.ToString("D"); } else { "Встреч на сегодня нет".ToString();}">
-                            <div class="stroka">
-                                <div class="photomeet">
-                                    @if (meet != null)
-                                    {
-                                        <img src="~/images/user.png" class="mrtop32 mrleft32" alt="">
-                                    }
-                                </div>
-                                <div class="timemeet">
-                                    @if (meet != null)
-                                    {
-                                        <p class="mrtop16 mrleft32">@meet.DateAndTime.Hour:@meet.DateAndTime.Minute</p>
-                                    }
-                                    else
-                                    {
-                                        <p class="mrtop32 mrleft32">00:00</p>
-                                    }
-                                </div>
-                            </div>
-                            <div class="stroka">
-                                <div class="namemeet">
-                                    @if (meet != null)
-                                    {
-                                    <p>@meet.Resume.LastName @meet.Resume.FirstName @meet.Resume.MiddleName</p>
-                                    }
-                                    else
-                                    {
-                                        <p>Сегодня встреч нет</p>
-                                    }
-                                </div>
-                            </div>
-                            <div class="descripmeet mrtop16 mrleft32 mrbottom32">
-                                @if (meet != null)
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(2).Id) != null)
+                            {
+                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(2).Id).IsAccepted == 0)
                                 {
-                                    <p>Собеседование</p>
+                                    <a class="font-18 color-2c2c2c">Отправлен</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(2).Id).IsAccepted == 1)
+                                {
+                                    <a class="font-18 color-green">Принят</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(2).Id).IsAccepted == 2)
+                                {
+                                    <a class="font-18 color-red">Отклонен</a>
+                                }
+                            }
+                            else
+                            {
+                                var resume = Model.Resumes.FirstOrDefault(r => r.Id == Model.User.Id);
+                                if (resume.LastName != null && resume.FirstName != null && resume.MiddleName != null && resume.Gender != null && resume.Photo != null && resume.DateOfBirth != null && resume.PhoneNumber != null && resume.IdCity != null && resume.IdCitizenship != null && resume.Position != null && resume.Salary != null && resume.Education != null && resume.University != null && resume.WorkExperience != null && resume.IdTypeOfEmployment != null && resume.AdditionalInformation != null)
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateFakeResponse();">Отклик</a>
                                 }
                                 else
                                 {
-                                    <p>Возможно у вас назначены встречи на другие дни.</p>
-                                }
-                            </div>
-                        </div>
-                        <div class="rightdelmeet">
-                            @if (meet != null)
-                            {
-                                @if (Model.User != null)
-                                {
-                                    <div class="mrtop8">
-                                        <a class="btn btn-outline-dark w-200 mrright32" onclick="DeleteMeetingForEmployers('@Model.User.Id', '@meet.Id');DeleteMeetMassage();" id="deletemeeting">Отменить встречу</a>
-                                    </div>
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(2).Id');">Отклик</a>
                                 }
                             }
-                        </div>
+                        }
                     }
+                </div>
+            </div>
 
-                </div>
+            <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
+                <div class="summary-vacancy-left">
+                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(3).Position</a>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(3).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(3).WorkExperience)</p>
+                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(3).IdTypeOfEmployment)</p>
+                    </div>
 
-                <div class="resume mrtop32">
-                    <a class="opvacancy-text" href="/Home/Resume/@Model.User.Id">Базы резюме <img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в резюме"></a>
-                </div>
-                <a href="/Home/Resume/@Model.User.Id"></a>
-                <div class="allresume mrtop16">
-                    <div class="resume1back mrright16">
-                        <div class="strokaresume">
-                            <img src="~/images/resume1.png" class="mrtop32 mrleft32 mrright16" alt="">
-                        </div>
-                        @{var resumes = Model.Resumes.Where(m => m.ItsPublic == true); Random randomResume1 = new Random(); int rndResume1 = randomResume1.Next(1, resumes.Count());}
-                        <div class="resumeinfo">
-                            <p class="mrbottom8 font-bolder">@resumes.ElementAtOrDefault(rndResume1).Position</p>
-                            <p>@resumes.Count(m => m.Position == resumes.ElementAtOrDefault(rndResume1).Position) резюме</p>
-                        </div>
-                    </div>
-                    <div class="resume2back">
-                        <div class="strokaresume">
-                            <img src="~/images/resume2.png" class="mrtop24 mrleft32 mrright16" alt="">
-                        </div>
-                        @{var resumes2 = Model.Resumes.Where(m => m.ItsPublic == true); Random randomResume2 = new Random(); int rndResume2 = randomResume2.Next(1, resumes2.Count());
-                            do { rndResume2 = randomResume2.Next(1, resumes2.Count()); } while (rndResume2 == rndResume1);}
-                        <div class="resumeinfo">
-                            <p class="mrbottom8 font-bolder">@resumes.ElementAtOrDefault(rndResume1).Position</p>
-                            <p>@resumes.Count(m => m.Position == resumes.ElementAtOrDefault(rndResume1).Position) резюме</p>
-                        </div>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(3).Salary руб.</p>
+                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(3).IdEmployer)).City.Name</p>
                     </div>
                 </div>
+                <div class="summary-vacancy-right">
+                    @if (Model.User != null)
+                    {
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(3).Id) != null)
+                            {
+                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(3).Id).IsAccepted == 0)
+                                {
+                                    <a class="font-18 color-2c2c2c">Отправлен</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(3).Id).IsAccepted == 1)
+                                {
+                                    <a class="font-18 color-green">Принят</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(3).Id).IsAccepted == 2)
+                                {
+                                    <a class="font-18 color-red">Отклонен</a>
+                                }
+                            }
+                            else
+                            {
+                                var resume = Model.Resumes.FirstOrDefault(r => r.Id == Model.User.Id);
+                                if (resume.LastName != null && resume.FirstName != null && resume.MiddleName != null && resume.Gender != null && resume.Photo != null && resume.DateOfBirth != null && resume.PhoneNumber != null && resume.IdCity != null && resume.IdCitizenship != null && resume.Position != null && resume.Salary != null && resume.Education != null && resume.University != null && resume.WorkExperience != null && resume.IdTypeOfEmployment != null && resume.AdditionalInformation != null)
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateFakeResponse();">Отклик</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(3).Id');">Отклик</a>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
 
-                <div class="article mrtop32">
-                    <a class="opvacancy-text" href="/Home/Article/@Model.User.Id">Сообщество</a>
+            <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
+                <div class="summary-vacancy-left">
+                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(4).Position</a>
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(4).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(4).WorkExperience)</p>
+                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(4).IdTypeOfEmployment)</p>
+                    </div>
+
+                    <div class="media-wrap-text">
+                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(4).Salary руб.</p>
+                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(4).IdEmployer)).City.Name</p>
+                    </div>
                 </div>
-                <a href="/Home/Article/@Model.User.Id"><img class="strelka" src="~/images/strelka.png" alt="Перейти" title="Перейти в сообщество"></a>
-                <div class="allarticle mrtop16">
-                    @{Random randomArticle1 = new Random(); int rndArticle1 = randomArticle1.Next(1, Model.Articles.Count());}
-                    <div class="article1back mrright16 mrtop20 mrleft28">
-                        <img src="@Model.Articles.FirstOrDefault(m => m.Id == rndArticle1).Photo" class="articleimg" alt="">
-                        <p class="article-text font-bolder mrleft16 mrtop-50">@Model.Articles.FirstOrDefault(m => m.Id == rndArticle1).Name</p>
-                    </div>
-                    @{Random randomArticle2 = new Random(); int rndArticle2 = randomArticle2.Next(1, Model.Articles.Count());
-                        do { rndArticle2 = randomArticle2.Next(1, Model.Articles.Count()); } while (rndArticle2 == rndArticle1);}
-                    <div class="article2back mrtop20">
-                        <img src="@Model.Articles.FirstOrDefault(m => m.Id == rndArticle2).Photo" class="articleimg" alt="">
-                        <p class="article-text font-bolder mrleft16 mrtop-50">@Model.Articles.FirstOrDefault(m => m.Id == rndArticle2).Name</p>
-                    </div>
+                <div class="summary-vacancy-right">
+                    @if (Model.User != null)
+                    {
+                        if (Model.User.Role == "Соискатель")
+                        {
+                            if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(4).Id) != null)
+                            {
+                                if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(4).Id).IsAccepted == 0)
+                                {
+                                    <a class="font-18 color-2c2c2c">Отправлен</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(4).Id).IsAccepted == 1)
+                                {
+                                    <a class="font-18 color-green">Принят</a>
+                                }
+                                else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == defaultVacancies.ElementAt(4).Id).IsAccepted == 2)
+                                {
+                                    <a class="font-18 color-red">Отклонен</a>
+                                }
+                            }
+                            else
+                            {
+                                var resume = Model.Resumes.FirstOrDefault(r => r.Id == Model.User.Id);
+                                if (resume.LastName != null && resume.FirstName != null && resume.MiddleName != null && resume.Gender != null && resume.Photo != null && resume.DateOfBirth != null && resume.PhoneNumber != null && resume.IdCity != null && resume.IdCitizenship != null && resume.Position != null && resume.Salary != null && resume.Education != null && resume.University != null && resume.WorkExperience != null && resume.IdTypeOfEmployment != null && resume.AdditionalInformation != null)
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateFakeResponse();">Отклик</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(4).Id');">Отклик</a>
+                                }
+                            }
+                        }
+                    }
                 </div>
             </div>
         </div>
-        <footer class="backwhite">
-            <div class="firstline">
-                <div class="aboutus mrtop32">
-                    <div class="aboutuss">
-                        <a href="#" class="font16 fontbold">О нас</a>
-                    </div>
-                    <div class="aboutuscontext">
-                        <a href="#" class="font16 fontregular">О сервисе</a> <br><br>
-                        <a href="#" class="font16 fontregular">Пользовательское соглашение</a> <br><br>
-                        <a href="#" class="font16 fontregular">Политика конфиденциальности</a> <br><br>
-                    </div>
-                </div>
+    </div>
+    <div class="summary-right">
+        <div class="d-flex align-items-bottom cursor-pointer">
+            @if (Model.User != null)
+            {
+                <a href="/Home/Meeting" class="font-24 fontbold mrbottom8 mr-right-1dot6percent media-mrtop color-2c2c2c color-green-hover" title="Страница встреч">
+                    Встречи
+                    сегодня
+                </a>
+            }
+            else
+            {
+                <a class="font-24 fontbold mrbottom8 mr-right-1dot6percent media-mrtop color-2c2c2c color-green-hover" title="Страница встреч">
+                    Встречи
+                    сегодня
+                </a>
+            }
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" class="svg">
+                <path fill="currentColor"
+                      d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z">
+                </path>
+            </svg>
+        </div>
+        @{ string role = Model.User != null ? Model.User.Role : string.Empty;
+            Meeting meet = new Meeting();
+            if (role == "Соискатель")
+            {
+                meet = Model.Meetings.FirstOrDefault(m => m.IdResume == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
+            }
+            else if (role == "Работодатель")
+            {
+                meet = Model.Meetings.FirstOrDefault(m => m.IdEmployer == Model.User.Id && m.DateAndTime.Date == DateTime.Now.Date);
+            }
+        }
+        <div class="summary-meetings">
+            <div class="summary-meeting-back">
+                <div class="d-flex align-items-center">
+                    @if (role == "Соискатель" && meet != null)
+                    {
+                        Employer employer = Model.Employers.FirstOrDefault(e => e.Id == meet.IdEmployer);
+                        <p class="mr-right-1dot6percent font-bolder mrleft16">@meet.DateAndTime.ToString("t")</p>
+                        <div class="w-100">
+                            <p title="Название компании и адрес встречи">@employer.СompanyName - @employer.City.Name @employer.Street/@employer.House/@employer.Apartment</p>
+                        </div>
+                    }
+                    else if (role == "Работодатель" && meet != null)
+                    {
+                        Resume seeker = Model.Resumes.FirstOrDefault(s => s.Id == meet.IdResume);
+                        <p class="mr-right-1dot6percent font-bolder mrleft16">@meet.DateAndTime.ToString("t")</p>
+                        <p class="mr-right-1dot6percent">@seeker.LastName @seeker.FirstName</p>
+                    }
+                    else
+                    {
+                        <div class="summary-meeting-left d-flex align-items-center">
+                            @if (Model.User != null)
+                            { 
+                                <p class="mr-right-1dot6percent color-2c2c2c font-bolder mrleft16">На сегодня нет встреч</p>
+                                <a href="/Home/Meeting" class="color-green-hover color-2c2c2c cursor-pointer">Все встречи</a>
+                            }
+                            else
+                            { 
+                                <p class="mr-right-1dot6percent color-2c2c2c font-bolder mrleft16">Авторизуйтесь в системе -_-</p>
+                            }
+                        </div>
+                    }
 
-                <div class="support mrtop32">
-                    <div class="supportt">
-                        <a href="" class="font16 fontbold">Поддержка</a>
-                    </div>
-                    <div class="devicescontext">
-                        <a href="#" class="font16 fontregular">support@recruterra.ru</a> <br> <br>
-                        <a href="#" class="font16 fontregular">8 (905) 020-99-52</a> <br><br>
-                        <a href="#" class="font16 fontregular">FAQ</a> <br><br>
-                    </div>
-                </div>
-
-                <div class="SocSeti mrtop32">
-                    <div class="SocSetii">
-                        <a href="#" class="font16 fontbold">Наши соц.сети</a>
-                    </div>
-                    <div class="SocSeticontext">
-                        <a href="https://www.instagram.com/ar.gelick/"><img src="~/images/instagram.png" alt=""></a>
-                        <a href="https://twitter.com/?lang=ru"><img src="~/images/twitter.png" alt=""></a>
-                        <a href="https://www.facebook.com/"><img src="~/images/facebook.png" alt=""></a>
-                        <a href="https://t.me/kurechh"><img src="~/images/telegram.png" alt=""></a>
-                    </div>
                 </div>
             </div>
-            <div class="copy">
-                <table class="iksweb">
-                    <tbody>
-                        <tr>
-                            <td><a href="" class="font36">Recruterra</a></td>
-                            <td class="copyright"><a href="" class="copyright">© 2023</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+        </div>
+
+        <div class="d-flex align-items-bottom cursor-pointer">
+            @if (Model.User != null)
+            {
+                <a href="/Home/Resume" class="font-24 fontbold mrtop16 mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover" title="Страница всех открых резюме">Резюме</a>
+            }
+            else
+            {
+                <a class="font-24 fontbold mrtop16 mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover" title="Страница всех открых резюме">Резюме</a>
+            }
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" class="svg">
+                <path fill="currentColor"
+                      d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z">
+                </path>
+            </svg>
+        </div>
+        <div class="summary-resumes d-flex align-items-center">
+            @{List<Resume> latestResumes = new List<Resume>();
+                latestResumes = Model.Resumes.Where(q => q.ItsPublic == true).OrderByDescending(o => o.Id).ToList();}
+            <div class="summary-resume-1">
+                <p class="mr-right-1dot6percent font-bolder mrleft16">@latestResumes.ElementAt(0).Position</p>
+                <p class="mrleft16">@Model.Resumes.Count(r => r.Position == latestResumes.ElementAt(0).Position) резюме</p>
             </div>
-        </footer>
-    </main>
-</body>
-</html>
+            <div class="summary-resume-2">
+                <p class="mr-right-1dot6percent font-bolder mrleft16">@latestResumes.ElementAt(1).Position</p>
+                <p class="mrleft16">@Model.Resumes.Count(r => r.Position == latestResumes.ElementAt(1).Position) резюме</p>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-bottom cursor-pointer">
+            @if (Model.User != null)
+            {
+                <a href="/Home/Article" class="font-24 fontbold mrtop16 mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover" title="Страница сообщества">Сообщество</a>
+            }
+            else
+            {
+                <a class="font-24 fontbold mrtop16 mrbottom8 mr-right-1dot6percent color-2c2c2c color-green-hover" title="Страница сообщества">Сообщество</a>
+            }
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" class="svg">
+                <path fill="currentColor"
+                      d="M5.293 12.293a1 1 0 1 0 1.414 1.414l5-5a1 1 0 0 0 0-1.414l-5-5a1 1 0 0 0-1.414 1.414L9.586 8l-4.293 4.293Z">
+                </path>
+            </svg>
+        </div>
+
+        <div class="summary-community d-flex">
+            @{List<Article> latestArticles = new List<Article>();
+                latestArticles = Model.Articles.OrderByDescending(o => o.Id).ToList();}
+            <div class="summary-community-1 mr-right-1dot6percent align-items-end">
+                <p class="font-bolder">@latestArticles.ElementAt(0).Name</p>
+                <img src="@latestArticles.ElementAt(0).Photo" class="w-100 h-170px mrtop8">
+            </div>
+            <div class="summary-community-2 align-items-end">
+                <p class="font-bolder">@latestArticles.ElementAt(1).Name</p>
+                <img src="@latestArticles.ElementAt(1).Photo" class="w-100 h-170px mrtop8">
+            </div>
+        </div>
+    </div>
+</div>

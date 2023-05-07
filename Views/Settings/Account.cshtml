@@ -1,0 +1,225 @@
+﻿@model IndexData
+
+@{
+    ViewBag.Title = "Recruterra - Настройки";
+}
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light media-header-true">
+        <div class="container d-flex justify-content-center ">
+            @if (Model.User != null)
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="/Home/Index" class="color-2c2c2c">Сводка</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
+                    <a href="/Home/Meeting" class="color-2c2c2c">Встречи</a>
+                    <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
+                    <a href="/Settings/Account" class="color-green">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
+                </div>
+            }
+            else
+            {
+            <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+            <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
+            <div id="myDropdown2" class="dropdown-content">
+                <a href="/Access/Signin" class="color-green">Войти</a>
+            </div>
+            }
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light media-header">
+        <div class="container d-flex justify-content-center ">
+            <ul class="navbar-nav mr-auto d-flex justify-content-center align-items-center">
+                @if (Model.User != null)
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Index">Сводка</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover"
+                           href="/Home/Article">Сообщество</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Settings/Account">Профиль</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black cursor-pointer" onclick="UpdateAccount()">Выйти</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black" href="/Access/Signin">Войти</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="container justify-content-center mrtop16 dd-flex minheight">
+    <div class="account-left">
+        <p class="font-bolder font-18">Настройки пользователя</p>
+        <p class="font-bolder font-16 mrleft16 mrtop16">Выберите нужное</p>
+        @if (Model.User != null)
+        {
+            if (Model.User.Role == "Соискатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/MyResume" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Резюме</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+            else if (Model.User.Role == "Работодатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+        }
+    </div>
+    <div class="account-right justify-content-start">
+        <div class="account-back">
+            @if (Model.User.Role == "Соискатель")
+            {
+                <form class="justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rlastname">Фамилия</p>
+                        <input type="text" id="rlastname" class="account-input" placeholder="Иванов" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).LastName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rfirstname">Имя</p>
+                        <input type="text" id="rfirstname" class="account-input" placeholder="Иван" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).FirstName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rmiddlename">Отчество</p>
+                        <input type="text" id="rmiddlename" class="account-input" placeholder="Иванович" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).MiddleName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rgender">Пол</p>
+                        @{var gender = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Gender; }
+                        <select id="rgender" class="media-wrap-inputs">
+                            @if (gender == "М")
+                            {
+                                <option value="М" selected>Мужской</option>
+                                <option value="Ж">Женский</option>
+                            }
+                            else
+                            {
+                                <option value="Ж" selected>Женский</option>
+                                <option value="М">Мужской</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rdateofbirth">Дата рождения</p>
+                        <input type="date"
+                               asp-for="Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).DateOfBirth.Value"
+                               asp-format="{0:yyyy-MM-dd}" id="rdateofbirth" class="account-input">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rphone">Номер телефона</p>
+                        <input type="text" id="rphone" class="account-input" placeholder="89050209952"
+                               value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).PhoneNumber">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rcity">Город</p>
+                        <input type="text" id="rcity" class="account-input" placeholder="Казань"
+                               value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCity).Name">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="rcitizenship">Гражданство</p>
+                        <input type="text" id="rcitizenship" class="account-input" placeholder="Россия"
+                               value="@Model.Citizenships.FirstOrDefault(citizenship => citizenship.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCitizenship).Name">
+                    </div>
+                    <div class="d-flex justify-content-center media-account-b">
+                        <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"
+                               onclick="UpdateProfileResume('@Model.User.Id', this.form.rlastname.value, this.form.rfirstname.value, this.form.rmiddlename.value, this.form.rgender.value, this.form.rdateofbirth.value, this.form.rphone.value, this.form.rcity.value, this.form.rcitizenship.value)"
+                               value="Обновить" />
+                    </div>
+                </form>
+            }
+            else if (Model.User.Role == "Работодатель")
+            {
+                <form class="justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="ecompanyname">Название компании</p>
+                        <input type="text" class="account-input" id="ecompanyname" placeholder='ООО "Каскад"' value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).СompanyName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="emsrn">ОГРН</p>
+                        <input type="text" class="account-input" id="emsrn" placeholder="313028000120160" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MSRN">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="elastname">Фамилия HR</p>
+                        <input type="text" class="account-input" id="elastname" placeholder="Иванов" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).LastName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="efirstname">Имя HR</p>
+                        <input type="text" class="account-input" id="efirstname" placeholder="Иван" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).FirstName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="emiddlename">Отчество HR</p>
+                        <input type="text" class="account-input" id="emiddlename" placeholder="Иванович" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MiddleName">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="ecreationdate">Дата<br>регистрации</p>
+                        <input type="date" asp-for="Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).CreationDate.Value" asp-format="{0:yyyy-MM-dd}" class="account-input" id="ecreationdate">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="ecity">Город</p>
+                        <input type="text" class="account-input" id="ecity" placeholder="Казань" value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).IdCity).Name">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="epostcode" title="Почтовый индекс офиса вашей компании">Почтовый<br>индекс</p>
+                        <input type="text" class="account-input" id="epostcode" placeholder="420140" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Postcode">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="estreet" title="Адрес вашей компании">Улица</p>
+                        <input type="text" class="account-input" id="estreet" placeholder="Пушкина" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Street">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="ehouse" title="Адрес вашей компании">Дом</p>
+                        <input type="text" class="account-input" id="ehouse" placeholder="3" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).House">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
+                        <p class="w-12" for="eapartment" title="Адрес вашей компании">Помещение</p>
+                        <input type="text" class="account-input" id="eapartment" placeholder="185" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Apartment">
+                    </div>
+                    <div class="d-flex justify-content-center media-account-b">
+                        <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"
+                               onclick="UpdateProfileEmployer('@Model.User.Id', this.form.ecompanyname.value, this.form.emsrn.value, this.form.elastname.value, this.form.efirstname.value, this.form.emiddlename.value, this.form.ecreationdate.value, this.form.ecity.value, this.form.epostcode.value, this.form.estreet.value, this.form.ehouse.value, this.form.eapartment.value)"
+                               value="Обновить" />
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

@@ -16,332 +16,173 @@ using System.Net;
 using Microsoft.EntityFrameworkCore;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace WebApplication2.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationContext db;
+        private readonly ApplicationContext db;
+        private readonly IConfiguration _config;
+
         static MailAddress to;
-        public HomeController(ApplicationContext context)
+        public HomeController(ApplicationContext context, IConfiguration config)
         {
             db = context;
+            _config = config;
         }
 
-        [HttpGet]
-        public IActionResult Signin()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            // Получение токена из cookie
+            string jwtToken = Request.Cookies["recruterra"];
 
-        [HttpGet]
-        public IActionResult Signup()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> PasswordRecovery()
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == 1);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index(int? id)
-        {
-            if (id != null)
+            if (Request.Cookies["recruterra"] != null)
             {
-                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var jwt = Request.Cookies["recruterra"];
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userId = token.Claims.First(c => c.Type == "userId").Value;
+
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
             {
-                id = 1;
-                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = null, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Vacancy(int? id, int? salary, string? city, string? education, int? workexperience, int? employment)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            List<Employer> employersByCity = new List<Employer>();
-            if (city != null)
-            {
-                City searchcity = db.Cities.FirstOrDefault(c => c.Name == city);
-                employersByCity = db.Employers.Where(emp => emp.IdCity == searchcity.Id).ToList();
-            }
 
-            List<Vacancy> searchvacancies = new List<Vacancy>(); // нужный город
-            List<Vacancy> vacancies = new List<Vacancy>();
-            if (salary != null && city != null && education != null && workexperience != null && employment != null)
+        [HttpGet]
+        public async Task<IActionResult> Vacancy(int? salary, string? city, string? education, int? workexperience, int? employment)
+        {
+            string jwtToken = Request.Cookies["recruterra"];
+
+            if (Request.Cookies["recruterra"] != null)
             {
-                int[] ids = new int[employersByCity.Count];
-                for (int i = 0; i < employersByCity.Count; i++)
+                var jwt = Request.Cookies["recruterra"];
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userId = token.Claims.First(c => c.Type == "userId").Value;
+
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
+                List<Employer> employersByCity = new List<Employer>();
+                if (city != null)
                 {
-                    ids[i] = employersByCity[i].Id;
+                    City searchcity = db.Cities.FirstOrDefault(c => c.Name == city);
+                    employersByCity = db.Employers.Where(emp => emp.IdCity == searchcity.Id).ToList();
                 }
 
-                vacancies = await db.Vacancies.Where(v => v.Salary >= salary).Where(v => v.Education == education).Where(v => v.WorkExperience >= workexperience).Where(v => v.IdTypeOfEmployment == employment).ToListAsync();
-
-                for (int j = 0; j < vacancies.Count; j++)
+                List<Vacancy> searchvacancies = new List<Vacancy>(); // нужный город
+                List<Vacancy> vacancies = new List<Vacancy>();
+                if (salary != null && city != null && education != null && workexperience != null && employment != null)
                 {
-                    for (int o = 0; o < ids.Length; o++)
+                    int[] ids = new int[employersByCity.Count];
+                    for (int i = 0; i < employersByCity.Count; i++)
                     {
-                        if (vacancies[j].IdEmployer == ids[o])
+                        ids[i] = employersByCity[i].Id;
+                    }
+
+                    vacancies = await db.Vacancies.Where(v => v.Salary >= salary).Where(v => v.Education == education).Where(v => v.WorkExperience >= workexperience).Where(v => v.IdTypeOfEmployment == employment).ToListAsync();
+
+                    for (int j = 0; j < vacancies.Count; j++)
+                    {
+                        for (int o = 0; o < ids.Length; o++)
                         {
-                            searchvacancies.Add(vacancies[j]);
+                            if (vacancies[j].IdEmployer == ids[o])
+                            {
+                                searchvacancies.Add(vacancies[j]);
+                            }
                         }
                     }
-                }
 
-                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    return View(model);
+                }
+                else
+                {
+                    vacancies = await db.Vacancies.ToListAsync();
+                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction("Signin", "Access");
+            }    
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Resume()
+        {
+            string jwtToken = Request.Cookies["recruterra"];
+
+            if (Request.Cookies["recruterra"] != null)
+            {
+                var jwt = Request.Cookies["recruterra"];
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userId = token.Claims.First(c => c.Type == "userId").Value;
+
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
             {
-                vacancies = await db.Vacancies.ToListAsync();
-                var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                return RedirectToAction("Signin", "Access");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Meeting()
+        {
+            string jwtToken = Request.Cookies["recruterra"];
+
+            if (Request.Cookies["recruterra"] != null)
+            {
+                var jwt = Request.Cookies["recruterra"];
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userId = token.Claims.First(c => c.Type == "userId").Value;
+
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
-            }  
-        }
-
-        [HttpGet]
-        public IActionResult Myresume()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Account(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Resume(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Meeting(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Article(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> AddVacancy(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Responses(int? id)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(m => m.Id == id);
-            var model = new IndexData { User = user, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
-            return View(model);
-        }
-
-        public EmptyResult AcceptResponse(int idresponse)
-        {
-            var response = db.Responses.FirstOrDefault(m => m.Id == idresponse);
-            var vacancy = db.Vacancies.FirstOrDefault(m => m.Id == response.IdVacancy);
-            var user = db.Users.FirstOrDefault(m => m.Id == response.IdUser);
-            response.IsAccepted = 1;
-            db.Update(response);
-            db.SaveChanges();
-
-            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
-            to = new MailAddress(user.Login);
-            MailMessage m = new MailMessage(from, to);
-            m.Subject = "Ваш отклик принят!";
-            m.Body = $"Отклик на вакансию <b> {vacancy.Position} </b> принят!<br>Ожидайте назначение встречи от работодателя.<br><br> --------------------- <br> 2023 - Recruterra";
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
-            smtp.EnableSsl = true;
-            smtp.SendMailAsync(m);
-
-            return new EmptyResult();
-        }
-
-        public EmptyResult DismissResponse(int idresponse)
-        {
-            var response = db.Responses.FirstOrDefault(m => m.Id == idresponse);
-            response.IsAccepted = 2;
-            db.Update(response);
-            db.SaveChanges();
-            return new EmptyResult();
-        }
-
-        [Route("Home/AddMeeting/{id:int}/{id2:int}")]
-        public async Task<IActionResult> AddMeeting(int id, int id2)
-        {
-            User user = await db.Users.FirstOrDefaultAsync(p => p.Id == id);
-            Resume resume = await db.Resumes.FirstOrDefaultAsync(p => p.Id == id2);
-
-            var model = new MeetingsData { User = user, Resume = resume, Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Employers = db.Employers.ToList(), Accounts = db.Accounts.ToList() };
-            return View(model);
-        }
-
-
-        public EmptyResult AddMeet(int idemployer, int idresume, DateTime dateandtime)
-        {
-            Resume seeker = db.Resumes.FirstOrDefault(s => s.Id == idresume);
-            Employer employer = db.Employers.FirstOrDefault(e => e.Id == idemployer);
-
-            Meeting meeting = new Meeting()
-            {
-                DateAndTime = dateandtime,
-                IsActive = true,
-                IdEmployer = idemployer,
-                IdResume = idresume
-            };
-            db.Meetings.Add(meeting);
-            db.SaveChanges();
-
-            var someoneSendingResume = seeker;
-            var someoneSendingUser = db.Users.FirstOrDefault(m => m.Id == someoneSendingResume.Id);
-            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
-            to = new MailAddress(someoneSendingUser.Login);
-            MailMessage m = new MailMessage(from, to);
-            m.Subject = "Вам назначена встреча с работодателем!";
-            m.Body = $"Здравствуйте, {someoneSendingResume.FirstName}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br>Адрес встречи: офис {employer.СompanyName} (Улица: {employer.Street}, дом {employer.House}, помещение {employer.Apartment})<br><i>Не забудьте взять свои документы!<i><br> --------------------- <br> 2023 - Recruterra";
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
-            smtp.EnableSsl = true;
-            smtp.SendMailAsync(m);
-
-            return new EmptyResult();
-        }
-
-        [HttpPost]
-        public IActionResult Signup(string email, string password, string role) // регистрация
-        {
-            User user = new User() { Login = email, Password = PasswordHashing.GetHashString(password), Role = role, CreateDate = DateTime.Now };
-            db.Users.Add(user);
-            db.SaveChanges();
-
-            if (role == "Соискатель")
-            {
-                Resume resume = new Resume() { Id = user.Id };
-                db.Resumes.Add(resume);
             }
-            else if (role == "Работодатель")
+            else
             {
-                Employer employer = new Employer() { Id = user.Id };
-            }    
-
-            db.SaveChanges();
-            
-            return Redirect("~/Home/Signin");
-        }
-
-        [HttpPost]
-        public IActionResult Signin(string email, string password) // авторизация
-        {
-            var user = db.Users.FirstOrDefault(el => el.Login == email && el.Password == PasswordHashing.GetHashString(password));
-
-            if (user != null)
-            {
-                Account account = new Account() { IdUser = user.Id, Auth = 1 };
-                db.Accounts.Add(account);
+                return RedirectToAction("Signin", "Access");
             }
-
-            db.SaveChanges();
-
-            return Redirect($"~/Home/Index/{user.Id}");
         }
 
-        public EmptyResult RecoverySendCodeToEmail(string email)
+        [HttpGet]
+        public async Task<IActionResult> Article()
         {
-            User user = db.Users.FirstOrDefault(m => m.Login == email);
+            string jwtToken = Request.Cookies["recruterra"];
 
-            if(user != null)
+            if (Request.Cookies["recruterra"] != null)
             {
-                MailAddress from = new MailAddress("recruterra@mail.ru", "Recruterra");
-                to = new MailAddress(email);
-                MailMessage m = new MailMessage(from, to);
-                m.Subject = "Вам отправлен код для восстановления пароля!";
-                m.Body = $"Здравствуйте, {email}.<br>Ваш код восстановления {GenerateCodeForRecoveryPassword.Generate()}<br><br><br> --------------------- <br> 2023 - Recruterra";
-                m.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-                smtp.Credentials = new NetworkCredential("recruterra@mail.ru", "WkEXb6t8ULG0u7rVRbwj");
-                smtp.EnableSsl = true;
-                smtp.SendMailAsync(m);
+                var jwt = Request.Cookies["recruterra"];
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userId = token.Claims.First(c => c.Type == "userId").Value;
+
+                User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                return View(model);
             }
-
-            return new EmptyResult();
-        }
-
-        public EmptyResult UpdatePasswordInRecovery(string email, string code, string newpassword)
-        {
-            User user = db.Users.FirstOrDefault(m => m.Login == email);
-            if (code == GenerateCodeForRecoveryPassword.CurentCode)
+            else
             {
-                user.Password = PasswordHashing.GetHashString(newpassword);
-                db.Update(user);
-                db.SaveChanges();
+                return RedirectToAction("Signin", "Access");
             }
-
-            return new EmptyResult();
-        }
-
-        public EmptyResult AddResponse(int iduser, int idvacancy)
-        {
-            Response response = new Response()
-            {
-                IdUser = iduser,
-                IdVacancy = idvacancy,
-                DateAndTime = DateTime.Now,
-                IsAccepted = 0
-            };
-            db.Responses.Add(response);
-            db.SaveChanges();
-            return new EmptyResult();
-        }
-
-        public EmptyResult AddVac(string vacposition, string vacobligations, int vacsalary, int vacworkex, string vacdescrip, string vacedu, int vactypeofemp, int vacisactive, int idemployer)
-        {
-            Vacancy vacancy = new Vacancy() 
-            { 
-                Position = vacposition,
-                Obligations = vacobligations,
-                Salary = vacsalary,
-                WorkExperience = vacworkex,
-                Description = vacdescrip,
-                Education = vacedu,
-                IdTypeOfEmployment = vactypeofemp,
-                IdEmployer = idemployer,
-                IsActive = vacisactive
-            };
-            db.Vacancies.Add(vacancy);
-            db.SaveChanges();
-            return new EmptyResult();
         }
 
         public EmptyResult DelVacancy(int idvacancy)
@@ -375,6 +216,20 @@ namespace WebApplication2.Controllers
             return new EmptyResult();
         }
 
+        public EmptyResult AddResponse(int iduser, int idvacancy)
+        {
+            Response response = new Response()
+            {
+                IdUser = iduser,
+                IdVacancy = idvacancy,
+                DateAndTime = DateTime.Now,
+                IsAccepted = 0
+            };
+            db.Responses.Add(response);
+            db.SaveChanges();
+            return new EmptyResult();
+        }
+
         public EmptyResult UpadateAccountAfterLogout(int idaccount)
         {
             var account = db.Accounts.FirstOrDefault(m => m.Id == idaccount);
@@ -383,57 +238,6 @@ namespace WebApplication2.Controllers
             db.Accounts.Update(account);
             db.SaveChanges();
 
-            return new EmptyResult();
-        }
-
-        // обновление основной информации соискателя
-        public EmptyResult UpadateSeekerProfileSettings(int iduser, string login, string lastname, string firstname, string middlename, string gender, DateTime dateofbirth, string phone, string city, string citizenship)
-        {
-            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
-            int idcitizenship = db.Citizenships.FirstOrDefault(cz => cz.Name == citizenship).Id;
-            User user = db.Users.FirstOrDefault(user => user.Id == iduser);
-            user.Login = login;
-            db.Update(user);
-            db.SaveChanges();
-
-            Resume resume = db.Resumes.FirstOrDefault(user => user.Id == iduser);
-            resume.LastName = lastname;
-            resume.FirstName = firstname;
-            resume.MiddleName = middlename;
-            resume.Gender = gender;
-            resume.DateOfBirth = dateofbirth;
-            resume.PhoneNumber = phone;
-            resume.IdCity = idcity;
-            resume.IdCitizenship = idcitizenship;
-            db.Update(resume);
-            db.SaveChanges();
-            return new EmptyResult();
-        }
-
-        // обновление основной информации работодателя
-        public EmptyResult UpadateEmployerProfileSettings(int iduser, string login, string companyname, string msrn, string lastname, string firstname, string middlename, DateTime creationdate, string city, int postcode, string street, string house, string apartment)
-        {
-            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
-
-            User user = db.Users.FirstOrDefault(user => user.Id == iduser);
-            user.Login = login;
-            db.Update(user);
-            db.SaveChanges();
-
-            Employer employer = db.Employers.FirstOrDefault(user => user.Id == iduser);
-            employer.СompanyName = companyname;
-            employer.LastName = lastname;
-            employer.FirstName = firstname;
-            employer.MiddleName = middlename;
-            employer.CreationDate = creationdate;
-            employer.Postcode = postcode;
-            employer.IdCity = idcity;
-            employer.Street = street;
-            employer.House = house;
-            employer.Apartment = apartment;
-            employer.MSRN = msrn;
-            db.Update(employer);
-            db.SaveChanges();
             return new EmptyResult();
         }
 
@@ -476,16 +280,6 @@ namespace WebApplication2.Controllers
             //    }
             //}
             return meet;
-        }
-
-        public static byte[] ObjectToByteArray(Object obj)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, obj);
-                return ms.ToArray();
-            }
         }
 
         public IActionResult Privacy()

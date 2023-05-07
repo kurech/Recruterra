@@ -1,9 +1,220 @@
 ﻿@model IndexData
 
 @{
-    Layout = null;
+    ViewBag.Title = "Recruterra - Отклики";
 }
-<!DOCTYPE html>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light media-header-true">
+        <div class="container d-flex justify-content-center ">
+            @if (Model.User != null)
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="/Home/Index" class="color-2c2c2c">Сводка</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
+                    <a href="/Home/Meeting" class="color-2c2c2c">Встречи</a>
+                    <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
+                    <a href="/Home/Article" class="color-2c2c2c">Сообщество</a>
+                    <a href="/Settings/Account" class="color-green">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
+                </div>
+            }
+            else
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="/Access/Signin" class="color-green">Войти</a>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light media-header">
+        <div class="container d-flex justify-content-center ">
+            <ul class="navbar-nav mr-auto d-flex justify-content-center align-items-center">
+                @if (Model.User != null)
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Index">Сводка</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover"
+                           href="/Home/Article">Сообщество</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Settings/Account">Профиль</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black cursor-pointer" onclick="UpdateAccount()">Выйти</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black" href="/Access/Signin">Войти</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="container justify-content-center mrtop16 dd-flex minheight">
+    <div class="account-left">
+        <p class="font-bolder font-18">Настройки пользователя</p>
+        <p class="font-bolder font-16 mrleft16 mrtop16">Выберите нужное</p>
+        @if (Model.User != null)
+        {
+            if (Model.User.Role == "Соискатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/MyResume" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Резюме</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+            else if (Model.User.Role == "Работодатель")
+            {
+                <a href="/Settings/Account" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Основная информация</label>
+                </a>
+                <a href="/Settings/Responses" class="font-16 color-2c2c2c hover-underline" style="cursor: pointer">
+                    <label class="form-check-label mrtop3 cursor-pointer mrleft16">• Отклики</label>
+                </a>
+            }
+        }
+    </div>
+    <div class="account-right justify-content-start">
+        @if (Model.User.Role == "Работодатель")
+        {
+            foreach (var a in Model.Responses.OrderByDescending(a => a.Id))
+            {
+                List<Vacancy> _vacancies = new List<Vacancy>();
+                foreach (var b in Model.Vacancies)
+                {
+                    if (b.IdEmployer == Model.User.Id)
+                    {
+                        _vacancies.Add(b);
+                    }
+                }
+                foreach (var c in _vacancies)
+                {
+                    if (a.IdVacancy == c.Id)
+                    {
+                        var resume = Model.Resumes.FirstOrDefault(m => m.Id == a.IdUser);
+
+                        <div class="account-back mrbottom16">
+                            <form>
+                                <p>@a.DateAndTime.ToString("f")</p>
+                                <p>Отклик на вакансию: @c.Position</p>
+                                <p>@resume.LastName @resume.FirstName @resume.MiddleName</p>
+                                @{var date = resume.DateOfBirth.Value;
+                                    var age = DateTime.Now.Year - date.Year;
+                                    if (DateTime.Now.DayOfYear < date.DayOfYear)
+                                    {
+                                        age++;
+                                    }
+                                }
+                                <p class="mrtop16">Возраст: @age @Model.GetYearNameInRussian(age)</p>
+                                @if (resume.WorkExperience == 0)
+                                {
+                                    <p>Опыт работы: @Model.GetYearNameInRussian(resume.WorkExperience)</p>
+                                }
+                                else
+                                {
+                                    <p>Опыт работы: @resume.WorkExperience @Model.GetYearNameInRussian(resume.WorkExperience)</p>
+                                }
+                                <p>Предполагаемая должность: @resume.Position</p>
+                                <p>Предполагаемая заработная плата: @resume.Salary руб.</p>
+                                <p>Город: @resume.City.Name</p>
+                                <p>Образование: @resume.Education</p>
+                                <p class="mrtop16">Дополнительная информация: @resume.AdditionalInformation</p>
+                                @if (a.IsAccepted == 0)
+                                {
+                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"
+                                           onclick="DismissResponse('@a.Id');"
+                                           value="Отклонить" />
+                                    <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"
+                                           onclick="AcceptResponse('@a.Id', '@Model.User.Id', '@resume.Id');"
+                                           value="Принять" />
+                                }
+                                else if (a.IsAccepted == 1)
+                                {
+                                    <p class="mrtop16 color-green">Отклик принят</p>
+                                }
+                                else if (a.IsAccepted == 2)
+                                {
+                                    <p class="mrtop16 color-red">Отклик отклонен</p>
+                                }
+                            </form>
+                        </div>
+                    }
+                }
+            }
+        }
+        else if (Model.User.Role == "Соискатель")
+        {
+            <div class="mrbottom8" title="Вы скачиваете файл Excel, с вашим результатом откликов"><a class="color-2c2c2c cursor-pointer hover-underline font-bolder" href="@Url.RouteUrl("downloadseekerstats", new { controller = "Settings", action = "Export", seekerId = Model.User.Id})">Скачать статистику</a></div>
+            var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id);
+            foreach (var a in Model.Responses.OrderByDescending(a => a.Id))
+            {
+                if (a.IdUser == seekerResume.Id)
+                {
+                    <div class="account-back mrbottom16">
+                        <form>
+                            @{ var vacancy = Model.Vacancies.FirstOrDefault(v => v.Id == a.IdVacancy);
+                                var employer = Model.Employers.FirstOrDefault(e => e.Id == vacancy.IdEmployer);
+                                string city = Model.Cities.FirstOrDefault(c => c.Id == employer.IdCity).Name;
+                                string companyName = employer.СompanyName;}
+                            <p><u>@a.DateAndTime.ToString("f")</u></p>
+                            <p class="font-bolder">@companyName</p>
+                            <p class="mrbottom8">@city</p>
+                            <p>@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
+                            <p>@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Salary руб.</p>
+                            @if (a.IsAccepted == 0)
+                            {
+                                <p class="mrtop16 color-green">Мой отклик отправлен</p>
+                            }
+                            else if (a.IsAccepted == 1)
+                            {
+                                <p class="mrtop16 color-green">Работодатель принял отклик</p>
+                            }
+                            else if (a.IsAccepted == 2)
+                            {
+                                <p class="mrtop16 color-green">Работодатель отклонил отклик</p>
+                            }
+                        </form>
+                    </div>
+                }
+
+            }
+        }
+    </div>
+</div>
+
+@*<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -283,4 +494,4 @@
         </footer>
     </main>
 </body>
-</html>
+</html>*@

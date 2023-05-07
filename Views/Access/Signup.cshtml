@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Recruterra - Регистрация";
+}
+<div class="login-root">
+    <div class="box-root flex-flex flex-direction--column" style="flex-grow: 1;">
+        <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+            <div class="box-root padding-top--24 padding-bottom--24 flex-flex flex-justifyContent--center">
+                <h1><a href="" class="hover-underline color-2c2c2c font-bolder" rel="dofollow">Recruterra</a></h1>
+            </div>
+            <div class="formbg-outer">
+                <div class="formbg">
+                    <div class="formbg-inner padding-horizontal--48">
+                        <span class="padding-bottom--15">Регистрация в системе</span>
+                        <form id="stripe-login" method="post">
+                            <div class="field padding-bottom--24">
+                                <label for="email">Электронная почта</label>
+                                <input type="email" name="email" id="email">
+                            </div>
+                            <div class="field padding-bottom--24">
+                                <label for="password">Пароль</label>
+                                <input type="password" name="password" id="password">
+                            </div>
+                            <div class="field padding-bottom--24" id="selectrole">
+                                <label for="role">Роль</label>
+                                <select class="roleselect" id="role" onchange="SelectedChooseRole(this)" name="role">
+                                    <option value="Соискатель">Соискатель</option>
+                                    <option value="Работодатель">Работодатель</option>
+                                </select>
+                            </div>
+                            <div class="field padding-bottom--24">
+                                <input type="submit" name="submit" value="Продолжить">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer-link padding-top--24">
+                    <span>Уже есть аккаунт? <a href="/Access/Signin" class="hover-underline">Авторизация</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

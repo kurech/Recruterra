@@ -1,0 +1,149 @@
+﻿@model IndexData
+@{
+    ViewBag.Title = "Recruterra - Добавление вакансии";
+}
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light media-header-true">
+        <div class="container d-flex justify-content-center ">
+            @if (Model.User != null)
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown()">&#9776;</a>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="/Home/Index" class="color-2c2c2c">Сводка</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Вакансии</a>
+                    <a href="/Home/Vacancy" class="color-2c2c2c">Встречи</a>
+                    <a href="/Home/Resume" class="color-2c2c2c">Резюме</a>
+                    <a href="/Home/Article" class="color-2c2c2c">Сообщество</a>
+                    <a href="/Settings/Account" class="color-2c2c2c">Профиль</a>
+                    <a class="color-green" onclick="UpdateAccount()">Выйти</a>
+                </div>
+            }
+            else
+            {
+                <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                <a class="nav-link font-24 fontbold color-green dropbtn" onclick="menuDropDown2()">&#9776;</a>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="/Access/Signin" class="color-green">Войти</a>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light media-header">
+        <div class="container d-flex justify-content-center ">
+            <ul class="navbar-nav mr-auto d-flex justify-content-center align-items-center">
+                @if (Model.User != null)
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Index">Сводка</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Vacancy">Вакансии</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Meeting">Встречи</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Home/Resume">Резюме</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover"
+                           href="/Home/Article">Сообщество</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-18 fontbold color-black color-green-hover" href="/Settings/Account">Профиль</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black cursor-pointer" onclick="UpdateAccount()">Выйти</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="nav-link font-24 fontbold color-green" href="/Home/Index">Recruterra</a>
+                    </li>
+                    <li class="nav-item mr-right-1dot6percent">
+                        <a class="btn btn-outline-primary nav-link font-18 font-bolder color-black" href="/Access/Signin">Войти</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+@if (Model.User != null && Model.User.Role == "Работодатель")
+{
+    var employer = Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id);
+    if (employer.СompanyName != null && employer.LastName != null && employer.FirstName != null && employer.MiddleName != null && employer.CreationDate != null && employer.Postcode != null && employer.IdCity != null && employer.Street != null && employer.House != null && employer.Apartment != null && employer.MSRN != null)
+    {
+        <div class="container margin-0-auto minheight">
+            <form class="add-vacancy-back mrtop16">
+                <div class="media-wrap-text">
+                    <div class="add-vacancy-left">
+                        <div class="justify-content-start">
+                            <div class="d-flex align-items-center media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacposition">Должность</p>
+                                <input type="text" class="add-vacancy-input" id="vacposition" placeholder="Бариста">
+                            </div>
+                            <div class="d-flex align-items-center mrtop16 media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacobligations">Требования</p>
+                                <textarea id="vacobligations" class="add-vacancy-textarea" placeholder="Знание Python на уровне синтаксиса, базовое понимание Django и Flask..."></textarea>
+                            </div>
+                            <div class="d-flex align-items-center mrtop16 media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vactypeofemp">Тип занятости</p>
+                                <select id="vactypeofemp" class="add-vacancy-select">
+                                    <option value="2">Полная занятость</option>
+                                    <option value="1">Частичная занятость</option>
+                                    <option value="4">Проектная работа</option>
+                                    <option value="3">Стажировка</option>
+                                </select>
+                            </div>
+                            <div class="d-flex align-items-center mrtop16 media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacworkex">Опыт работы</p>
+                                <select id="vacworkex" class="add-vacancy-select">
+                                    <option value="0">Без опыта</option>
+                                    <option value="1">От 1 года</option>
+                                    <option value="2">От 2 лет</option>
+                                    <option value="3">От 3 лет</option>
+                                    <option value="4">От 4 лет</option>
+                                    <option value="5">От 5 лет</option>
+                                    <option value="6">От 6 лет</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-vacancy-right">
+                        <div class="justify-content-start">
+                            <div class="d-flex align-items-center media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacsalary">Зарплата</p>
+                                <input type="text" class="add-vacancy-input" id="vacsalary" placeholder="40000">
+                            </div>
+
+                            <div class="d-flex align-items-center mrtop16 media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacdescrip">Описание</p>
+                                <textarea id="vacdescrip" class="add-vacancy-textarea" placeholder="Компания ищет младшего разработчика Python для работы в..."></textarea>
+                            </div>
+                            <div class="d-flex align-items-center mrtop16 media-wrap-inputs">
+                                <p class="mr-right-1dot6percent w-12" for="vacedu">Образование</p>
+                                <select id="vacedu" class="add-vacancy-select" required>
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                </select>
+                            </div>
+                            <div class="media-wrap-inputs">
+                                <input type="button" class="btn btn-outline-dark w-200 mrtop16" value="Добавить" onclick="CreateVacancy(this.form.vacposition.value, this.form.vacobligations.value, this.form.vacsalary.value, this.form.vacworkex.value, this.form.vacdescrip.value, this.form.vacedu.value, this.form.vactypeofemp.value, 1, @Model.User.Id);" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    }
+}

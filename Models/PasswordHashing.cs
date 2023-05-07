@@ -11,16 +11,11 @@ namespace WebApplication2.Models
     {
         public static string GetHashString(string s)
         {
-            byte[] bytes = Encoding.Unicode.GetBytes(s);
+            byte[] bytes = Encoding.UTF8.GetBytes(s);
+            SHA256Managed hashAlgoritm = new SHA256Managed();
+            byte[] hash = hashAlgoritm.ComputeHash(bytes);
 
-            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
-            byte[] byteHash = CSP.ComputeHash(bytes);
-            string hash = "";
-            foreach (byte b in byteHash)
-            {
-                hash += string.Format("{0:x2}", b);
-            }
-            return hash;
+            return Convert.ToBase64String(hash);
         }
     }
 }
