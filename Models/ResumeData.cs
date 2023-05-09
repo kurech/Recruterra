@@ -11,7 +11,6 @@ namespace WebApplication2.Models
     {
         public User User { get; set; }
         public IEnumerable<Resume> Resumes { get; set; }
-        public IEnumerable<Account> Accounts { get; set; }
         public IEnumerable<TypeOfEmployment> TypeOfEmployments { get; set; }
         public IFormFile ProfileImage { set; get; }
         public int ResumeId { set; get; }

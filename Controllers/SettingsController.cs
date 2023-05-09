@@ -40,7 +40,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -75,7 +75,7 @@ namespace WebApplication2.Controllers
             int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
 
             Employer employer = db.Employers.FirstOrDefault(user => user.Id == iduser);
-            employer.СompanyName = companyname;
+            employer.CompanyName = companyname;
             employer.LastName = lastname;
             employer.FirstName = firstname;
             employer.MiddleName = middlename;
@@ -104,7 +104,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -244,7 +244,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new ResumeData { User = user, Resumes = db.Resumes.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList() };
+                var model = new ResumeData { User = user, Resumes = db.Resumes.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList() };
                 return View(model);
             }
             else
@@ -293,13 +293,9 @@ namespace WebApplication2.Controllers
         }
 
         // обновление резюме соискателя
-        public EmptyResult UpadateSeekerResumeSettings(int iduser, int postcode, string street, string house, string apartment, string position, int salary, string edu, string university, int workex, int typeofemp, string additionalinformation, bool itspublic)
+        public EmptyResult UpadateSeekerResumeSettings(int iduser, string position, int salary, string edu, string university, int workex, int typeofemp, string additionalinformation, bool itspublic)
         {
             Resume resume = db.Resumes.FirstOrDefault(user => user.Id == iduser);
-            resume.Postcode = postcode;
-            resume.Street = street;
-            resume.House = house;
-            resume.Apartment = apartment;
             resume.Position = position;
             resume.Salary = salary;
             resume.Education = edu;
@@ -359,13 +355,6 @@ namespace WebApplication2.Controllers
                 Paragraph replacement1 = new Paragraph("Место жительства: ", new Font(Font.FontFamily.HELVETICA, Font.BOLDITALIC, 16));
                 replacement1.Alignment = Element.ALIGN_LEFT;
                 document.Add(replacement1);
-
-                string replace = resume.Postcode != null && db.Cities.FirstOrDefault(u => u.Id == resume.IdCity).Name != string.Empty && resume.Street != string.Empty && resume.House != string.Empty && resume.Apartment != string.Empty
-                    ? resume.Postcode + ", " + db.Cities.FirstOrDefault(u => u.Id == resume.IdCity).Name + ", " + resume.Street + ", " + resume.House + ", " + resume.Apartment
-                    : string.Empty;
-                Paragraph replacement = new Paragraph($"{replace}", new Font(Font.FontFamily.HELVETICA, 16));
-                replacement.Alignment = Element.ALIGN_LEFT;
-                document.Add(replacement);
 
                 Paragraph citizenship = new Paragraph($"Гражданство: {db.Citizenships.FirstOrDefault(u => u.Id == resume.IdCitizenship).Name}", new Font(Font.FontFamily.HELVETICA, 16));
                 citizenship.Alignment = Element.ALIGN_LEFT;

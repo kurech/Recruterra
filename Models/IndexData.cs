@@ -14,7 +14,6 @@ namespace WebApplication2.Models
         public IEnumerable<Vacancy> Vacancies { get; set; }
         public IEnumerable<Article> Articles { get; set; }
         public IEnumerable<Response> Responses { get; set; }
-        public IEnumerable<Account> Accounts { get; set; }
         public IEnumerable<TypeOfEmployment> TypeOfEmployments { get; set; }
         public IEnumerable<City> Cities { get; set; }
         public IEnumerable<Citizenship> Citizenships { get; set; }

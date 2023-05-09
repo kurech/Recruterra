@@ -88,7 +88,7 @@
     <div class="oneofthevacancy-back mrtop16">
         @{ var emloyer = Model.Employers.FirstOrDefault(e => e.Id == Model.Vacancy.IdEmployer);}
         <div class="employer-info">
-            <p class="mr-right-1dot6percent">@emloyer.СompanyName</p>
+            <p class="mr-right-1dot6percent">@emloyer.CompanyName</p>
             <p class="mr-right-1dot6percent">город: @Model.Cities.FirstOrDefault(city => city.Id == emloyer.IdCity).Name</p>
             <p class="mr-right-1dot6percent">улица: @emloyer.Street</p>
             <p class="mr-right-1dot6percent">дом: @emloyer.House</p>

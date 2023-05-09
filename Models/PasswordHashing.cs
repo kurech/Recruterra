@@ -11,11 +11,17 @@ namespace WebApplication2.Models
     {
         public static string GetHashString(string s)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(s);
-            SHA256Managed hashAlgoritm = new SHA256Managed();
-            byte[] hash = hashAlgoritm.ComputeHash(bytes);
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(s));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
 
-            return Convert.ToBase64String(hash);
+                return builder.ToString();
+            }
         }
     }
 }

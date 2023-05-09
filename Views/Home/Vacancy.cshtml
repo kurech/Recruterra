@@ -269,7 +269,7 @@
                     <fieldset id="class4">
                         <div class="form-check">
                             <input class="form-check-input" value="0" type="radio" name="class4" id="workexRadio1" checked>
-                            <label class="form-check-label mr-left-1percent font-weight-normal" for="workexRadio1">Нет опыта</label>
+                            <label class="form-check-label mr-left-1percent font-weight-normal" for="workexRadio1">Не имеет значения</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" value="1" type="radio" name="class4" id="workexRadio2">
@@ -331,46 +331,55 @@
                     }
                 }
 
-                @foreach (var vacancy in startCity.Concat(anotherCity))
+                @foreach (var vacancy in startCity.Concat(anotherCity).Where(a => a.IsConfirmed == true))
                 {
 
-                    if (vacancy.IsActive == 1)
+                    if (vacancy.IsActive == true)
                     {
                         <div class="vacancy-vacancy-back d-flex align-items-center mrbottom16">
                             <div class="vacancy-back-left mr-right-1dot6percent">
                                 <div class="media-wrap-text align-items-center">
-                                    <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover" href="/Vacancys/OneOfTheVacancy/@vacancy.Id/@Model.User.Id">@vacancy.Position</a>
-                                    <p class="">@vacancy.Salary руб.</p>
+                                    <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover" title="Наименование вакансии" href="/Vacancys/OneOfTheVacancy/@vacancy.Id/@Model.User.Id">@vacancy.Position</a>
+                                    <p class="mrright8" title="Заработная плата">@vacancy.Salary руб.</p>
+                                    @if (vacancy.Salary > vacancy.OptimalSalary)
+                                    {
+                                        <p class="color-red" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="color-green" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
+                                    }
+
                                 </div>
                                 <div class="media-wrap-text align-items-center">
                                     @if (vacancy.WorkExperience != 0)
                                     {
-                                        <p class="mr-right-1dot6percent">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
                                     }
                                     else
                                     {
-                                        <p class="mr-right-1dot6percent">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
                                     }
-                                    <p class="mr-right-1dot6percent">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
-                                    <p class="">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                                    <p class="mr-right-1dot6percent" title="Тип занятости">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
+                                    <p class="" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
                                 </div>
                                 <br>
-                                <p class="media-font-lower">@vacancy.Obligations</p>
+                                <p class="media-font-lower" title="Требования к соискателю">@vacancy.Obligations</p>
                             </div>
                             <div class="vacancy-back-right">
                                 @if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id) != null)
                                 {
                                     if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 0)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c">Отправлен</a>
+                                        <a href="" class="font-18 color-2c2c2c" title="Вы уже откликались на эту вакансию">Отправлен</a>
                                     }
                                     else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 1)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c">Принят</a>
+                                        <a href="" class="font-18 color-2c2c2c" title="Ваш отклик был принят работодателем. Вам должны были назначить встречу!">Принят</a>
                                     }
                                     else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 2)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c">Отклонен</a>
+                                        <a href="" class="font-18 color-2c2c2c" title="Ваш отклик был отклонен работодателем">Отклонен</a>
                                     }
                                 }
                                 else
@@ -395,52 +404,83 @@
         {
             <div class="vacancy-left">
                 @{var employer = Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id);} 
-                @if (employer.СompanyName != null && employer.LastName != null && employer.FirstName != null && employer.MiddleName != null && employer.CreationDate != null && employer.Postcode != null && employer.IdCity != null && employer.Street != null && employer.House != null && employer.Apartment != null && employer.MSRN != null)
+                @if (employer.IsApproved == true)
                 {
-                    <a href="/Vacancys/AddVacancy" class="font-bolder font-24 media-header-false color-2c2c2c color-green-hover">Добавить</a>
-                    <a href="/Vacancys/AddVacancy" class="font-bolder font-24 media-header-true color-2c2c2c color-green-hover">Добавить</a>
+                    <a href="/Vacancys/AddVacancy" title="Добавление новой вакансии" class="font-bolder font-24 media-header-false color-2c2c2c color-green-hover">Добавить</a>
+                    <a href="/Vacancys/AddVacancy" title="Добавление новой вакансии" class="font-bolder font-24 media-header-true color-2c2c2c color-green-hover">Добавить</a>
                 }
                 else
                 {
-                    <a class="font-bolder font-24 media-header-false color-2c2c2c color-green-hover cursor-pointer" onclick="CreateVacancyFake()">Добавить</a>
-                    <a class="font-bolder font-24 media-header-true color-2c2c2c color-green-hover cursor-pointer" onclick="CreateVacancyFake()">Добавить</a>
+                    <a class="font-bolder font-24 media-header-false color-2c2c2c color-green-hover cursor-pointer" title="Добавление новой вакансии" onclick="CreateVacancyFake()">Добавить</a>
+                    <a class="font-bolder font-24 media-header-true color-2c2c2c color-green-hover cursor-pointer" title="Добавление новой вакансии" onclick="CreateVacancyFake()">Добавить</a>
                 }
             </div>
             <div class="vacancy-right">
                 @foreach (var vacancy in vacancies.OrderByDescending(o => o.IsActive).ThenByDescending(o => o.Id))
                 {
-                    <div class="vacancy-vacancy-back align-items-center mrbottom16">
-                        <div class="vacancy-back-left mr-right-1dot6percent">
-                            <div class="media-wrap-text align-items-center">
-                                <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover cursor-pointer" onclick="RedirectToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id')">@vacancy.Position</a> 
-                                <p class="">@vacancy.Salary рублей</p>
+                    if (vacancy.IsConfirmed == true)
+                    {
+                        <div class="vacancy-vacancy-back align-items-center mrbottom16">
+                            <div class="vacancy-back-left mr-right-1dot6percent">
+                                <div class="media-wrap-text align-items-center">
+                                    <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover cursor-pointer" title="Наименование вакансии" onclick="RedirectToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id')">@vacancy.Position</a>
+                                    <p class="" title="Заработная плата">@vacancy.Salary рублей</p>
+                                </div>
+                                <div class="media-wrap-text align-items-center">
+                                    @if (vacancy.WorkExperience != 0)
+                                    {
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                    }
+                                    <p class="mr-right-1dot6percent" title="Тип занятости">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
+                                    <p class="" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                                </div>
+                                <br>
+                                <p class="media-font-lower" title="Требования к соискателю">@vacancy.Obligations</p>
                             </div>
-                            <div class="media-wrap-text align-items-center">
-                                @if (vacancy.WorkExperience != 0)
-                                 {
-                                     <p class="mr-right-1dot6percent">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
-                                 }
-                                 else
-                                 {
-                                     <p class="mr-right-1dot6percent">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
-                                 }
-                                <p class="mr-right-1dot6percent">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
-                                <p class="">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                            <div class="vacancy-back-right">
+                                @if (vacancy.IsActive == true)
+                                {
+                                    <a onclick="DeleteVacancy('@vacancy.Id');" class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer">Удалить</a>
+                                }
+                                else if (vacancy.IsActive == false)
+                                {
+                                    <a class="font-18 color-2c2c2c" title="Вакансия была удалена">Удалена</a>
+                                }
                             </div>
-                            <br>
-                            <p class="media-font-lower">@vacancy.Obligations</p>
                         </div>
-                        <div class="vacancy-back-right">
-                            @if (vacancy.IsActive == 1)
-                            {
-                                <a onclick="DeleteVacancy('@vacancy.Id');" class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer">Удалить</a>
-                            }
-                            else if (vacancy.IsActive == 0)
-                            {
-                                <a class="font-18 color-2c2c2c">Удалена</a>
-                            }
+                    }
+                    else
+                    {
+                        <div class="vacancy-vacancy-back align-items-center mrbottom16">
+                            <div class="vacancy-back-left mr-right-1dot6percent">
+                                <div class="media-wrap-text align-items-center">
+                                    <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover cursor-pointer" title="Наименование вакансии" onclick="RedirectToOneOfTheVacancy('@vacancy.Id', '@Model.User.Id')">@vacancy.Position</a>
+                                    <p class="" title="Заработная плата">@vacancy.Salary рублей</p>
+                                </div>
+                                <div class="media-wrap-text align-items-center">
+                                    @if (vacancy.WorkExperience != 0)
+                                    {
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                    }
+                                    <p class="mr-right-1dot6percent" title="Тип занятости">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
+                                    <p class="" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                                </div>
+                                <br>
+                                <p class="media-font-lower" title="Требования к соискателю">@vacancy.Obligations</p>
+                            </div>
+                            <div class="vacancy-back-right">
+                                <a class="font-18 color-2c2c2c" title="Вакансия обрабатывается администраторами">В обработке</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         }

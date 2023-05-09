@@ -10,7 +10,6 @@ namespace WebApplication2.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Vacancy> Vacancies { get; set; }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Citizenship> Citizenships { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -38,6 +37,8 @@ namespace WebApplication2.Models
                 .WithMany(t => t.Meetings)
                 .HasForeignKey(x => x.IdResume)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().HasIndex(u => u.Login).IsUnique();
         }
     }
 }

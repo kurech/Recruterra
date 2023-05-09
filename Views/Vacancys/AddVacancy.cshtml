@@ -79,7 +79,7 @@
 @if (Model.User != null && Model.User.Role == "Работодатель")
 {
     var employer = Model.Employers.FirstOrDefault(e => e.Id == Model.User.Id);
-    if (employer.СompanyName != null && employer.LastName != null && employer.FirstName != null && employer.MiddleName != null && employer.CreationDate != null && employer.Postcode != null && employer.IdCity != null && employer.Street != null && employer.House != null && employer.Apartment != null && employer.MSRN != null)
+    if (employer.IsApproved == true)
     {
         <div class="container margin-0-auto minheight">
             <form class="add-vacancy-back mrtop16">
@@ -138,7 +138,7 @@
                                 </select>
                             </div>
                             <div class="media-wrap-inputs">
-                                <input type="button" class="btn btn-outline-dark w-200 mrtop16" value="Добавить" onclick="CreateVacancy(this.form.vacposition.value, this.form.vacobligations.value, this.form.vacsalary.value, this.form.vacworkex.value, this.form.vacdescrip.value, this.form.vacedu.value, this.form.vactypeofemp.value, 1, @Model.User.Id);" />
+                                <input type="button" class="btn btn-outline-dark w-200 mrtop16" value="Добавить" onclick="CreateVacancy(this.form.vacposition.value, this.form.vacobligations.value, this.form.vacsalary.value, this.form.vacworkex.value, this.form.vacdescrip.value, this.form.vacedu.value, this.form.vactypeofemp.value, @Model.User.Id);" />
                             </div>
                         </div>
                     </div>

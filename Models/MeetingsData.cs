@@ -12,6 +12,5 @@ namespace WebApplication2.Models
         public IEnumerable<Resume> Resumes { get; set; }
         public IEnumerable<Meeting> Meetings { get; set; }
         public IEnumerable<Employer> Employers { get; set; }
-        public IEnumerable<Account> Accounts { get; set; }
     }
 }

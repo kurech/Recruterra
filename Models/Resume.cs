@@ -20,10 +20,6 @@ namespace WebApplication2.Models
         public string? PhoneNumber { get; set; }
         public int? IdCity { get; set; }
         public int? IdCitizenship { get; set; }
-        public int? Postcode { get; set; }
-        public string? Street { get; set; }
-        public string? House { get; set; }
-        public string? Apartment { get; set; }
         public string? Position { get; set; }
         public int? Salary { get; set; }
         public string? Education { get; set; }

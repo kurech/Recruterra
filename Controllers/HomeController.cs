@@ -49,12 +49,12 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
             {
-                var model = new IndexData { User = null, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = null, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
         }
@@ -103,13 +103,13 @@ namespace WebApplication2.Controllers
                         }
                     }
 
-                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                     return View(model);
                 }
                 else
                 {
                     vacancies = await db.Vacancies.ToListAsync();
-                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                     return View(model);
                 }
             }
@@ -132,7 +132,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -154,7 +154,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -176,7 +176,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -188,7 +188,7 @@ namespace WebApplication2.Controllers
         public EmptyResult DelVacancy(int idvacancy)
         {
             Vacancy vacancy = db.Vacancies.FirstOrDefault(vac => vac.Id == idvacancy);
-            vacancy.IsActive = 0;
+            vacancy.IsActive = false;
             db.Update(vacancy);
             db.SaveChanges();
             return new EmptyResult();
@@ -228,58 +228,6 @@ namespace WebApplication2.Controllers
             db.Responses.Add(response);
             db.SaveChanges();
             return new EmptyResult();
-        }
-
-        public EmptyResult UpadateAccountAfterLogout(int idaccount)
-        {
-            var account = db.Accounts.FirstOrDefault(m => m.Id == idaccount);
-            account.Auth = 0;
-
-            db.Accounts.Update(account);
-            db.SaveChanges();
-
-            return new EmptyResult();
-        }
-
-        public static List<Meeting> GetMeetings(int iduser) // week meetings
-        {
-            List<Meeting> meet = new List<Meeting>();
-            //foreach(var a in db.Meetings)
-            //{
-            //    if(a.DateAndTime.Date == DateTime.Now.Date)
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(1))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(2))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(3))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(4))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(5))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(6))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //    if (a.DateAndTime.Date == DateTime.Now.Date.AddDays(7))
-            //    {
-            //        meet.Add(a);
-            //    }
-            //}
-            return meet;
         }
 
         public IActionResult Privacy()

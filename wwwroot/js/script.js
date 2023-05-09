@@ -105,12 +105,12 @@ function CreateMeeting(idemployer, idresume, dateandtime) {
     });
 };
 
-function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdescrip, vacedu, vactypeofemp, vacisactive, vacidemployer) {
-    $.get(`/Vacancys/AdditionalVacancy?vacposition=${vacposition}&vacobligations=${vacobligations}&vacsalary=${vacsalary}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&vacisactive=${vacisactive}&idemployer=${vacidemployer}`).then(() => {
+function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdescrip, vacedu, vactypeofemp, vacidemployer) {
+    $.get(`/Vacancys/AdditionalVacancy?vacposition=${vacposition}&vacobligations=${vacobligations}&vacsalary=${vacsalary}&vacworkex=${vacworkex}&vacdescrip=${vacdescrip}&vacedu=${vacedu}&vactypeofemp=${vactypeofemp}&idemployer=${vacidemployer}`).then(() => {
         Swal.fire({
             icon: 'success',
             title: 'Успешно!',
-            text: 'Вакансия была добавлена',
+            text: 'Вакансия в обработке! Подождите пожалуйста, пока ее подтвердят',
             buttonsStyling: true,
             confirmButtonColor: "#8DD7AB",
         }).then(() => {
@@ -253,8 +253,8 @@ function UpdateAccount(id) {
     });
 };
 
-function UpdateProfileResumePage(id, postcode, street, house, apartment, position, salary, edu, university, workex, typeofemp, additionalinformation, itspublic) {
-    $.get(`/Settings/UpadateSeekerResumeSettings?iduser=${id}&postcode=${postcode}&street=${street}&house=${house}&apartment=${apartment}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`).then(() => {
+function UpdateProfileResumePage(id, position, salary, edu, university, workex, typeofemp, additionalinformation, itspublic) {
+    $.get(`/Settings/UpadateSeekerResumeSettings?iduser=${id}&position=${position}&salary=${salary}&edu=${edu}&university=${university}&workex=${workex}&typeofemp=${typeofemp}&additionalinformation=${additionalinformation}&itspublic=${itspublic}`).then(() => {
         Swal.fire({
             icon: 'success',
             title: 'Успешно!',
@@ -387,20 +387,58 @@ function DismissResponse(idresponse) {
 };
 
 function RecoverySendCode(email) {
-    $.get(`/Access/RecoverySendCodeToEmail?email=${email}`);
+    $.get(`/Access/RecoverySendCodeToEmail?email=${email}`).then(() => {
+        var target = document.getElementById('lastelemonpage');
+        var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field mrtop16"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value);"></div>';
 
-    var target = document.getElementById('lastelemonpage');
-    var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field mrtop16"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value);"></div>';
+        var temp = document.createElement('div');
+        temp.innerHTML = str;
+        while (temp.firstChild) {
+            target.appendChild(temp.firstChild);
+        }
 
-    var temp = document.createElement('div');
-    temp.innerHTML = str;
-    while (temp.firstChild) {
-        target.appendChild(temp.firstChild);
-    }
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: `${email} вам отправлен код для восстановления пароля! Проверьте свой почтовый ящик`,
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Не получилось отправь код восстановления! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Access/Signin/';
+        });
+    });
 };
 
 function UpdatePassword(email, code, newpassword) {
-    $.get(`/Access/UpdatePasswordInRecovery?email=${email}&code=${code}&newpassword=${newpassword}`);
+    $.get(`/Access/UpdatePasswordInRecovery?email=${email}&code=${code}&newpassword=${newpassword}`).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Успешно!',
+            text: 'Ваш пароль был изменен!',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Access/Signin/';
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Ошибка!',
+            text: 'Произошла ошибка! Повторите попытку позже',
+            buttonsStyling: true,
+            confirmButtonColor: "#8DD7AB",
+        }).then(() => {
+            window.location.href = '/Access/Signin/';
+        });
+    });
 }
 
 function AddMettingPage(iduser, idresume) {

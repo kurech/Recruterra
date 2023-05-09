@@ -31,7 +31,7 @@ namespace WebApplication2.Controllers
 
                 Vacancy vacancy = await db.Vacancies.FirstOrDefaultAsync(p => p.Id == id);
                 User user = await db.Users.FirstOrDefaultAsync(p => p.Id == int.Parse(userId));
-                var model = new OneOfTheVacancyData { Vacancy = vacancy, User = user, Users = db.Users.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new OneOfTheVacancyData { Vacancy = vacancy, User = user, Users = db.Users.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -53,7 +53,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), Accounts = db.Accounts.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
@@ -62,7 +62,7 @@ namespace WebApplication2.Controllers
             }
         }
 
-        public EmptyResult AdditionalVacancy(string vacposition, string vacobligations, int vacsalary, int vacworkex, string vacdescrip, string vacedu, int vactypeofemp, int vacisactive, int idemployer)
+        public EmptyResult AdditionalVacancy(string vacposition, string vacobligations, int vacsalary, int vacworkex, string vacdescrip, string vacedu, int vactypeofemp, int idemployer)
         {
             Vacancy vacancy = new Vacancy()
             {
@@ -74,7 +74,9 @@ namespace WebApplication2.Controllers
                 Education = vacedu,
                 IdTypeOfEmployment = vactypeofemp,
                 IdEmployer = idemployer,
-                IsActive = vacisactive
+                IsActive = true,
+                IsConfirmed = false,
+                OptimalSalary = 0
             };
             db.Vacancies.Add(vacancy);
             db.SaveChanges();

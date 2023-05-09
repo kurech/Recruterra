@@ -98,7 +98,7 @@
         </div>
         <div class="summary-allvacancyback">
             @{ List<Vacancy> defaultVacancies = new List<Vacancy>();
-                defaultVacancies = Model.Vacancies.Where(q => q.IsActive == 1).OrderByDescending(a => a.Id).ToList();}
+                defaultVacancies = Model.Vacancies.Where(q => q.IsActive == true).OrderByDescending(a => a.Id).ToList();}
             <div class="summary-vacancy-back mrbottom8 align-items-center">
                 <div class="summary-vacancy-left">
                     <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(0).Position</a>
@@ -391,7 +391,7 @@
                         Employer employer = Model.Employers.FirstOrDefault(e => e.Id == meet.IdEmployer);
                         <p class="mr-right-1dot6percent font-bolder mrleft16">@meet.DateAndTime.ToString("t")</p>
                         <div class="w-100">
-                            <p title="Название компании и адрес встречи">@employer.СompanyName - @employer.City.Name @employer.Street/@employer.House/@employer.Apartment</p>
+                            <p title="Название компании и адрес встречи">@employer.CompanyName - @employer.City.Name @employer.Street/@employer.House/@employer.Apartment</p>
                         </div>
                     }
                     else if (role == "Работодатель" && meet != null)

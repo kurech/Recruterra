@@ -187,7 +187,7 @@
                             @{ var vacancy = Model.Vacancies.FirstOrDefault(v => v.Id == a.IdVacancy);
                                 var employer = Model.Employers.FirstOrDefault(e => e.Id == vacancy.IdEmployer);
                                 string city = Model.Cities.FirstOrDefault(c => c.Id == employer.IdCity).Name;
-                                string companyName = employer.СompanyName;}
+                                string companyName = employer.CompanyName;}
                             <p><u>@a.DateAndTime.ToString("f")</u></p>
                             <p class="font-bolder">@companyName</p>
                             <p class="mrbottom8">@city</p>
