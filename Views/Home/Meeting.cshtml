@@ -123,6 +123,12 @@
                 </div>
             }
         }
+        if (seekerMeetings.Count == 0)
+        {
+            <div class="justify-content-center mrtop16">
+                <p><b>У вас не имеется встреч</b></p>
+            </div>
+        }
     }
     else if (role == "Работодатель")
     {
@@ -171,6 +177,12 @@
                     </div>
                 </div>
             }
+        }
+        if (employerMeetings.Count == 0)
+        {
+            <div class="justify-content-center mrtop16">
+                <p><b>У вас не имеется встреч</b></p>
+            </div>
         }
     }
 </div>

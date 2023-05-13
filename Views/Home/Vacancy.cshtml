@@ -482,6 +482,12 @@
                         </div>
                     }
                 }
+                @if (vacancies.OrderByDescending(o => o.IsActive).ThenByDescending(o => o.Id).Count() == 0)
+                {
+                    <div class="vacancy-vacancy-back align-items-center mrbottom16">
+                        <p><b>У вас не имеется вакансий</b></p>
+                    </div>
+                }
             </div>
         }
     }
