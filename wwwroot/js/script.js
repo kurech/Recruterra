@@ -48,7 +48,7 @@ function CreateResponse(iduser, idvacancy) {
             title: 'Успешно!',
             text: 'Ваш отклик записан!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -58,7 +58,7 @@ function CreateResponse(iduser, idvacancy) {
             title: 'Ошибка!',
             text: 'Не получилось записать отклик! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -71,7 +71,7 @@ function CreateFakeResponse() {
         title: 'Ошибка!',
         text: 'Заполните свое резюме!',
         buttonsStyling: true,
-        confirmButtonColor: "#8DD7AB",
+        confirmButtonColor: "#8DD7AB"
     }).then(() => {
         location.reload();
     });
@@ -88,7 +88,7 @@ function CreateMeeting(idemployer, idresume, dateandtime) {
             title: 'Успешно!',
             text: 'Встреча была добавлена',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Settings/Responses';
         });
@@ -112,7 +112,7 @@ function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdes
             title: 'Успешно!',
             text: 'Вакансия в обработке! Подождите пожалуйста, пока ее подтвердят',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Home/Vacancy/';
         });
@@ -122,7 +122,7 @@ function CreateVacancy(vacposition, vacobligations, vacsalary, vacworkex, vacdes
             title: 'Ошибка!',
             text: 'Не получилось добавить вакансию! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Home/Vacancy/';
         });
@@ -135,7 +135,7 @@ function CreateVacancyFake() {
         title: 'Ошибка!',
         text: 'Заполните данные о компании!',
         buttonsStyling: true,
-        confirmButtonColor: "#8DD7AB",
+        confirmButtonColor: "#8DD7AB"
     }).then(() => {
         window.location.href = '/Home/Vacancy/';
     });
@@ -148,7 +148,7 @@ function DeleteVacancy(idvacancy) {
             title: 'Успешно!',
             text: 'Вакансия удалена!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -158,7 +158,7 @@ function DeleteVacancy(idvacancy) {
             title: 'Ошибка!',
             text: 'Не получилось удалить вакансию! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -172,7 +172,7 @@ function DeleteVacancyInOOTV(idvacancy) {
             title: 'Успешно!',
             text: 'Вакансия удалена!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Home/Vacancy/';
         });
@@ -182,7 +182,7 @@ function DeleteVacancyInOOTV(idvacancy) {
             title: 'Ошибка!',
             text: 'Не получилось удалить вакансию! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Home/Vacancy/';
         });
@@ -196,7 +196,7 @@ function DeleteMeetingForSeekers(idseeker, idmeeting) {
             title: 'Успешно!',
             text: 'Встреча отменена!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -206,7 +206,7 @@ function DeleteMeetingForSeekers(idseeker, idmeeting) {
             title: 'Ошибка!',
             text: 'Не получилось отменить встречу! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -220,7 +220,7 @@ function DeleteMeetingForEmployers(idemployer, idmeeting) {
             title: 'Успешно!',
             text: 'Встреча отменена!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -230,7 +230,7 @@ function DeleteMeetingForEmployers(idemployer, idmeeting) {
             title: 'Ошибка!',
             text: 'Не получилось отменить встречу! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -239,14 +239,14 @@ function DeleteMeetingForEmployers(idemployer, idmeeting) {
 
 function UpdateAccount(id) {
     $.get(`/Access/UpadateAccountAfterLogout?idaccount=${id}`).then(() => {
-        window.location.href = '/Access/Signin/';
+        window.location.href = '/Home/Index/';
     }).catch(() => {
         Swal.fire({
             icon: 'error',
             title: 'Ошибка!',
             text: 'Не получилось выйти из аккаунта!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -260,7 +260,7 @@ function UpdateProfileResumePage(id, position, salary, edu, university, workex, 
             title: 'Успешно!',
             text: 'Ваше резюме успешно обновлено!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -270,7 +270,7 @@ function UpdateProfileResumePage(id, position, salary, edu, university, workex, 
             title: 'Ошибка!',
             text: 'Не получилось обновить резюме! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -284,7 +284,7 @@ function UpdateProfileResume(id, rlastname, rfirstname, rmiddlename, rgender, rd
             title: 'Успешно!',
             text: 'Ваши данные успешно обновлены!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -294,7 +294,7 @@ function UpdateProfileResume(id, rlastname, rfirstname, rmiddlename, rgender, rd
             title: 'Ошибка!',
             text: 'Не получилось обновить информацию!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -308,7 +308,7 @@ function UpdateProfileEmployer(id, ecompanyname, emsrn, elastname, efirstname, e
             title: 'Успешно!',
             text: 'Ваши данные успешно обновлены!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -318,7 +318,7 @@ function UpdateProfileEmployer(id, ecompanyname, emsrn, elastname, efirstname, e
             title: 'Ошибка!',
             text: 'Не получилось обновить информацию!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -345,7 +345,7 @@ function AcceptResponse(idresponse, idemployer, idresume) {
             title: 'Успешно!',
             text: 'Отклик был принят!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             AddMettingPage(idemployer, idresume);
         });
@@ -355,7 +355,7 @@ function AcceptResponse(idresponse, idemployer, idresume) {
             title: 'Ошибка!',
             text: 'Не получилось принять отклик! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -369,7 +369,7 @@ function DismissResponse(idresponse) {
             title: 'Успешно!',
             text: 'Отклик был отменен!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -379,7 +379,7 @@ function DismissResponse(idresponse) {
             title: 'Ошибка!',
             text: 'Не получилось удалить отклик! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
@@ -402,7 +402,7 @@ function RecoverySendCode(email) {
             title: 'Успешно!',
             text: `${email} вам отправлен код для восстановления пароля! Проверьте свой почтовый ящик`,
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         });
     }).catch(() => {
         Swal.fire({
@@ -410,7 +410,7 @@ function RecoverySendCode(email) {
             title: 'Ошибка!',
             text: 'Не получилось отправь код восстановления! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Access/Signin/';
         });
@@ -424,7 +424,7 @@ function UpdatePassword(email, code, newpassword) {
             title: 'Успешно!',
             text: 'Ваш пароль был изменен!',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Access/Signin/';
         });
@@ -434,7 +434,7 @@ function UpdatePassword(email, code, newpassword) {
             title: 'Ошибка!',
             text: 'Произошла ошибка! Повторите попытку позже',
             buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB",
+            confirmButtonColor: "#8DD7AB"
         }).then(() => {
             window.location.href = '/Access/Signin/';
         });
@@ -448,22 +448,6 @@ function AddMettingPage(iduser, idresume) {
 function RedirectToOneOfTheVacancy(idvacancy, iduser) {
     window.location.href = '/Vacancys/OneOfTheVacancy/' + idvacancy + '/' + iduser;
 }
-
-function HappyMassage() {
-    alert('Отлик записан ʕ•ᴥ•ʔ!');
-};
-
-function DeleteMeetMassage() {
-    alert('Встреча отменена ʕ◉ᴥ◉ʔ!');
-};
-
-function AddMeetMassage() {
-    alert('Встреча добавлена ᵔᴥᵔ!');
-};
-
-function AddVacancyMassage() {
-    alert('Вакансия добавлена ʕ￫ᴥ￩ʔ!');
-};
 
 function RedirectResponsesToAddMeeting(iduser, idresume) {
     window.location.href = '/Meetings/AddMeeting/' + iduser + '/' + idresume;
@@ -490,16 +474,3 @@ function RedirectToIndex(id) {
 function RedirectToSignin(id) {
     window.location.href = '/Home/Signin/';
 };
-
-function PrintResume(id) {
-    $.get(`/Print/PrintPesumePDF?iduser=${id}`);
-}
-
-function AutoRefresh(t) {
-    setTimeout("location.reload(true);", t);
-}
-
-function AutoRefreshResponses() {
-    window.location.reload(true);
-    window.location.href = window.location.href;
-}

@@ -1,6 +1,4 @@
 ﻿using ClosedXML.Excel;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -232,7 +230,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyResume(int? id)
+        public async Task<IActionResult> MyResume()
         {
             string jwtToken = Request.Cookies["recruterra"];
 
