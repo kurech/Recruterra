@@ -22,13 +22,10 @@ namespace WebApplication2.Controllers
     public class AccessController : Controller
     {
         private readonly ApplicationContext db;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
-        static MailAddress to;
-        public AccessController(ApplicationContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public AccessController(ApplicationContext context, IConfiguration configuration)
         {
             db = context;
-            _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
         }
 
@@ -117,7 +114,7 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public async Task<IActionResult> PasswordRecovery()
         {
-            var model = new IndexData { User = null, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+            var model = new IndexData { User = null, Users = await db.Users.ToListAsync(), Resumes = await db.Resumes.ToListAsync(), Meetings = await db.Meetings.ToListAsync(), Vacancies = await db.Vacancies.ToListAsync(), Articles = await db.Articles.ToListAsync(), Responses = await db.Responses.ToListAsync(), TypeOfEmployments = await db.TypeOfEmployments.ToListAsync(), Cities = await db.Cities.ToListAsync(), Citizenships = await db.Citizenships.ToListAsync(), Employers = await db.Employers.ToListAsync() };
             return View(model);
         }
 
@@ -127,17 +124,10 @@ namespace WebApplication2.Controllers
 
             if (user != null)
             {
-                MailAddress from = new MailAddress("recruterra@mail.ru", "Recruterra");
-                to = new MailAddress(email);
-                MailMessage m = new MailMessage(from, to);
-                m.Subject = "Вам отправлен код для восстановления пароля!";
-                m.Body = $"Здравствуйте, {email}.<br>Ваш код восстановления {GenerateCodeForRecoveryPassword.Generate()}<br><br><br> --------------------- <br> 2023 - Recruterra";
-                m.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-                smtp.Credentials = new NetworkCredential("recruterra@mail.ru", "WkEXb6t8ULG0u7rVRbwj");
-                smtp.EnableSsl = true;
-                smtp.SendMailAsync(m);
-
+                SendMessageToEmail.SendMessage(
+                    email, 
+                    "Вам отправлен код для восстановления пароля!", 
+                    $"Здравствуйте, {email}.<br>Ваш код восстановления {GenerateCodeForRecoveryPassword.Generate()}<br><br><br> --------------------- <br> 2023 - Recruterra");
                 return new EmptyResult();
             }
             else

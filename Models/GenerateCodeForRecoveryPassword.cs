@@ -11,7 +11,7 @@ namespace WebApplication2.Models
         public static string Generate()
         {
             Random random = new Random();
-            string code = random.Next(0, 9).ToString() + random.Next(0, 9).ToString() + random.Next(0, 9).ToString() + random.Next(0, 9).ToString();
+            string code = random.Next(1000, 9999).ToString();
             CurentCode = code;
             return code;
         }

@@ -340,46 +340,46 @@
                             <div class="vacancy-back-left mr-right-1dot6percent">
                                 <div class="media-wrap-text align-items-center">
                                     <a class="mr-right-1dot6percent color-2c2c2c font-bolder color-green-hover" title="Наименование вакансии" href="/Vacancys/OneOfTheVacancy/@vacancy.Id/@Model.User.Id">@vacancy.Position</a>
-                                    <p class="mrright8" title="Заработная плата">@vacancy.Salary руб.</p>
+                                    <p class="mrright8 cursor-default" title="Заработная плата">@vacancy.Salary руб.</p>
                                     @if (vacancy.Salary > vacancy.OptimalSalary)
                                     {
-                                        <p class="color-red" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
+                                        <p class="color-red cursor-default" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
                                     }
                                     else
                                     {
-                                        <p class="color-green" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
+                                        <p class="color-green cursor-default" title="Оптимальная заработная плата">(@vacancy.OptimalSalary руб.)</p>
                                     }
 
                                 </div>
                                 <div class="media-wrap-text align-items-center">
                                     @if (vacancy.WorkExperience != 0)
                                     {
-                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@vacancy.WorkExperience @Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
                                     }
                                     else
                                     {
-                                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
+                                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@Model.GetYearNameInRussian(vacancy.WorkExperience)</p>
                                     }
-                                    <p class="mr-right-1dot6percent" title="Тип занятости">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
-                                    <p class="" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
+                                    <p class="mr-right-1dot6percent cursor-default" title="Тип занятости">@Model.TypeOfEmployments.FirstOrDefault(type => type.Id == vacancy.IdTypeOfEmployment).Type</p>
+                                    <p class="cursor-default" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (Model.Vacancies.FirstOrDefault(m => m.Id == vacancy.Id).IdEmployer)).City.Name</p>
                                 </div>
                                 <br>
-                                <p class="media-font-lower" title="Требования к соискателю">@vacancy.Obligations</p>
+                                <p class="media-font-lower cursor-default" title="Требования к соискателю">@vacancy.Obligations</p>
                             </div>
                             <div class="vacancy-back-right">
                                 @if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id) != null)
                                 {
                                     if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 0)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c" title="Вы уже откликались на эту вакансию">Отправлен</a>
+                                        <a class="font-18 color-2c2c2c cursor-default" title="Вы уже откликались на эту вакансию">Отправлен</a>
                                     }
                                     else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 1)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c" title="Ваш отклик был принят работодателем. Вам должны были назначить встречу!">Принят</a>
+                                        <a class="font-18 color-green cursor-default" title="Ваш отклик был принят работодателем. Вам должны были назначить встречу!">Принят</a>
                                     }
                                     else if (Model.Responses.FirstOrDefault(m => m.IdUser == Model.User.Id && m.IdVacancy == vacancy.Id).IsAccepted == 2)
                                     {
-                                        <a href="" class="font-18 color-2c2c2c" title="Ваш отклик был отклонен работодателем">Отклонен</a>
+                                        <a class="font-18 color-red cursor-default" title="Ваш отклик был отклонен работодателем">Отклонен</a>
                                     }
                                 }
                                 else
@@ -397,6 +397,12 @@
                             </div>
                         </div>
                     }
+                }
+                @if (startCity.Concat(anotherCity).Where(a => a.IsConfirmed == true).Count() == 0)
+                {
+                    <div class="vacancy-vacancy-back d-flex align-items-center mrbottom16">
+                        <p class="color-2c2c2c cursor-default"><b>Вакансии не найдены</b></p>
+                    </div>
                 }
             </div>
         }

@@ -14,7 +14,6 @@ namespace WebApplication2.Controllers
     public class MeetingsController : Controller
     {
         private readonly ApplicationContext db;
-        static MailAddress to;
         public MeetingsController(ApplicationContext context)
         {
             db = context;
@@ -58,19 +57,13 @@ namespace WebApplication2.Controllers
             };
             db.Meetings.Add(meeting);
             db.SaveChanges();
-
+            
             var someoneSendingResume = seeker;
             var someoneSendingUser = db.Users.FirstOrDefault(m => m.Id == someoneSendingResume.Id);
-            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
-            to = new MailAddress(someoneSendingUser.Login);
-            MailMessage m = new MailMessage(from, to);
-            m.Subject = "Вам назначена встреча с работодателем!";
-            m.Body = $"Здравствуйте, {someoneSendingResume.FirstName}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br>Адрес встречи: офис {employer.CompanyName} (Улица: {employer.Street}, дом {employer.House}, помещение {employer.Apartment})<br><i>Не забудьте взять свои документы!<i><br> --------------------- <br> 2023 - Recruterra";
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
-            smtp.EnableSsl = true;
-            smtp.SendMailAsync(m);
+
+            SendMessageToEmail.SendMessage(someoneSendingUser.Login,
+                "Вам назначена встреча с работодателем!",
+                $"Здравствуйте, {someoneSendingResume.FirstName}.<br>Встреча запланирована на {dateandtime.ToString("f")}<br>Адрес встречи: офис {employer.CompanyName} (Улица: {employer.Street}, дом {employer.House}, помещение {employer.Apartment})<br><i>Не забудьте взять свои документы!<i><br> --------------------- <br> 2023 - Recruterra");
 
             return new EmptyResult();
         }

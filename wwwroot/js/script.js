@@ -133,7 +133,7 @@ function CreateVacancyFake() {
     Swal.fire({
         icon: 'error',
         title: 'Ошибка!',
-        text: 'Заполните данные о компании!',
+        text: 'Ваш аккаунт не подтвержден! Ожидайте проверки..',
         buttonsStyling: true,
         confirmButtonColor: "#8DD7AB"
     }).then(() => {
@@ -389,7 +389,7 @@ function DismissResponse(idresponse) {
 function RecoverySendCode(email) {
     $.get(`/Access/RecoverySendCodeToEmail?email=${email}`).then(() => {
         var target = document.getElementById('lastelemonpage');
-        var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field"><label for="newpassword">Новый пароль</label><input type="text" name="newpassword"></div><div class="field mrtop16"><input type = "button" name = "submit" value = "Продолжить" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value);"></div>';
+        var str = '<br><div class="field padding-bottom--24 mrtop16"><label for="code">Код подтверждения</label><input type="text" name="code"></div><div class="field"><label for="newpassword">Новый пароль</label><input type="password" name="newpassword"></div><div class="field mrtop16"><input type = "button" name = "submit" value = "Сменить пароль" onclick = "UpdatePassword(this.form.email.value, this.form.code.value, this.form.newpassword.value);"></div>';
 
         var temp = document.createElement('div');
         temp.innerHTML = str;

@@ -422,6 +422,10 @@ select {
     height: 170px;
 }
 
+.cursor-default{
+    cursor: default;
+}
+
     .underline:hover {
         text-decoration: underline;
         color: #2C2C2C;

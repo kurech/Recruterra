@@ -18,7 +18,6 @@ namespace WebApplication2.Controllers
     {
         private readonly ApplicationContext db;
         private readonly IWebHostEnvironment WebHostEnvironment;
-        static MailAddress to;
         public SettingsController(ApplicationContext context, IWebHostEnvironment webHostEnvironment)
         {
             db = context;
@@ -115,21 +114,17 @@ namespace WebApplication2.Controllers
         {
             var response = db.Responses.FirstOrDefault(m => m.Id == idresponse);
             var vacancy = db.Vacancies.FirstOrDefault(m => m.Id == response.IdVacancy);
+            var employer = db.Employers.FirstOrDefault(m => m.Id == vacancy.IdEmployer);
             var user = db.Users.FirstOrDefault(m => m.Id == response.IdUser);
+
             response.IsAccepted = 1;
+
             db.Update(response);
             db.SaveChanges();
 
-            MailAddress from = new MailAddress("laba_oaip@mail.ru", "Recruterra");
-            to = new MailAddress(user.Login);
-            MailMessage m = new MailMessage(from, to);
-            m.Subject = "Ваш отклик принят!";
-            m.Body = $"Отклик на вакансию <b> {vacancy.Position} </b> принят!<br>Ожидайте назначение встречи от работодателя.<br><br> --------------------- <br> 2023 - Recruterra";
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-            smtp.Credentials = new NetworkCredential("laba_oaip@mail.ru", "6rdUR8HTnFbfbcHDLGxn");
-            smtp.EnableSsl = true;
-            smtp.SendMailAsync(m);
+            SendMessageToEmail.SendMessage(user.Login, 
+                "Ваш отклик принят!",
+                $"Отклик на вакансию <b>{vacancy.Position}</b> принят!<br>Ожидайте назначение встречи от работодателя({employer.CompanyName} - {db.Cities.FirstOrDefault(q => q.Id == employer.IdCity).Name}).<br><br> --------------------- <br> 2023 - Recruterra");
 
             return new EmptyResult();
         }
@@ -210,8 +205,6 @@ namespace WebApplication2.Controllers
             {
                 return RedirectToAction("Signin", "Access");
             }
-
-            
         }
 
         public string ResponseResult(int? isAccepted)

@@ -106,6 +106,7 @@
             }
         }
     </div>
+    @{ bool flag = false;}
     <div class="account-right justify-content-start">
         @if (Model.User.Role == "Работодатель")
         {
@@ -124,7 +125,7 @@
                     if (a.IdVacancy == c.Id)
                     {
                         var resume = Model.Resumes.FirstOrDefault(m => m.Id == a.IdUser);
-
+                        flag = true;
                         <div class="account-back mrbottom16">
                             <form>
                                 <p>@a.DateAndTime.ToString("f")</p>
@@ -172,6 +173,14 @@
                         </div>
                     }
                 }
+            }
+            if (flag == false)
+            {
+                <div class="account-back mrbottom16">
+                    <p class="color-2c2c2c font-bolder">
+                        На ваши вакансии не откликались
+                    </p>
+                </div>
             }
         }
         else if (Model.User.Role == "Соискатель")

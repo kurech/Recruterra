@@ -1,17 +1,19 @@
-# Используем базовый образ .NET Core 3.1 SDK
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+EXPOSE 80
 
-# Копируем csproj и восстанавливаем зависимости
-COPY *.csproj ./
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+COPY ["WebApplication2.csproj", "./"]
+RUN dotnet restore "./WebApplication2.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "WebApplication2.csproj" -c Release -o /app/build
 
-# Копируем все остальные файлы и билдим проект
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+RUN dotnet publish "WebApplication2.csproj" -c Release -o /app/publish
 
-# Создаем образ ASP .NET Core
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "WebApplication2.dll"]

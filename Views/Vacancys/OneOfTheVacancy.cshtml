@@ -107,13 +107,14 @@
             <p class="font-16 mrtop8" style="text-align: justify;">
                 @Model.Vacancy.Description
             </p>
-            @if (Model.User.Role == "Соискатель")
+            @{ var ishaveresponse = true ? Model.Responses.FirstOrDefault(q => q.IdUser == Model.User.Id && q.IdVacancy == Model.Vacancy.Id) != null : false;}
+            @if (Model.User.Role == "Соискатель" && ishaveresponse == false)
             {
                 <input type="button" class="btn btn-outline-dark w-200 mrtop16"
                        onclick="CreateResponse('@Model.User.Id', '@Model.Vacancy.Id');"
                        value="Откликнуться" />
             }
-            else if (Model.User.Role == "Работодатель")
+            else if (Model.User.Role == "Работодатель" && Model.Employers.FirstOrDefault(q => q.Id == Model.User.Id) == emloyer)
             {
                 <input type="button" class="btn btn-outline-dark w-200 mrtop16"
                        onclick="DeleteVacancyInOOTV('@Model.Vacancy.Id');"

@@ -27,13 +27,9 @@ namespace WebApplication2.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationContext db;
-        private readonly IConfiguration _config;
-
-        static MailAddress to;
-        public HomeController(ApplicationContext context, IConfiguration config)
+        public HomeController(ApplicationContext context)
         {
             db = context;
-            _config = config;
         }
 
         public async Task<IActionResult> Index()
@@ -103,13 +99,13 @@ namespace WebApplication2.Controllers
                         }
                     }
 
-                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = searchvacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    var model = new IndexData { User = user, Users = await db.Users.ToListAsync(), Resumes = await db.Resumes.ToListAsync(), Meetings = await db.Meetings.ToListAsync(), Vacancies = searchvacancies, Articles = await db.Articles.ToListAsync(), Responses = await db.Responses.ToListAsync(), TypeOfEmployments = await db.TypeOfEmployments.ToListAsync(), Cities = await db.Cities.ToListAsync(), Citizenships = await db.Citizenships.ToListAsync(), Employers = await db.Employers.ToListAsync() };
                     return View(model);
                 }
                 else
                 {
                     vacancies = await db.Vacancies.ToListAsync();
-                    var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = vacancies, Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                    var model = new IndexData { User = user, Users = await db.Users.ToListAsync(), Resumes = await db.Resumes.ToListAsync(), Meetings = await db.Meetings.ToListAsync(), Vacancies = vacancies, Articles = await db.Articles.ToListAsync(), Responses = await db.Responses.ToListAsync(), TypeOfEmployments = await db.TypeOfEmployments.ToListAsync(), Cities = await db.Cities.ToListAsync(), Citizenships = await db.Citizenships.ToListAsync(), Employers = await db.Employers.ToListAsync() };
                     return View(model);
                 }
             }
@@ -202,6 +198,10 @@ namespace WebApplication2.Controllers
             db.Update(meeting);
             db.SaveChanges();
 
+            string fullNameSeeker = db.Resumes.FirstOrDefault(q => q.Id == idseeker).LastName + " " + db.Resumes.FirstOrDefault(q => q.Id == idseeker).FirstName + " " + db.Resumes.FirstOrDefault(q => q.Id == idseeker).MiddleName;
+            string gender = db.Resumes.FirstOrDefault(q => q.Id == idseeker).Gender == "Ж" ? "a" : string.Empty;
+            SendMessageToEmail.SendMessage(db.Users.FirstOrDefault(q => q.Id == meeting.IdEmployer).Login, "Соикатель отклонил встречу!", $"{fullNameSeeker} отменил{gender} встречу, назначенная на {meeting.DateAndTime:f}. Извиняемся, что так получилось.<br><br>------------------<br>2023 - Recruterra");
+
             return new EmptyResult();
         }
 
@@ -212,6 +212,9 @@ namespace WebApplication2.Controllers
 
             db.Update(meeting);
             db.SaveChanges();
+
+            string fullCompanyName = db.Employers.FirstOrDefault(q => q.Id == idemployer).CompanyName + " " + db.Cities.FirstOrDefault(q => q.Id == db.Employers.FirstOrDefault(q => q.Id == idemployer).IdCity).Name;
+            SendMessageToEmail.SendMessage(db.Users.FirstOrDefault(q => q.Id == meeting.IdResume).Login, "Работодатель отклонил встречу!", $"{fullCompanyName} отменил встречу, назначенная на {meeting.DateAndTime:f}. Извиняемся, что так получилось.<br><br>------------------<br>2023 - Recruterra");
 
             return new EmptyResult();
         }

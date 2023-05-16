@@ -101,15 +101,15 @@
                 defaultVacancies = Model.Vacancies.Where(q => q.IsActive == true).OrderByDescending(a => a.Id).ToList();}
             <div class="summary-vacancy-back mrbottom8 align-items-center">
                 <div class="summary-vacancy-left">
-                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(0).Position</a>
+                    <a class="fontbold color-2c2c2c cursor-default" title="Должность">@defaultVacancies.ElementAt(0).Position</a>
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(0).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
-                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(0).IdTypeOfEmployment)</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@defaultVacancies.ElementAt(0).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
+                        <p class="cursor-default" title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(0).IdTypeOfEmployment)</p>
                     </div>
 
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(0).Salary руб.</p>
-                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(0).IdEmployer)).City.Name</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Заработная плата">@defaultVacancies.ElementAt(0).Salary руб.</p>
+                        <p class="cursor-default" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(0).IdEmployer)).City.Name</p>
                     </div>
                 </div>
                 <div class="summary-vacancy-right">
@@ -151,15 +151,15 @@
 
             <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
                 <div class="summary-vacancy-left">
-                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(1).Position</a>
+                    <a class="fontbold color-2c2c2c cursor-default" title="Должность">@defaultVacancies.ElementAt(1).Position</a>
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(1).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(1).WorkExperience)</p>
-                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(1).IdTypeOfEmployment)</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@defaultVacancies.ElementAt(1).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(1).WorkExperience)</p>
+                        <p class="cursor-default" title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(1).IdTypeOfEmployment)</p>
                     </div>
 
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(1).Salary руб.</p>
-                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(1).IdEmployer)).City.Name</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Заработная плата">@defaultVacancies.ElementAt(1).Salary руб.</p>
+                        <p class="cursor-default" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(1).IdEmployer)).City.Name</p>
                     </div>
                 </div>
                 <div class="summary-vacancy-right">
@@ -191,7 +191,7 @@
                                 }
                                 else
                                 {
-                                    <a class="btn btn-outline-primary nav-link font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(1).Id');">Отклик</a>
+                                    <a class="btn btn-outline-primary font-18 color-2c2c2c cursor-pointer" onclick="CreateResponse('@Model.User.Id', '@defaultVacancies.ElementAt(1).Id');">Отклик</a>
                                 }
                             }
                         }
@@ -201,15 +201,15 @@
 
             <div class="summary-vacancy-back mrbottom8 d-flex align-items-center">
                 <div class="summary-vacancy-left">
-                    <a class="fontbold color-2c2c2c cursor-pointer" title="Должность">@defaultVacancies.ElementAt(2).Position</a>
+                    <a class="fontbold color-2c2c2c cursor-default" title="Должность">@defaultVacancies.ElementAt(2).Position</a>
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Требуемый опыт работы">@defaultVacancies.ElementAt(2).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(2).WorkExperience)</p>
-                        <p title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(2).IdTypeOfEmployment)</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@defaultVacancies.ElementAt(2).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(2).WorkExperience)</p>
+                        <p class="cursor-default" title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(2).IdTypeOfEmployment)</p>
                     </div>
 
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent" title="Заработная плата">@defaultVacancies.ElementAt(2).Salary руб.</p>
-                        <p title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(2).IdEmployer)).City.Name</p>
+                        <p class="mr-right-1dot6percent cursor-default" title="Заработная плата">@defaultVacancies.ElementAt(2).Salary руб.</p>
+                        <p class="cursor-default" title="Город">@Model.Employers.FirstOrDefault(employer => employer.Id == (defaultVacancies.ElementAt(2).IdEmployer)).City.Name</p>
                     </div>
                 </div>
                 <div class="summary-vacancy-right">
@@ -410,7 +410,7 @@
                             }
                             else
                             { 
-                                <p class="mr-right-1dot6percent color-2c2c2c font-bolder mrleft16">Авторизуйтесь в системе -_-</p>
+                                <p class="mr-right-1dot6percent color-2c2c2c font-bolder mrleft16">Доступ к встречам после <a href="/Access/Signin" class="hover-underline">авторизации</a></p>
                             }
                         </div>
                     }
