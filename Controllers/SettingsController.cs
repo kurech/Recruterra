@@ -47,11 +47,8 @@ namespace WebApplication2.Controllers
         }
 
         // обновление основной информации соискателя
-        public EmptyResult UpadateSeekerProfileSettings(int iduser, string lastname, string firstname, string middlename, string gender, DateTime dateofbirth, string phone, string city, string citizenship)
+        public EmptyResult UpadateSeekerProfileSettings(int iduser, string lastname, string firstname, string middlename, string gender, DateTime dateofbirth, string phone, int city, int citizenship)
         {
-            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
-            int idcitizenship = db.Citizenships.FirstOrDefault(cz => cz.Name == citizenship).Id;
-
             Resume resume = db.Resumes.FirstOrDefault(user => user.Id == iduser);
             resume.LastName = lastname;
             resume.FirstName = firstname;
@@ -59,18 +56,16 @@ namespace WebApplication2.Controllers
             resume.Gender = gender;
             resume.DateOfBirth = dateofbirth;
             resume.PhoneNumber = phone;
-            resume.IdCity = idcity;
-            resume.IdCitizenship = idcitizenship;
+            resume.IdCity = city;
+            resume.IdCitizenship = citizenship;
             db.Update(resume);
             db.SaveChanges();
             return new EmptyResult();
         }
 
         // обновление основной информации работодателя
-        public EmptyResult UpadateEmployerProfileSettings(int iduser, string companyname, string msrn, string lastname, string firstname, string middlename, DateTime creationdate, string city, int postcode, string street, string house, string apartment)
+        public EmptyResult UpadateEmployerProfileSettings(int iduser, string companyname, string msrn, string lastname, string firstname, string middlename, DateTime creationdate, int city, int postcode, string street, string house, string apartment)
         {
-            int idcity = db.Cities.FirstOrDefault(c => c.Name == city).Id;
-
             Employer employer = db.Employers.FirstOrDefault(user => user.Id == iduser);
             employer.CompanyName = companyname;
             employer.LastName = lastname;
@@ -78,7 +73,7 @@ namespace WebApplication2.Controllers
             employer.MiddleName = middlename;
             employer.CreationDate = creationdate;
             employer.Postcode = postcode;
-            employer.IdCity = idcity;
+            employer.IdCity = city;
             employer.Street = street;
             employer.House = house;
             employer.Apartment = apartment;

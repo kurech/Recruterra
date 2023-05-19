@@ -278,27 +278,40 @@ function UpdateProfileResumePage(id, position, salary, edu, university, workex, 
 }
 
 function UpdateProfileResume(id, rlastname, rfirstname, rmiddlename, rgender, rdateofbirth, rphone, rcity, rcitizenship) {
-    $.get(`/Settings/UpadateSeekerProfileSettings?iduser=${id}&lastname=${rlastname}&firstname=${rfirstname}&middlename=${rmiddlename}&gender=${rgender}&dateofbirth=${rdateofbirth}&phone=${rphone}&city=${rcity}&citizenship=${rcitizenship}`).then(() => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Успешно!',
-            text: 'Ваши данные успешно обновлены!',
-            buttonsStyling: true,
-            confirmButtonColor: "#8DD7AB"
-        }).then(() => {
-            location.reload();
+    if (rcity != 0 && rcitizenship != 0) {
+        $.get(`/Settings/UpadateSeekerProfileSettings?iduser=${id}&lastname=${rlastname}&firstname=${rfirstname}&middlename=${rmiddlename}&gender=${rgender}&dateofbirth=${rdateofbirth}&phone=${rphone}&city=${rcity}&citizenship=${rcitizenship}`).then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Успешно!',
+                text: 'Ваши данные успешно обновлены!',
+                buttonsStyling: true,
+                confirmButtonColor: "#8DD7AB"
+            }).then(() => {
+                location.reload();
+            });
+        }).catch(() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка!',
+                text: 'Не получилось обновить информацию!',
+                buttonsStyling: true,
+                confirmButtonColor: "#8DD7AB"
+            }).then(() => {
+                location.reload();
+            });
         });
-    }).catch(() => {
+    }
+    else {
         Swal.fire({
             icon: 'error',
             title: 'Ошибка!',
-            text: 'Не получилось обновить информацию!',
+            text: 'Вы не выбрали город/гражданство!',
             buttonsStyling: true,
             confirmButtonColor: "#8DD7AB"
         }).then(() => {
             location.reload();
         });
-    });
+    }
 }
 
 function UpdateProfileEmployer(id, ecompanyname, emsrn, elastname, efirstname, emiddlename, ecreationdate, ecity, epostcode, estreet, ehouse, eapartment) {
@@ -324,6 +337,30 @@ function UpdateProfileEmployer(id, ecompanyname, emsrn, elastname, efirstname, e
         });
     });
 }
+
+new TomSelect("#ecity", {
+    create: false,
+    sortField: {
+        field: "text",
+        direction: "asc"
+    }
+});
+
+new TomSelect("#rcity", {
+    create: false,
+    sortField: {
+        field: "text",
+        direction: "asc"
+    }
+});
+
+new TomSelect("#rcitizenship", {
+    create: false,
+    sortField: {
+        field: "text",
+        direction: "asc"
+    }
+});
 
 function UpdateResume(id, photoresume, nameresume, surnameresume, positionresume,salaryresume,dateofresume,phoneresume,cityresume,citizenshipresume,eduresume,workresume,employresume,addinforesume) {
     $.get(`/Home/UpdateResumeSettings?iduser=${id}&photoresume=${photoresume}&nameresume=${nameresume}&surnameresume=${surnameresume}&positionresume=${positionresume}&salaryresume=${salaryresume}&dateofresume=${dateofresume}&phoneresume=${phoneresume}&cityresume=${cityresume}&citizenshipresume=${citizenshipresume}&eduresume=${eduresume}&workresume=${workresume}&employresume=${employresume}&addinforesume=${addinforesume}`);

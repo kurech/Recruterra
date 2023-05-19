@@ -77,7 +77,7 @@
 </header>
 
 <div class="container margin-0-auto minheight">
-    <p class="color-2c2c2c font-bold font24 mrtop16 mrbottom8">Получено @Model.Resumes.Where(m => m.ItsPublic == true).Count() резюме</p>
+    <p class="color-2c2c2c font-bold font24 mrtop16 mrbottom8 cursor-default">Получено @Model.Resumes.Where(m => m.ItsPublic == true).Count() резюме</p>
     @{ var publicResumes = Model.Resumes.Where(m => m.ItsPublic == true);
         string role = Model.User.Role;}
     @if (role == "Соискатель" || role == "Работодатель")
@@ -88,7 +88,7 @@
             {
                 <div class="resumes-back mrbottom16 align-items-center">
                     <div class="resumes-back-left">
-                        <p><b>@resume.LastName</b> @resume.FirstName @resume.MiddleName</p>
+                        <p class="cursor-default" title="ФИО соискателя"><b>@resume.LastName</b> @resume.FirstName @resume.MiddleName</p>
                         @{var date = resume.DateOfBirth.Value;
                             var age = DateTime.Now.Year - date.Year;
                             if (DateTime.Now.DayOfYear < date.DayOfYear)
@@ -96,27 +96,27 @@
                                 age++;
                             }
                         }
-                        <p>Возраст: @age @Model.GetYearNameInRussian(age)</p>
-                        <p>Город: @resume.City.Name</p>
-                        <p>Должность: @resume.Position - з/п: @resume.Salary руб.</p>
+                        <p class="cursor-default" title="Возраст">Возраст: @age @Model.GetYearNameInRussian(age)</p>
+                        <p class="cursor-default" title="Город">Город: @resume.City.Name</p>
+                        <p class="cursor-default" title="Предполагаемая должность ">Должность: @resume.Position - з/п: @resume.Salary руб.</p>
                         @if (resume.WorkExperience != 0)
                         {
-                            <p class="">@resume.WorkExperience @Model.GetYearNameInRussian(resume.WorkExperience) - @resume.TypeOfEmployment.Type</p>
+                            <p class="cursor-default" title="Опыт работы и тип занятости">Опыт работы: @resume.WorkExperience @Model.GetYearNameInRussian(resume.WorkExperience) - @resume.TypeOfEmployment.Type</p>
                         }
                         else
                         {
-                            <p class="">@Model.GetYearNameInRussian(resume.WorkExperience) @resume.TypeOfEmployment.Type</p>
+                            <p class="cursor-default" title="Опыт работы и тип занятости">@Model.GetYearNameInRussian(resume.WorkExperience) @resume.TypeOfEmployment.Type</p>
                         }
-                        <p class="mrtop16">@resume.AdditionalInformation</p>
+                        <p class="mrtop16 cursor-default" title="Дополнительная информация">@resume.AdditionalInformation</p>
                     </div>
                     <div class="resumes-back-right">
                         @if (resume.Photo == null || resume.Photo == string.Empty)
                         {
-                            <img class="resumes-photo-up-wh" src="~/images/recruterra.png" width="105" height="120" />
+                            <img class="resumes-photo-up-wh cursor-default" src="~/images/recruterra.png" width="105" height="120" title="Фотография" />
                         }
                         else if (resume.Photo != null)
                         {
-                            <img class="resumes-photo-up-wh" src="~/images/@resume.Photo" width="105" height="120" />
+                            <img class="resumes-photo-up-wh cursor-default" src="~/images/@resume.Photo" width="105" height="120" title="Фотография" />
                         }
                     </div>
                 </div>

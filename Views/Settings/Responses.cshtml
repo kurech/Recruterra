@@ -79,8 +79,8 @@
 
 <div class="container justify-content-center mrtop16 dd-flex minheight">
     <div class="account-left">
-        <p class="font-bolder font-18">Настройки пользователя</p>
-        <p class="font-bolder font-16 mrleft16 mrtop16">Выберите нужное</p>
+        <p class="font-bolder font-18 cursor-default">Настройки пользователя</p>
+        <p class="font-bolder font-16 mrleft16 mrtop16 cursor-default">Выберите нужное</p>
         @if (Model.User != null)
         {
             if (Model.User.Role == "Соискатель")
@@ -128,9 +128,9 @@
                         flag = true;
                         <div class="account-back mrbottom16">
                             <form>
-                                <p>@a.DateAndTime.ToString("f")</p>
-                                <p>Отклик на вакансию: @c.Position</p>
-                                <p>@resume.LastName @resume.FirstName @resume.MiddleName</p>
+                                <p class="cursor-default" title="Дата и время отклика">@a.DateAndTime.ToString("f")</p>
+                                <p class="cursor-default" title="Должность">Отклик на вакансию: @c.Position</p>
+                                <p class="cursor-default" title="ФИО соискателя">@resume.LastName @resume.FirstName @resume.MiddleName</p>
                                 @{var date = resume.DateOfBirth.Value;
                                     var age = DateTime.Now.Year - date.Year;
                                     if (DateTime.Now.DayOfYear < date.DayOfYear)
@@ -138,20 +138,20 @@
                                         age++;
                                     }
                                 }
-                                <p class="mrtop16">Возраст: @age @Model.GetYearNameInRussian(age)</p>
+                                <p class="mrtop16 cursor-default" title="Возраст соискателя">Возраст: @age @Model.GetYearNameInRussian(age)</p>
                                 @if (resume.WorkExperience == 0)
                                 {
-                                    <p>Опыт работы: @Model.GetYearNameInRussian(resume.WorkExperience)</p>
+                                    <p class="cursor-default" title="Опыт работы соискателя">Опыт работы: @Model.GetYearNameInRussian(resume.WorkExperience)</p>
                                 }
                                 else
                                 {
-                                    <p>Опыт работы: @resume.WorkExperience @Model.GetYearNameInRussian(resume.WorkExperience)</p>
+                                    <p class="cursor-default">Опыт работы: @resume.WorkExperience @Model.GetYearNameInRussian(resume.WorkExperience)</p>
                                 }
-                                <p>Предполагаемая должность: @resume.Position</p>
-                                <p>Предполагаемая заработная плата: @resume.Salary руб.</p>
-                                <p>Город: @resume.City.Name</p>
-                                <p>Образование: @resume.Education</p>
-                                <p class="mrtop16">Дополнительная информация: @resume.AdditionalInformation</p>
+                                <p class="cursor-default">Предполагаемая должность: @resume.Position</p>
+                                <p class="cursor-default">Предполагаемая заработная плата: @resume.Salary руб.</p>
+                                <p class="cursor-default">Город: @resume.City.Name</p>
+                                <p class="cursor-default">Образование: @resume.Education</p>
+                                <p class="mrtop16 cursor-default">Дополнительная информация: @resume.AdditionalInformation</p>
                                 @if (a.IsAccepted == 0)
                                 {
                                     <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"
@@ -163,11 +163,11 @@
                                 }
                                 else if (a.IsAccepted == 1)
                                 {
-                                    <p class="mrtop16 color-green">Отклик принят</p>
+                                    <p class="mrtop16 color-green cursor-default">Отклик принят</p>
                                 }
                                 else if (a.IsAccepted == 2)
                                 {
-                                    <p class="mrtop16 color-red">Отклик отклонен</p>
+                                    <p class="mrtop16 color-red cursor-default">Отклик отклонен</p>
                                 }
                             </form>
                         </div>
@@ -177,7 +177,7 @@
             if (flag == false)
             {
                 <div class="account-back mrbottom16">
-                    <p class="color-2c2c2c font-bolder">
+                    <p class="color-2c2c2c font-bolder cursor-default">
                         На ваши вакансии не откликались
                     </p>
                 </div>
@@ -185,39 +185,51 @@
         }
         else if (Model.User.Role == "Соискатель")
         {
-            <div class="mrbottom8" title="Вы скачиваете файл Excel, с вашим результатом откликов"><a class="color-2c2c2c cursor-pointer hover-underline font-bolder" href="@Url.RouteUrl("downloadseekerstats", new { controller = "Settings", action = "Export", seekerId = Model.User.Id})">Скачать статистику</a></div>
+            if (Model.Responses.Where(q => q.IdUser == Model.User.Id).Count() != 0)
+                {
+                    <div class="mrbottom8" title="Вы скачиваете файл Excel, с вашим результатом откликов"><a class="color-2c2c2c cursor-pointer hover-underline font-bolder" href="@Url.RouteUrl("downloadseekerstats", new { controller = "Settings", action = "Export", seekerId = Model.User.Id})">Скачать статистику</a></div>
+                }
             var seekerResume = Model.Resumes.FirstOrDefault(m => m.Id == Model.User.Id);
             foreach (var a in Model.Responses.OrderByDescending(a => a.Id))
             {
                 if (a.IdUser == seekerResume.Id)
                 {
+                    flag = true;
                     <div class="account-back mrbottom16">
                         <form>
                             @{ var vacancy = Model.Vacancies.FirstOrDefault(v => v.Id == a.IdVacancy);
                                 var employer = Model.Employers.FirstOrDefault(e => e.Id == vacancy.IdEmployer);
                                 string city = Model.Cities.FirstOrDefault(c => c.Id == employer.IdCity).Name;
                                 string companyName = employer.CompanyName;}
-                            <p><u>@a.DateAndTime.ToString("f")</u></p>
-                            <p class="font-bolder">@companyName</p>
-                            <p class="mrbottom8">@city</p>
-                            <p>@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
-                            <p>@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Salary руб.</p>
+                            <p class="cursor-default" title="Дата и время отклика"><u>@a.DateAndTime.ToString("f")</u></p>
+                            <p class="font-bolder cursor-default" title="Наименование компании">@companyName</p>
+                            <p class="mrbottom8 cursor-default" title="Город">@city</p>
+                            <p class="cursor-default" title="Должность">@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Position</p>
+                            <p class="cursor-default" title="Заработная плата">@Model.Vacancies.FirstOrDefault(m => m.Id == a.IdVacancy).Salary руб.</p>
                             @if (a.IsAccepted == 0)
                             {
-                                <p class="mrtop16 color-green">Мой отклик отправлен</p>
+                                <p class="mrtop16 color-green cursor-default" title="Статус отклика">Мой отклик отправлен</p>
                             }
                             else if (a.IsAccepted == 1)
                             {
-                                <p class="mrtop16 color-green">Работодатель принял отклик</p>
+                                <p class="mrtop16 color-green cursor-default" title="Статус отклика">Работодатель принял отклик</p>
                             }
                             else if (a.IsAccepted == 2)
                             {
-                                <p class="mrtop16 color-green">Работодатель отклонил отклик</p>
+                                <p class="mrtop16 color-green cursor-default" title="Статус отклика">Работодатель отклонил отклик</p>
                             }
                         </form>
                     </div>
                 }
 
+            }
+            if (flag == false)
+            {
+                <div class="account-back mrbottom16">
+                    <p class="color-2c2c2c font-bolder cursor-default">
+                        Вы не откликались на вакансии
+                    </p>
+                </div>
             }
         }
     </div>
