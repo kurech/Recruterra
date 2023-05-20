@@ -140,9 +140,17 @@
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rdateofbirth">Дата рождения</p>
-                        <input type="date"
+                        @if (Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).DateOfBirth != null)
+                        {
+                            <input type="date"
                                asp-for="Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).DateOfBirth.Value"
                                asp-format="{0:yyyy-MM-dd}" id="rdateofbirth" class="account-input">
+                        }
+                        else
+                        {
+                            <input type="date" asp-format="{0:yyyy-MM-dd}" class="account-input" id="rdateofbirth">
+                        }
+                        
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rphone">Номер телефона</p>
@@ -165,8 +173,6 @@
                                 }
                             }
                         </select>
-                        @*<input type="text" id="rcity" class="account-input" placeholder="Казань"
-                               value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCity).Name">*@
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rcitizenship">Гражданство</p>
@@ -184,8 +190,6 @@
                                 }
                             }
                         </select>
-                        @*<input type="text" id="rcitizenship" class="account-input" placeholder="Россия"
-                               value="@Model.Citizenships.FirstOrDefault(citizenship => citizenship.Id == Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).IdCitizenship).Name">*@
                     </div>
                     <div class="d-flex justify-content-center media-account-b">
                         <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"

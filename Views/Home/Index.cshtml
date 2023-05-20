@@ -103,7 +103,15 @@
                 <div class="summary-vacancy-left">
                     <a class="fontbold color-2c2c2c cursor-default" title="Должность">@defaultVacancies.ElementAt(0).Position</a>
                     <div class="media-wrap-text">
-                        <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@defaultVacancies.ElementAt(0).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
+                        @if (defaultVacancies.ElementAt(0).WorkExperience == 0)
+                        {
+                            <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
+
+                        }
+                        else
+                        {
+                            <p class="mr-right-1dot6percent cursor-default" title="Требуемый опыт работы">@defaultVacancies.ElementAt(0).WorkExperience @Model.GetYearNameInRussian(defaultVacancies.ElementAt(0).WorkExperience)</p>
+                        }
                         <p class="cursor-default" title="Тип занятости">@Model.GetTypeOfEmployment(defaultVacancies.ElementAt(0).IdTypeOfEmployment)</p>
                     </div>
 
