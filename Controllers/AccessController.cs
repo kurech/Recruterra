@@ -91,6 +91,13 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public IActionResult Signup(string email, string password, string role) // регистрация
         {
+            var isHaveAccount = db.Users.FirstOrDefault(q => q.Login == email);
+
+            if (isHaveAccount != null)
+            {
+                return Redirect("~/Access/Signup");
+            }
+
             User user = new User() { Login = email, Password = PasswordHashing.GetHashString(password), Role = role, CreateDate = DateTime.Now };
             db.Users.Add(user);
             db.SaveChanges();
