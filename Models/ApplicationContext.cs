@@ -21,7 +21,6 @@ namespace WebApplication2.Models
         public DbSet<Administrator> Administrator { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

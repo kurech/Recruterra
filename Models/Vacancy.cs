@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using MySql.Data.MySqlClient;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication2.Models
