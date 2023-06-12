@@ -112,15 +112,15 @@
                 <form class="justify-content-center">
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rlastname">Фамилия</p>
-                        <input type="text" id="rlastname" class="account-input" placeholder="Иванов" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).LastName">
+                        <input type="text" id="rlastname" class="account-input" placeholder="Иванов" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).LastName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rfirstname">Имя</p>
-                        <input type="text" id="rfirstname" class="account-input" placeholder="Иван" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).FirstName">
+                        <input type="text" id="rfirstname" class="account-input" placeholder="Иван" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).FirstName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rmiddlename">Отчество</p>
-                        <input type="text" id="rmiddlename" class="account-input" placeholder="Иванович" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).MiddleName">
+                        <input type="text" id="rmiddlename" class="account-input" placeholder="Иванович" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).MiddleName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rgender">Пол</p>
@@ -155,7 +155,7 @@
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rphone">Номер телефона</p>
                         <input type="text" id="rphone" class="account-input" placeholder="89050209952"
-                               value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).PhoneNumber">
+                               value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).PhoneNumber" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="rcity">Город</p>
@@ -217,19 +217,19 @@
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="emsrn">ОГРН</p>
-                        <input type="text" class="account-input" id="emsrn" placeholder="313028000120160" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MSRN">
+                        <input type="text" class="account-input" id="emsrn" placeholder="313028000120160" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MSRN" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="elastname">Фамилия HR</p>
-                        <input type="text" class="account-input" id="elastname" placeholder="Иванов" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).LastName">
+                        <input type="text" class="account-input" id="elastname" placeholder="Иванов" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).LastName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="efirstname">Имя HR</p>
-                        <input type="text" class="account-input" id="efirstname" placeholder="Иван" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).FirstName">
+                        <input type="text" class="account-input" id="efirstname" placeholder="Иван" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).FirstName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="emiddlename">Отчество HR</p>
-                        <input type="text" class="account-input" id="emiddlename" placeholder="Иванович" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MiddleName">
+                        <input type="text" class="account-input" id="emiddlename" placeholder="Иванович" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).MiddleName" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="ecreationdate">Дата<br>регистрации</p>
@@ -258,18 +258,10 @@
                                 }
                             }
                         </select>
-                        @*@if (Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).IdCity != null)
-                        {
-                            <input type="text" class="account-input" id="ecity" placeholder="Казань" value="@Model.Cities.FirstOrDefault(city => city.Id == Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).IdCity).Name">
-                        }
-                        else
-                        {
-                            <input type="text" class="account-input" id="ecity" placeholder="Казань" value="">
-                        }*@
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="epostcode" title="Почтовый индекс офиса вашей компании">Почтовый<br>индекс</p>
-                        <input type="text" class="account-input" id="epostcode" placeholder="420140" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Postcode">
+                        <input type="text" class="account-input" id="epostcode" placeholder="420140" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Postcode" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="estreet" title="Адрес вашей компании">Улица</p>
@@ -277,11 +269,11 @@
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="ehouse" title="Адрес вашей компании">Дом</p>
-                        <input type="text" class="account-input" id="ehouse" placeholder="3" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).House">
+                        <input type="text" class="account-input" id="ehouse" placeholder="3" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).House" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                         <p class="w-12" for="eapartment" title="Адрес вашей компании">Помещение</p>
-                        <input type="text" class="account-input" id="eapartment" placeholder="185" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Apartment">
+                        <input type="text" class="account-input" id="eapartment" placeholder="185" value="@Model.Employers.FirstOrDefault(employer => employer.Id == Model.User.Id).Apartment" onkeypress="CheckSpaceInput();">
                     </div>
                     <div class="d-flex justify-content-center media-account-b">
                         <input type="button" class="btn btn-outline-dark w-200 mrtop16 mrbottom8"

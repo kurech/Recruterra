@@ -133,52 +133,52 @@
                         </div>
                         <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                             <p class="w-12" for="salary">Ожидаемая<br>з/п</p>
-                            <input type="text" class="account-input" id="salary" placeholder="40000" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Salary">
+                            <input type="text" class="account-input" id="salary" placeholder="40000" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Salary" onkeypress="CheckSpaceInput();">
                         </div>
                         <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                             <p class="w-12" for="edu">Образование</p>
                             @{var edu = Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).Education; }
-                        <select id="edu" class="media-wrap-inputs">
-                            @if (edu == "Высшее")
-                            {
-                                <option value="Высшее" selected>Высшее</option>
-                                <option value="Среднее профессиональное">Среднее профессиональное</option>
-                                <option value="Среднее общее">Среднее общее</option>
-                                <option value="Основное общее">Основное общее</option>
-                            }
-                            else if (edu == "Среднее профессиональное")
-                            {
-                                <option value="Высшее">Высшее</option>
-                                <option value="Среднее профессиональное" selected>Среднее профессиональное</option>
-                                <option value="Среднее общее">Среднее общее</option>
-                                <option value="Основное общее">Основное общее</option>
-                            }
-                            else if (edu == "Среднее общее")
-                            {
-                                <option value="Высшее">Высшее</option>
-                                <option value="Среднее профессиональное">Среднее профессиональное</option>
-                                <option value="Среднее общее" selected>Среднее общее</option>
-                                <option value="Основное общее">Основное общее</option>
-                            }
-                            else if (edu == "Основное общее")
-                            {
-                                <option value="Высшее">Высшее</option>
-                                <option value="Среднее профессиональное">Среднее профессиональное</option>
-                                <option value="Среднее общее">Среднее общее</option>
-                                <option value="Основное общее" selected>Основное общее</option>
-                            }
-                            else
-                            {
-                                <option value="Высшее">Высшее</option>
-                                <option value="Среднее профессиональное">Среднее профессиональное</option>
-                                <option value="Среднее общее">Среднее общее</option>
-                                <option value="Основное общее">Основное общее</option>
-                            }
-                        </select>
+                            <select id="edu" class="media-wrap-inputs">
+                                @if (edu == "Высшее")
+                                {
+                                    <option value="Высшее" selected>Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Среднее профессиональное")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное" selected>Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Среднее общее")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее" selected>Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                                else if (edu == "Основное общее")
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее" selected>Основное общее</option>
+                                }
+                                else
+                                {
+                                    <option value="Высшее">Высшее</option>
+                                    <option value="Среднее профессиональное">Среднее профессиональное</option>
+                                    <option value="Среднее общее">Среднее общее</option>
+                                    <option value="Основное общее">Основное общее</option>
+                                }
+                            </select>
                         </div>
                         <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                             <p class="w-12" for="university">Учебное заведение</p>
-                            <input type="text" class="account-input" id="university" placeholder="КНИТУ-КАИ" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).University">
+                            <input type="text" class="account-input" id="university" placeholder="КНИТУ-КАИ" value="@Model.Resumes.FirstOrDefault(resume => resume.Id == Model.User.Id).University" onkeypress="CheckSpaceInput();">
                         </div>
                         <div class="d-flex justify-content-center align-items-center mrtop16 media-wrap-inputs">
                             <p class="w-12" for="workex">Опыт работы</p>

@@ -511,3 +511,10 @@ function RedirectToIndex(id) {
 function RedirectToSignin(id) {
     window.location.href = '/Home/Signin/';
 };
+
+function CheckSpaceInput() {
+    if (event.which == 32) {
+        event.preventDefault();
+        return false;
+    }
+}
