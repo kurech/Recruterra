@@ -78,11 +78,10 @@
 
 <div class="container margin-0-auto minheight">
     <p class="color-2c2c2c font-bold font24 mrtop16 mrbottom8 cursor-default">Получено @Model.Resumes.Where(m => m.ItsPublic == true).Count() резюме</p>
-    @{ var publicResumes = Model.Resumes.Where(m => m.ItsPublic == true);
-        string role = Model.User.Role;}
+    @{ string role = Model.User.Role;}
     @if (role == "Соискатель" || role == "Работодатель")
     {
-        foreach (var resume in publicResumes)
+        foreach (var resume in Model.Resumes)
         {
             if (resume != null)
             {

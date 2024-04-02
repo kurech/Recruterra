@@ -22,6 +22,13 @@ namespace WebApplication2.Models
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             Database.EnsureCreated();
+
+            Database.ExecuteSqlInterpolated($@"
+                IF NOT EXISTS (SELECT * FROM TypeOfEmployments)
+                BEGIN
+                    INSERT INTO TypeOfEmployments VALUES ('Частичная занятость'), ('Полная занятость'), ('Стажировка'), ('Проектная работа');
+                END
+            ");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

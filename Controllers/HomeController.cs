@@ -128,7 +128,7 @@ namespace WebApplication2.Controllers
                 var userId = token.Claims.First(c => c.Type == "userId").Value;
 
                 User user = await db.Users.FirstOrDefaultAsync(m => m.Id == int.Parse(userId));
-                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
+                var model = new IndexData { User = user, Users = db.Users.ToList(), Resumes = db.Resumes.FromSqlRaw("EXEC GetPublicResumes").ToList(), Meetings = db.Meetings.ToList(), Vacancies = db.Vacancies.ToList(), Articles = db.Articles.ToList(), Responses = db.Responses.ToList(), TypeOfEmployments = db.TypeOfEmployments.ToList(), Cities = db.Cities.ToList(), Citizenships = db.Citizenships.ToList(), Employers = db.Employers.ToList() };
                 return View(model);
             }
             else
